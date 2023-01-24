@@ -33,6 +33,7 @@ router.get("/whoami", (req, res) => {
 });
 
 router.post("/initsocket", (req, res) => {
+  console.log(req.user);
   if (req.user) {
     socketManager.addUser(
       req.user,
