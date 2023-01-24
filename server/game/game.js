@@ -4,6 +4,8 @@ const { Vector } = require("./utilities");
 const GUMMY_COUNT = 16;
 const MAP_SIZE = 1280;
 
+const KILL_SIZE = 640;
+
 const gameState = {
   players: {},
   gummies: [],
@@ -38,6 +40,13 @@ const updateGameState = () => {
   for (const white1 of Object.values(gameState.players)) {
     for (const white2 of Object.values(gameState.players)) {
       if (white1.id != white2.id) Egg.whiteWhiteCollision(white1, white2);
+    }
+  }
+
+  // check for death
+  for (const id in gameState.players) {
+    if (gameState.players[id].whiteSize <= KILL_SIZE) {
+      delete gameState.players[id];
     }
   }
 };

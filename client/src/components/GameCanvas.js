@@ -3,6 +3,7 @@ import { moveWhite, movePtr, setClick, socket } from "../client-socket.js";
 import { Application } from "pixi.js";
 
 import GameState from "../game/gameState.js";
+import "./GameCanvas.css";
 
 const MAP_SIZE = 1280;
 const SCREEN_SIZE = 640;
@@ -30,7 +31,7 @@ const onKeyUp = (event) => {
     });
 };
 
-const GameCanvas = (props) => {
+const GameCanvas = () => {
   const canvas = useRef();
   const [game, setGame] = useState();
 
@@ -53,7 +54,7 @@ const GameCanvas = (props) => {
       if (game.stage.children.length > 0) {
         game.stage.removeChild(game.stage.children[0]);
       }
-      game.stage.addChild(new GameState(gameState, props.userId));
+      game.stage.addChild(new GameState(gameState));
     }
   };
 
@@ -82,13 +83,15 @@ const GameCanvas = (props) => {
   };
 
   return (
-    <canvas
-      ref={canvas}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-    />
+    <div className="GameCanvas-container">
+      <canvas
+        ref={canvas}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+      />
+    </div>
   );
 };
 

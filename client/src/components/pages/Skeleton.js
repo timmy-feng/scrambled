@@ -14,9 +14,6 @@ const GOOGLE_CLIENT_ID =
   "405770742094-nsvn5kjdutoiito75u15c7b78eqmekmf.apps.googleusercontent.com";
 
 const Skeleton = ({ userId, handleLogin, handleLogout }) => {
-  // const userId = "test";
-  userId = "yed";
-
   return (
     <div className="Start-container u-flex">
       <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
