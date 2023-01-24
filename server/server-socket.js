@@ -56,6 +56,7 @@ module.exports = {
 
       socket.on("disconnect", (reason) => {
         const user = getUserFromSocketID(socket.id);
+        if (!user) return; // not sure why I had to add this line, but it works now
         console.log(`Disconnected ${user._id}`);
         removeUser(user, socket);
       });
