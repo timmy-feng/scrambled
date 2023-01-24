@@ -45,6 +45,10 @@ const App = () => {
   return (
     <>
       <Router>
+        <GameCanvas
+          path="/game"
+          userId={userId}
+        />
         <Skeleton
           path="/"
           handleLogin={handleLogin}
