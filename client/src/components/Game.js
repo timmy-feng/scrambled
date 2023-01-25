@@ -3,7 +3,8 @@ import { moveWhite, movePtr, setClick, socket } from "../client-socket.js";
 import { Application } from "pixi.js";
 
 import GameState from "../game/gameState.js";
-import "./GameCanvas.css";
+import "./Game.css";
+import { get } from "../utilities.js";
 
 const MAP_SIZE = 1280;
 const SCREEN_SIZE = 640;
@@ -31,9 +32,15 @@ const onKeyUp = (event) => {
     });
 };
 
-const GameCanvas = () => {
+const Game = (props) => {
   const canvas = useRef();
   const [game, setGame] = useState();
+
+  const [numDeaths, setNumDeaths] = useState();
+
+  useEffect(() => {
+    get("/api/numDeaths").then((result) => setNumDeaths(result.numDeaths));
+  }, [props.userId]);
 
   useEffect(() => {
     window.addEventListener("keydown", onKeyDown);
@@ -83,16 +90,23 @@ const GameCanvas = () => {
   };
 
   return (
-    <div className="GameCanvas-container">
-      <canvas
-        ref={canvas}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-      />
-    </div>
+    <>
+      <div className="Game-container">
+        <canvas
+          ref={canvas}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+        />
+      </div>
+      {numDeaths ? (
+        <div className="Game-container">
+          <p>your egg has suffered {numDeaths} deaths</p>
+        </div>
+      ) : null}
+    </>
   );
 };
 
-export default GameCanvas;
+export default Game;

@@ -33,7 +33,6 @@ router.get("/whoami", (req, res) => {
 });
 
 router.post("/initsocket", (req, res) => {
-  console.log(req.user);
   if (req.user) {
     socketManager.addUser(
       req.user,
@@ -41,6 +40,17 @@ router.post("/initsocket", (req, res) => {
     );
   }
   res.send({});
+});
+
+router.get("/numDeaths", (req, res) => {
+  if (req.user) {
+    console.log(req.user._id);
+    User.findOne({ _id: req.user._id }).then((user) => {
+      res.send({ numDeaths: user.numDeaths });
+    });
+  } else {
+    res.send({});
+  }
 });
 
 // |------------------------------|
@@ -52,5 +62,7 @@ router.all("*", (req, res) => {
   console.log(`API route not found: ${req.method} ${req.url}`);
   res.status(404).send({ msg: "API route not found" });
 });
+
+User.find({}).then((users) => console.log(users));
 
 module.exports = router;

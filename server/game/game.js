@@ -1,6 +1,8 @@
 const Egg = require("./egg");
 const { Vector } = require("./utilities");
 
+const User = require("../models/user.js");
+
 const GUMMY_COUNT = 16;
 const MAP_SIZE = 1280;
 
@@ -47,13 +49,17 @@ const updateGameState = () => {
   for (const id in gameState.players) {
     if (gameState.players[id].whiteSize <= KILL_SIZE) {
       delete gameState.players[id];
+      User.updateOne({ _id: id }, { $inc: { numDeaths: 1 } }).then(
+        (numMat, numMod) => {
+          console.log(`found ${numMat} documents and modified ${numMod}`);
+        }
+      );
     }
   }
 };
 
 const spawnPlayer = (id) => {
   gameState.players[id] = new Egg(id);
-  console.log(`Spawned player ${id}`);
 };
 
 const killPlayer = (id) => {

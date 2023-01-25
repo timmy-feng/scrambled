@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Router } from "@reach/router";
 import jwt_decode from "jwt-decode";
 
-import GameCanvas from "./GameCanvas.js";
+import Game from "./Game.js";
 import NotFound from "./pages/NotFound.js";
 import Skeleton from "./pages/Skeleton.js";
 
@@ -45,10 +45,7 @@ const App = () => {
   return (
     <>
       <Router>
-        <GameCanvas
-          path="/game"
-          userId={userId}
-        />
+        <Game path="/game" userId={userId} />
         <Skeleton
           path="/"
           handleLogin={handleLogin}

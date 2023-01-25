@@ -126,7 +126,7 @@ class Egg {
       a.yolkVel.add(normal);
 
       b.whiteSize -= 1;
-      a.whiteSize += 1;
+      //a.whiteSize += 1;
     }
   };
 
