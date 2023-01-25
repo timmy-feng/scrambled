@@ -8,14 +8,14 @@ const YOLK_SIZE = 32;
 const SCREEN_SIZE = 640;
 
 const WHITE_ACCELERATION = 1000;
-const YOLK_ACCELERATION = 5000;
-const FRICTION = 0.95;
+const YOLK_ACCELERATION = 10000;
+const FRICTION = 0.9;
 
-const SELF_SPRING = 1000;
+const SELF_SPRING = 2000;
 const YOLK_YOLK_SPRING = 2000;
 const YOLK_WHITE_SPRING = 200;
 const WHITE_WHITE_SPRING = 20;
-const MAP_SPRING = 10;
+const MAP_SPRING = 20;
 
 class Egg {
   constructor(id) {
