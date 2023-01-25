@@ -17,6 +17,8 @@ const YOLK_WHITE_SPRING = 200;
 const WHITE_WHITE_SPRING = 20;
 const MAP_SPRING = 20;
 
+const SHRINK_SPEED = 0.2;
+
 class Egg {
   constructor(id) {
     this.id = id;
@@ -80,6 +82,9 @@ class Egg {
 
     this.screenPos.x = this.whitePos.x - SCREEN_SIZE / 2;
     this.screenPos.y = this.whitePos.y + SCREEN_SIZE / 2;
+
+    // lets try making eggs shrink as you go
+    this.whiteSize -= SHRINK_SPEED;
   }
 
   whiteMapCollision() {

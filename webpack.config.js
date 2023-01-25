@@ -62,12 +62,7 @@ module.exports = {
   resolve: {
     extensions: ["*", ".js", ".jsx"],
   },
-  plugins: [
-    new CopyPlugin({
-      patterns: [{ from: "client/src/public/images/" }],
-    }),
-    new webpack.HotModuleReplacementPlugin(),
-  ],
+  plugins: [new webpack.HotModuleReplacementPlugin()],
   devServer: {
     historyApiFallback: true,
     static: "./client/dist",

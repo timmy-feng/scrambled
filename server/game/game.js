@@ -3,7 +3,8 @@ const { Vector } = require("./utilities");
 
 const User = require("../models/user.js");
 
-const GUMMY_COUNT = 16;
+const GUMMY_COUNT = 8;
+const GUMMY_SIZE = 64;
 const MAP_SIZE = 1280;
 
 const KILL_SIZE = 640;
@@ -14,12 +15,6 @@ const gameState = {
 };
 
 const updateGameState = () => {
-  while (gameState.gummies.length < GUMMY_COUNT) {
-    gameState.gummies.push(
-      new Vector(Math.random() * MAP_SIZE, Math.random() * MAP_SIZE)
-    );
-  }
-
   for (const player of Object.values(gameState.players)) {
     player.updatePosition();
   }
@@ -55,6 +50,26 @@ const updateGameState = () => {
         }
       );
     }
+  }
+
+  for (const player of Object.values(gameState.players)) {
+    const eaten = [];
+    for (const gummy of gameState.gummies) {
+      if (player.yolkPos.dist(gummy) < GUMMY_SIZE) {
+        eaten.push(gummy);
+      }
+    }
+
+    player.whiteSize += 10 * eaten.length;
+    for (const gummy of eaten) {
+      gameState.gummies.splice(gameState.gummies.indexOf(gummy), 1);
+    }
+  }
+
+  while (gameState.gummies.length < GUMMY_COUNT) {
+    gameState.gummies.push(
+      new Vector(Math.random() * MAP_SIZE, Math.random() * MAP_SIZE)
+    );
   }
 };
 
