@@ -60,7 +60,7 @@ const updateGameState = () => {
       }
     }
 
-    player.whiteSize += 10 * eaten.length;
+    player.whiteSize += 20 * eaten.length;
     for (const gummy of eaten) {
       gameState.gummies.splice(gameState.gummies.indexOf(gummy), 1);
     }

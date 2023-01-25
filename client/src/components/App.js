@@ -18,6 +18,12 @@ import { get, post } from "../utilities";
 const App = () => {
   const [userId, setUserId] = useState(undefined);
 
+  // for not so local localhost testing
+  // useEffect(() => {
+  //   const id = prompt("Enter user id:", "63d0452da9aad45f0da4e71b");
+  //   post("/api/devLogin", { id }).then(() => setUserId(id));
+  // }, []);
+
   useEffect(() => {
     get("/api/whoami").then((user) => {
       if (user._id) {

@@ -21,6 +21,12 @@ const router = express.Router();
 //initialize socket
 const socketManager = require("./server-socket");
 
+router.post("/devLogin", (req, res) => {
+  req.session.user = { _id: req.body.id };
+  console.log(`Logged in as ${req.body.id}`);
+  res.send({});
+});
+
 router.post("/login", auth.login);
 router.post("/logout", auth.logout);
 router.get("/whoami", (req, res) => {
@@ -46,7 +52,7 @@ router.get("/numDeaths", (req, res) => {
   if (req.user) {
     console.log(req.user._id);
     User.findOne({ _id: req.user._id }).then((user) => {
-      res.send({ numDeaths: user.numDeaths });
+      if (user) res.send({ numDeaths: user.numDeaths });
     });
   } else {
     res.send({});
