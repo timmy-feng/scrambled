@@ -1,9 +1,12 @@
 import * as PIXI from "pixi.js";
+import { Sprite } from "pixi.js";
 
 const MAP_SIZE = 1280;
 const SCREEN_SIZE = 640;
 const YOLK_SIZE = 32;
 const GUMMY_SIZE = 12;
+
+const fabiTexture = PIXI.Texture.from("fabidead.png");
 
 export default class GameState extends PIXI.Container {
   constructor({ players, gummies, you }) {
@@ -45,6 +48,7 @@ export default class GameState extends PIXI.Container {
       this.addChild(border);
 
       for (const gummy of gummies) {
+        /*
         const yum = new PIXI.Graphics();
         yum.beginFill(0xffc0ff);
         yum.drawCircle(0, 0, GUMMY_SIZE);
@@ -52,6 +56,14 @@ export default class GameState extends PIXI.Container {
         yum.position.x = gummy.x - offset.x;
         yum.position.y = -(gummy.y - offset.y);
         this.addChild(yum);
+        */
+
+        const fabi = new Sprite(fabiTexture);
+        fabi.position.x = gummy.x - offset.x;
+        fabi.position.y = -(gummy.y - offset.y);
+        fabi.scale = { x: 0.2, y: 0.2 };
+        fabi.anchor = { x: 0.5, y: 0.5 };
+        this.addChild(fabi);
       }
 
       for (const player of Object.values(players)) {

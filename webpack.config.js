@@ -35,7 +35,7 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         loader: "babel-loader",
-        options: { presets: ['@babel/env', '@babel/preset-react'] },
+        options: { presets: ["@babel/env", "@babel/preset-react"] },
         exclude: /node_modules/,
       },
       {
@@ -62,7 +62,12 @@ module.exports = {
   resolve: {
     extensions: ["*", ".js", ".jsx"],
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()],
+  plugins: [
+    new CopyPlugin({
+      patterns: [{ from: "client/src/public/images/" }],
+    }),
+    new webpack.HotModuleReplacementPlugin(),
+  ],
   devServer: {
     historyApiFallback: true,
     static: "./client/dist",
