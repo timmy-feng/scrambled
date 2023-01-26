@@ -1,6 +1,5 @@
-const { Vector } = require("./game/utilities");
-
-const game = require("./game/game");
+const Vector = require("../shared/vector");
+const GameState = require("../shared/gameState");
 
 let io;
 
@@ -13,14 +12,18 @@ const getSocketFromSocketID = (socketid) => io.sockets.connected[socketid];
 
 const FRAMES_PER_SEC = 60;
 
+let game = new GameState();
+
 const startGame = () => {
   setInterval(() => {
-    game.updateGameState();
+    game.update();
     for (const id in userToSocketMap) {
-      getSocketFromUserID(id).emit("update", {
-        ...game.gameState,
-        you: game.gameState.players[id],
-      });
+      // make updating less stable for testing
+      // if (Math.random() < 0.2) {
+      const userGame = game;
+      userGame.you = game.getById(id);
+      getSocketFromUserID(id).emit("update", userGame);
+      // }
     }
   }, 1000 / FRAMES_PER_SEC);
 };
@@ -46,7 +49,7 @@ const removeUser = (user, socket) => {
   if (user) delete userToSocketMap[user._id];
   delete socketToUserMap[socket.id];
 
-  game.killPlayer(user._id);
+  game.disconnectPlayer(user._id);
 };
 
 module.exports = {
@@ -75,53 +78,49 @@ module.exports = {
       socket.on("arrowDown", (arrowCode) => {
         const user = getUserFromSocketID(socket.id);
         if (user) {
-          console.log("Arrow pressed :" + arrowCode);
-          game.movePlayer(user._id, direction[arrowCode]);
+          game.moveWhite(user._id, direction[arrowCode]);
         }
       });
 
       socket.on("arrowUp", (arrowCode) => {
         const user = getUserFromSocketID(socket.id);
         if (user) {
-          game.movePlayer(
-            user._id,
-            Vector.scalarProd(-1, direction[arrowCode])
-          );
+          game.moveWhite(user._id, Vector.scale(-1, direction[arrowCode]));
         }
       });
 
-      socket.on("spacebarDown", () => {
-        const user = getUserFromSocketID(socket.id);
-        if (user) {
-          game.setMode(user._id, true);
-        }
-      });
+      // socket.on("spacebarDown", () => {
+      //   const user = getUserFromSocketID(socket.id);
+      //   if (user) {
+      //     game.setMode(user._id, true);
+      //   }
+      // });
 
-      socket.on("spacebarUp", () => {
-        const user = getUserFromSocketID(socket.id);
-        if (user) {
-          game.setMode(user._id, false);
-        }
-      });
+      // socket.on("spacebarUp", () => {
+      //   const user = getUserFromSocketID(socket.id);
+      //   if (user) {
+      //     game.setMode(user._id, false);
+      //   }
+      // });
 
       socket.on("mouseDown", () => {
         const user = getUserFromSocketID(socket.id);
         if (user) {
-          game.setClick(user._id, true);
+          game.setMouse(user._id, true);
         }
       });
 
       socket.on("mouseUp", () => {
         const user = getUserFromSocketID(socket.id);
         if (user) {
-          game.setClick(user._id, false);
+          game.setMouse(user._id, false);
         }
       });
 
       socket.on("mouseMove", (mousePos) => {
         const user = getUserFromSocketID(socket.id);
         if (user) {
-          game.movePtr(user._id, mousePos);
+          game.moveMouse(user._id, mousePos);
         }
       });
     });

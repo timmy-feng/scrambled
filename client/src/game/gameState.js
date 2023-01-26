@@ -1,6 +1,8 @@
 import * as PIXI from "pixi.js";
 import { Sprite } from "pixi.js";
 
+import Vector from "../../../shared/vector";
+
 const MAP_SIZE = 1280;
 const SCREEN_SIZE = 640;
 const YOLK_SIZE = 48;
@@ -9,10 +11,10 @@ const GUMMY_SIZE = 12;
 const fabiTexture = PIXI.Texture.from("fabidead.png");
 
 export default class GameState extends PIXI.Container {
-  constructor({ players, gummies, you }) {
+  constructor(game) {
     super();
 
-    if (!you) {
+    if (!game.you) {
       const gameOverText = new PIXI.Text("Game Over | Reload to Try Again?", {
         fontFamily: "Comic Sans MS",
         fontSize: 36,
@@ -21,7 +23,7 @@ export default class GameState extends PIXI.Container {
       gameOverText.position = { x: SCREEN_SIZE / 2, y: SCREEN_SIZE / 2 };
       this.addChild(gameOverText);
     } else {
-      const offset = you.screenPos;
+      const offset = game.you.screenPos;
 
       // drawing the border - still kinda messy
       const border = new PIXI.Graphics();
@@ -48,7 +50,7 @@ export default class GameState extends PIXI.Container {
       border.endFill();
       this.addChild(border);
 
-      for (const gummy of gummies) {
+      for (const gummy of game.gummies) {
         const fabi = new Sprite(fabiTexture);
         fabi.position.x = gummy.x - offset.x;
         fabi.position.y = -(gummy.y - offset.y);
@@ -57,7 +59,7 @@ export default class GameState extends PIXI.Container {
         this.addChild(fabi);
       }
 
-      for (const player of Object.values(players)) {
+      for (const player of game.eggs) {
         this.drawCircle(
           new Vector(
             player.whitePos.x - offset.x,
@@ -68,14 +70,14 @@ export default class GameState extends PIXI.Container {
         );
       }
 
-      for (const player of Object.values(players)) {
+      for (const player of game.eggs) {
         const yolk = this.drawCircle(
           new Vector(
             player.yolkPos.x - offset.x,
             -(player.yolkPos.y - offset.y)
           ),
           YOLK_SIZE,
-          player.defensiveMode ? 0xff8000 : 0xffc040
+          0xffc040
         );
 
         const lenny = new PIXI.Text(player.name);
@@ -88,7 +90,8 @@ export default class GameState extends PIXI.Container {
   drawCircle(center, radius, color) {
     const circle = new PIXI.Graphics();
     circle.beginFill(color);
-    circle.drawCircle(center.x, center.y, radius);
+    circle.drawCircle(0, 0, radius);
+    circle.position = { x: center.x, y: center.y };
     this.addChild(circle);
     return circle;
   }
