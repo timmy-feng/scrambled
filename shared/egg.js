@@ -27,37 +27,39 @@ const SHRINK_SPEED = 0.2;
 const faces = ["( ͡° ͜ʖ ͡°)", "UwU", "◕‿↼", "( ͡° ᴥ ͡°)", "(ツ)", "(-_-)"];
 
 class Egg {
-  constructor(id) {
-    this.id = id;
-    this.name = faces[Math.floor(Math.random() * faces.length)];
+  constructor(data) {
+    this.id = data.id;
+    this.name = data.name ?? faces[Math.floor(Math.random() * faces.length)];
 
     const startX = Math.random() * MAP_SIZE;
     const startY = Math.random() * MAP_SIZE;
 
-    this.whitePos = new Vector(startX, startY);
-    this.whiteVel = new Vector(0, 0);
-    this.whiteAcc = new Vector(0, 0);
+    this.whitePos = data.whitePos ?? new Vector(startX, startY);
+    this.whiteVel = data.whiteVel ?? new Vector();
+    this.whiteAcc = data.whiteAcc ?? new Vector();
 
-    this.whiteSize = WHITE_SIZE;
+    this.whiteSize = data.whiteSize ?? WHITE_SIZE;
 
-    this.yolkPos = new Vector(startX, startY);
-    this.yolkVel = new Vector(0, 0);
-    this.yolkAcc = new Vector(0, 0);
+    this.yolkPos = data.yolkPos ?? new Vector(startX, startY);
+    this.yolkVel = data.yolkVel ?? new Vector();
 
-    this.mousePos = new Vector(startX, startY);
-    this.mouseClicked = false;
+    this.mousePos = data.mousePos ?? new Vector(startX, startY);
+    this.mouseClicked = data.mouseClicked ?? false;
 
-    this.screenPos = new Vector(
-      startX - SCREEN_SIZE / 2,
-      startY + SCREEN_SIZE / 2
-    );
+    this.screenPos =
+      data.screenPos ??
+      new Vector(startX - SCREEN_SIZE / 2, startY + SCREEN_SIZE / 2);
 
-    this.collisions = {};
+    this.collisions = data.collisions ? { ...data.collisions } : {};
   }
 
   // mouse position is given relative to screen position
   moveMouse(mousePos) {
     this.mousePos = Vector.sum(mousePos, this.screenPos);
+  }
+
+  setMouse(clicked) {
+    this.mouseClicked = clicked;
   }
 
   // change acceleration by direction delta
@@ -168,7 +170,7 @@ class Egg {
     if (Vector.dist(a.yolkPos, b.yolkPos) < 2 * YOLK_SIZE) {
       a.yolkVel = Vector.sum(
         a.yolkVel,
-        getSpringAcc(a.yolkPos, b.yolkPos, 2 * YOLK_SIZE, YOLK_YOLK_SPRING)
+        this.getSpringAcc(a.yolkPos, b.yolkPos, 2 * YOLK_SIZE, YOLK_YOLK_SPRING)
       );
     }
   };
@@ -177,7 +179,12 @@ class Egg {
     if (Vector.dist(a.yolkPos, b.whitePos) < b.whiteSize / 10) {
       a.yolkVel = Vector.sum(
         a.yolkVel,
-        getSpringAcc(a.yolkPos, b.whitePos, b.whiteSize / 10, YOLK_WHITE_SPRING)
+        this.getSpringAcc(
+          a.yolkPos,
+          b.whitePos,
+          b.whiteSize / 10,
+          YOLK_WHITE_SPRING
+        )
       );
 
       if (!(a.id in b.collisions)) {
@@ -200,7 +207,7 @@ class Egg {
     if (Vector.dist(a.whitePos, b.whitePos) < diameter) {
       a.whiteVel = Vector.sum(
         a.whiteVel,
-        getSpringAcc(a.whitePos, b.whitePos, diameter, WHITE_WHITE_SPRING)
+        this.getSpringAcc(a.whitePos, b.whitePos, diameter, WHITE_WHITE_SPRING)
       );
     }
   };

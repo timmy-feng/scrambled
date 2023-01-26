@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { socket } from "../client-socket.js";
 import { Application } from "pixi.js";
 
-import GameState from "../game/gameState.js";
+import GameRender from "../game/gameRender.js";
 import {
   onKeyDown,
   onKeyUp,
@@ -42,9 +42,10 @@ const Game = (props) => {
     if (game) {
       // empty the stage if currently displaying
       if (game.stage.children.length > 0) {
+        game.stage.children[0].cancelLoop();
         game.stage.removeChild(game.stage.children[0]);
       }
-      game.stage.addChild(new GameState(update));
+      game.stage.addChild(new GameRender(update));
     }
   };
 

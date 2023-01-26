@@ -1,5 +1,6 @@
 import * as PIXI from "pixi.js";
 import { Sprite } from "pixi.js";
+import GameState from "../../../shared/gameState";
 
 import Vector from "../../../shared/vector";
 
@@ -7,14 +8,31 @@ const MAP_SIZE = 1280;
 const SCREEN_SIZE = 640;
 const YOLK_SIZE = 48;
 const GUMMY_SIZE = 12;
+const FRAMES_PER_SEC = 60;
 
 const fabiTexture = PIXI.Texture.from("fabidead.png");
 
-export default class GameState extends PIXI.Container {
+export default class GameRender extends PIXI.Container {
   constructor(game) {
     super();
 
-    if (!game.you) {
+    this.game = new GameState(game, true);
+    this.you = game.you;
+
+    this.redraw();
+
+    this.loop = setInterval(() => {
+      this.game.update();
+      this.redraw();
+    }, 1000 / FRAMES_PER_SEC);
+  }
+
+  redraw() {
+    this.removeChildren();
+
+    const yourEgg = this.game.getById(this.you);
+
+    if (!yourEgg) {
       const gameOverText = new PIXI.Text("Game Over | Reload to Try Again?", {
         fontFamily: "Comic Sans MS",
         fontSize: 36,
@@ -23,7 +41,7 @@ export default class GameState extends PIXI.Container {
       gameOverText.position = { x: SCREEN_SIZE / 2, y: SCREEN_SIZE / 2 };
       this.addChild(gameOverText);
     } else {
-      const offset = game.you.screenPos;
+      const offset = yourEgg.screenPos;
 
       // drawing the border - still kinda messy
       const border = new PIXI.Graphics();
@@ -50,7 +68,7 @@ export default class GameState extends PIXI.Container {
       border.endFill();
       this.addChild(border);
 
-      for (const gummy of game.gummies) {
+      for (const gummy of this.game.gummies) {
         const fabi = new Sprite(fabiTexture);
         fabi.position.x = gummy.x - offset.x;
         fabi.position.y = -(gummy.y - offset.y);
@@ -59,7 +77,7 @@ export default class GameState extends PIXI.Container {
         this.addChild(fabi);
       }
 
-      for (const player of game.eggs) {
+      for (const player of this.game.eggs) {
         this.drawCircle(
           new Vector(
             player.whitePos.x - offset.x,
@@ -70,7 +88,7 @@ export default class GameState extends PIXI.Container {
         );
       }
 
-      for (const player of game.eggs) {
+      for (const player of this.game.eggs) {
         const yolk = this.drawCircle(
           new Vector(
             player.yolkPos.x - offset.x,
@@ -94,5 +112,12 @@ export default class GameState extends PIXI.Container {
     circle.position = { x: center.x, y: center.y };
     this.addChild(circle);
     return circle;
+  }
+
+  cancelLoop() {
+    if (this.loop) {
+      clearInterval(this.loop);
+      this.loop = null;
+    }
   }
 }

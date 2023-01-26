@@ -19,11 +19,9 @@ const startGame = () => {
     game.update();
     for (const id in userToSocketMap) {
       // make updating less stable for testing
-      // if (Math.random() < 0.2) {
-      const userGame = game;
-      userGame.you = game.getById(id);
-      getSocketFromUserID(id).emit("update", userGame);
-      // }
+      if (Math.random() < 0.1) {
+        getSocketFromUserID(id).emit("update", { ...game, you: id });
+      }
     }
   }, 1000 / FRAMES_PER_SEC);
 };

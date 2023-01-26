@@ -9,9 +9,15 @@ const KILL_SIZE = 640;
 const MAP_SIZE = 1280;
 
 class GameState {
-  constructor() {
-    this.eggs = [];
-    this.gummies = [];
+  constructor(data = null, predictMode = false) {
+    if (data) {
+      this.eggs = data.eggs.map((egg) => new Egg(egg));
+      this.gummies = data.gummies.map((gummy) => new Vector(gummy.x, gummy.y));
+    } else {
+      this.eggs = [];
+      this.gummies = [];
+    }
+    this.predictMode = predictMode;
   }
 
   // returns list of ids of eggs that just died (for now)
@@ -51,7 +57,9 @@ class GameState {
       this.eggs.splice(this.eggs.indexOf(egg), 1);
     }
 
-    while (this.gummies.length < GUMMY_COUNT) {
+    // respawn gummies to max number unless in predict mode
+    // if we're in predict mode, we don't want to misplace random gummies
+    while (!this.predictMode && this.gummies.length < GUMMY_COUNT) {
       this.gummies.push(
         new Vector(Math.random() * MAP_SIZE, Math.random() * MAP_SIZE)
       );
@@ -70,7 +78,7 @@ class GameState {
   }
 
   spawnPlayer(id) {
-    this.eggs.push(new Egg(id));
+    this.eggs.push(new Egg({ id }));
   }
 
   disconnectPlayer(id) {
@@ -78,18 +86,15 @@ class GameState {
   }
 
   moveWhite(id, dir) {
-    const egg = this.getById(id);
-    if (egg) egg.moveWhite(dir);
+    this.getById(id)?.moveWhite(dir);
   }
 
   moveMouse(id, pos) {
-    const egg = this.getById(id);
-    if (egg) egg.moveMouse(pos);
+    this.getById(id)?.moveMouse(pos);
   }
 
   setMouse(id, clicked) {
-    const egg = this.getById(id);
-    if (egg) egg.mouseClicked = clicked;
+    this.getById(id)?.setMouse(clicked);
   }
 
   // clone() {
