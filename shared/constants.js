@@ -8,7 +8,7 @@ const GAME = {
 };
 
 const WHITE = {
-  ACCELERATION: 1000,
+  ACCELERATION: 1500,
   FRICTION: 0.9,
   SIZE: 960,
 };

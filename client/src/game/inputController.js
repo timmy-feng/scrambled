@@ -9,7 +9,7 @@ import {
   socketPing,
 } from "../client-socket.js";
 import Vector from "../../../shared/vector.js";
-import { ARROW_CODE, DIRECTION } from "../../../shared/constants.js";
+import { ARROW_CODE } from "../../../shared/constants.js";
 
 export default class InputController {
   constructor(game) {
@@ -24,8 +24,7 @@ export default class InputController {
       const key = ARROW_CODE[event.key];
       sendArrowDown(key);
       setTimeout(
-        () =>
-          this.game.gameState?.moveWhite(this.game.playerId, DIRECTION[key]),
+        () => this.game.gameState?.setArrow(this.game.playerId, key, true),
         socketPing
       );
     }
@@ -38,17 +37,14 @@ export default class InputController {
       const key = ARROW_CODE[event.key];
       sendArrowUp(key);
       setTimeout(
-        () =>
-          this.game.gameState?.moveWhite(
-            this.game.playerId,
-            Vector.scale(-1, DIRECTION[key])
-          ),
+        () => this.game.gameState?.setArrow(this.game.playerId, false),
         socketPing
       );
     }
   }
 
-  onMouseDown() {
+  onMouseDown(event) {
+    if (event.button != 0) return;
     sendMouseDown();
     setTimeout(
       () => this.game.gameState?.setMouse(this.game.playerId, true),
@@ -56,7 +52,8 @@ export default class InputController {
     );
   }
 
-  onMouseUp() {
+  onMouseUp(event) {
+    if (event.button != 0) return;
     sendMouseUp();
     setTimeout(
       () => this.game.gameState?.setMouse(this.game.playerId, false),

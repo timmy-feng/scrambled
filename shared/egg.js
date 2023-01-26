@@ -1,5 +1,13 @@
 const Vector = require("./vector");
-const { GAME, WHITE, YOLK, SPRING, BITE, FACES } = require("./constants");
+const {
+  GAME,
+  WHITE,
+  YOLK,
+  SPRING,
+  BITE,
+  FACES,
+  DIRECTION,
+} = require("./constants");
 
 class Egg {
   // requires data.id
@@ -12,7 +20,6 @@ class Egg {
 
     this.whitePos = data.whitePos ?? new Vector(startX, startY);
     this.whiteVel = data.whiteVel ?? new Vector();
-    this.whiteAcc = data.whiteAcc ?? new Vector();
 
     this.whiteSize = data.whiteSize ?? WHITE.SIZE;
 
@@ -21,6 +28,7 @@ class Egg {
 
     this.mousePos = data.mousePos ?? new Vector(startX, startY);
     this.mouseClicked = data.mouseClicked ?? false;
+    this.arrowPressed = data.arrowPressed ?? [false, false, false, false];
 
     this.screenPos =
       data.screenPos ??
@@ -38,29 +46,37 @@ class Egg {
     this.mouseClicked = clicked;
   }
 
-  // change acceleration by direction delta
-  moveWhite(dir) {
-    this.whiteAcc = Vector.sum(this.whiteAcc, dir);
+  setArrow(key, pressed) {
+    this.arrowPressed[key] = pressed;
+  }
+
+  getWhiteAcc() {
+    let whiteAcc = new Vector();
+    for (let dir = 0; dir < 4; dir++) {
+      if (this.arrowPressed[dir])
+        whiteAcc = Vector.sum(whiteAcc, DIRECTION[dir]);
+    }
+
+    if (whiteAcc.norm() != 0)
+      whiteAcc = Vector.scale(1 / whiteAcc.norm(), whiteAcc);
+
+    whiteAcc = Vector.scale(WHITE.ACCELERATION / GAME.FRAMES_PER_SEC, whiteAcc);
+
+    // experimental way of making white slower the farther the yolk is
+    // whiteAcc = Vector.scale(
+    //   (1000 - Vector.dist(this.yolkPos, this.whitePos)) / 1000,
+    //   whiteAcc
+    // );
+
+    if (!this.yolkInWhite()) whiteAcc = Vector.scale(0.5, whiteAcc);
+
+    return whiteAcc;
   }
 
   updatePosition() {
     // handle white physics
     this.whiteMapCollision();
-    // white should move slower if yolk is not in its bounds
-    if (this.yolkInWhite()) {
-      this.whiteVel = Vector.sum(
-        this.whiteVel,
-        Vector.scale(WHITE.ACCELERATION / GAME.FRAMES_PER_SEC, this.whiteAcc)
-      );
-    } else {
-      this.whiteVel = Vector.sum(
-        this.whiteVel,
-        Vector.scale(
-          WHITE.ACCELERATION / GAME.FRAMES_PER_SEC / 2,
-          this.whiteAcc
-        )
-      );
-    }
+    this.whiteVel = Vector.sum(this.whiteVel, this.getWhiteAcc());
     this.whiteVel = Vector.scale(WHITE.FRICTION, this.whiteVel);
     this.whitePos = Vector.sum(
       this.whitePos,
@@ -68,7 +84,7 @@ class Egg {
     );
 
     // if mouse down, pull yolk forwards
-    let yolkAcc = new Vector(0, 0);
+    let yolkAcc = new Vector();
     if (this.mouseClicked) {
       const toMouse = Vector.diff(this.mousePos, this.yolkPos);
       yolkAcc = Vector.sum(

@@ -1,6 +1,5 @@
-const Vector = require("../shared/vector");
 const GameState = require("../shared/gameState");
-const { GAME, DIRECTION } = require("../shared/constants");
+const { GAME } = require("../shared/constants");
 
 const User = require("./models/user");
 
@@ -80,14 +79,14 @@ module.exports = {
       socket.on("arrowDown", (arrowCode) => {
         const user = getUserFromSocketID(socket.id);
         if (user) {
-          game.moveWhite(user._id, DIRECTION[arrowCode]);
+          game.setArrow(user._id, arrowCode, true);
         }
       });
 
       socket.on("arrowUp", (arrowCode) => {
         const user = getUserFromSocketID(socket.id);
         if (user) {
-          game.moveWhite(user._id, Vector.scale(-1, DIRECTION[arrowCode]));
+          game.setArrow(user._id, arrowCode, false);
         }
       });
 

@@ -53,10 +53,10 @@ const Game = (props) => {
       <div className="Game-container">
         <canvas
           ref={canvas}
-          onMouseDown={() => input?.onMouseDown()}
+          onMouseDown={(event) => input?.onMouseDown(event)}
           onMouseMove={(event) => input?.onMouseMove(event, canvas)}
-          onMouseUp={() => input?.onMouseUp()}
-          onMouseLeave={() => input?.onMouseUp()}
+          onMouseUp={(event) => input?.onMouseUp(event)}
+          onMouseLeave={(event) => input?.onMouseUp(event)}
         />
       </div>
 

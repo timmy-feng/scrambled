@@ -76,8 +76,8 @@ class GameState {
     this.eggs.splice(this.indexOfId(id), 1);
   }
 
-  moveWhite(id, dir) {
-    this.getById(id)?.moveWhite(dir);
+  setArrow(id, key, pressed) {
+    this.getById(id)?.setArrow(key, pressed);
   }
 
   moveMouse(id, pos) {
@@ -87,12 +87,6 @@ class GameState {
   setMouse(id, clicked) {
     this.getById(id)?.setMouse(clicked);
   }
-
-  // clone() {
-  //   const copy = new GameState();
-  //   copy.eggs = this.eggs.map((egg) => egg.clone());
-  //   copy.gummies = [...this.gummies];
-  // }
 }
 
 module.exports = GameState;
