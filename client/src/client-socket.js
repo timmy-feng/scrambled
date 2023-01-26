@@ -9,13 +9,17 @@ socket.on("connect", () => {
 // poll socket ping every second so client prediction is smoother
 
 export let socketPing = 0; // in ms
+let pingQueue = [];
 
 setInterval(() => {
   console.log(`Ping: ${socketPing}`);
-  socket.emit("pingTest", Date.now());
+  socket.emit("pingTest");
+  pingQueue.push(Date.now());
 }, 1000);
 
-socket.on("pingResult", (ping) => (socketPing = ping));
+socket.on("pingResult", () => {
+  socketPing = Date.now() - pingQueue.shift();
+});
 
 // socket api below
 
