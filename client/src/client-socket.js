@@ -6,10 +6,18 @@ socket.on("connect", () => {
   post("/api/initsocket", { socketid: socket.id });
 });
 
+export let socketPing = 0; // in ms
+
+setInterval(() => {
+  console.log(`Ping: ${socketPing}`);
+  socket.emit("pingTest", Date.now());
+}, 1000);
+
+socket.on("pingResult", (ping) => (socketPing = ping));
+
 // socket api below
 
 export const sendArrowDown = (arrowCode) => {
-  console.log(arrowCode);
   socket.emit("arrowDown", arrowCode);
 };
 

@@ -6,6 +6,7 @@ import {
   sendMouseDown,
   sendMouseUp,
   sendMouseMove,
+  socketPing,
 } from "../client-socket.js";
 import Vector from "../../../shared/vector.js";
 
@@ -42,8 +43,12 @@ export default class InputController {
       sendSpacebarDown();
     } else if (event.key in arrowCode) {
       const key = arrowCode[event.key];
-      this.game.gameState?.moveWhite(this.game.playerId, direction[key]);
       sendArrowDown(key);
+      setTimeout(
+        () =>
+          this.game.gameState?.moveWhite(this.game.playerId, direction[key]),
+        socketPing
+      );
     }
   }
 
@@ -52,22 +57,32 @@ export default class InputController {
       sendSpacebarUp();
     } else if (event.key in arrowCode) {
       const key = arrowCode[event.key];
-      this.game.gameState?.moveWhite(
-        this.game.playerId,
-        Vector.scale(-1, direction[key])
-      );
       sendArrowUp(key);
+      setTimeout(
+        () =>
+          this.game.gameState?.moveWhite(
+            this.game.playerId,
+            Vector.scale(-1, direction[key])
+          ),
+        socketPing
+      );
     }
   }
 
   onMouseDown() {
-    this.game.gameState?.setMouse(this.game.playerId, true);
     sendMouseDown();
+    setTimeout(
+      () => this.game.gameState?.setMouse(this.game.playerId, true),
+      socketPing
+    );
   }
 
   onMouseUp() {
-    this.game.gameState?.setMouse(this.game.playerId, false);
     sendMouseUp();
+    setTimeout(
+      () => this.game.gameState?.setMouse(this.game.playerId, false),
+      socketPing
+    );
   }
 
   onMouseMove(event, canvas) {
@@ -76,7 +91,10 @@ export default class InputController {
       event.clientX - rect.left,
       -(event.clientY - rect.top)
     );
-    this.game.gameState?.moveMouse(this.game.playerId, mousePos);
     sendMouseMove(mousePos);
+    setTimeout(
+      () => this.game.gameState?.moveMouse(this.game.playerId, mousePos),
+      socketPing
+    );
   }
 }

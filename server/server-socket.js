@@ -71,6 +71,10 @@ module.exports = {
         removeUser(user, socket);
       });
 
+      socket.on("pingTest", (timeSent) => {
+        socket.emit("pingResult", Date.now() - timeSent);
+      });
+
       // socket api below
 
       const direction = [

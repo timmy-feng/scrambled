@@ -83,7 +83,6 @@ class GameState {
   }
 
   moveWhite(id, dir) {
-    console.log("moved");
     this.getById(id)?.moveWhite(dir);
   }
 
