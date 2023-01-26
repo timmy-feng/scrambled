@@ -1,15 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { socket } from "../client-socket.js";
-import { Application } from "pixi.js";
 
-import GameRender from "../game/gameRender.js";
-import {
-  onKeyDown,
-  onKeyUp,
-  onMouseDown,
-  onMouseMove,
-  onMouseUp,
-} from "../game/inputController.js";
+import ClientGame from "../game/clientGame.js";
+import InputController from "../game/inputController.js";
 import { get } from "../utilities.js";
 
 import "./Game.css";
@@ -17,6 +10,7 @@ import "./Game.css";
 const Game = (props) => {
   const canvas = useRef();
   const [game, setGame] = useState();
+  const [input, setInput] = useState();
 
   const [numDeaths, setNumDeaths] = useState();
 
@@ -25,53 +19,44 @@ const Game = (props) => {
   }, [props.userId]);
 
   useEffect(() => {
-    window.addEventListener("keydown", onKeyDown);
-    window.addEventListener("keyup", onKeyUp);
-
-    return () => {
-      window.removeEventListener("keydown", onKeyDown);
-      window.removeEventListener("keyup", onKeyUp);
-    };
-  }, []);
+    if (input) {
+      const tempInput = input;
+      // TODO: figure out scope of event listener
+      window.addEventListener("keydown", (event) => tempInput.onKeyDown(event));
+      window.addEventListener("keyup", (event) => tempInput.onKeyUp(event));
+    }
+  }, [input]);
 
   useEffect(() => {
     socket.on("update", processUpdate);
   });
 
   const processUpdate = (update) => {
-    if (game) {
-      // empty the stage if currently displaying
-      if (game.stage.children.length > 0) {
-        game.stage.children[0].cancelLoop();
-        game.stage.removeChild(game.stage.children[0]);
-      }
-      game.stage.addChild(new GameRender(update));
-    }
+    if (game) game.serverUpdate(update.gameState, update.playerId);
   };
 
   // initialize PIXI instance
   useEffect(() => {
     if (canvas) {
-      setGame(
-        new Application({
-          view: canvas.current,
-          backgroundColor: 0x40c0ff,
-          width: 640,
-          height: 640,
-        })
-      );
+      setGame(new ClientGame(canvas.current));
     }
   }, [canvas]);
+
+  useEffect(() => {
+    if (game) {
+      setInput(new InputController(game));
+    }
+  }, [game]);
 
   return (
     <>
       <div className="Game-container">
         <canvas
           ref={canvas}
-          onMouseDown={onMouseDown}
-          onMouseMove={(event) => onMouseMove(event, canvas)}
-          onMouseUp={onMouseUp}
-          onMouseLeave={onMouseUp}
+          onMouseDown={() => input?.onMouseDown()}
+          onMouseMove={(event) => input?.onMouseMove(event, canvas)}
+          onMouseUp={() => input?.onMouseUp()}
+          onMouseLeave={() => input?.onMouseUp()}
         />
       </div>
 

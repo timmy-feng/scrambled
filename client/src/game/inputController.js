@@ -24,28 +24,59 @@ const arrowCode = {
   A: 3,
 };
 
-export const onKeyDown = (event) => {
-  if (event.repeat) return;
-  if (event.key == " ") sendSpacebarDown();
-  else if (event.key in arrowCode) sendArrowDown(arrowCode[event.key]);
-};
+const direction = [
+  new Vector(0, 1),
+  new Vector(0, -1),
+  new Vector(1, 0),
+  new Vector(-1, 0),
+];
 
-export const onKeyUp = (event) => {
-  if (event.key == " ") sendSpacebarUp();
-  else if (event.key in arrowCode) sendArrowUp(arrowCode[event.key]);
-};
+export default class InputController {
+  constructor(game) {
+    this.game = game;
+  }
 
-export const onMouseDown = (event) => {
-  sendMouseDown();
-};
+  onKeyDown(event) {
+    if (event.repeat) return;
+    if (event.key == " ") {
+      sendSpacebarDown();
+    } else if (event.key in arrowCode) {
+      const key = arrowCode[event.key];
+      this.game.gameState?.moveWhite(this.game.playerId, direction[key]);
+      sendArrowDown(key);
+    }
+  }
 
-export const onMouseUp = (event) => {
-  sendMouseUp();
-};
+  onKeyUp(event) {
+    if (event.key == " ") {
+      sendSpacebarUp();
+    } else if (event.key in arrowCode) {
+      const key = arrowCode[event.key];
+      this.game.gameState?.moveWhite(
+        this.game.playerId,
+        Vector.scale(-1, direction[key])
+      );
+      sendArrowUp(key);
+    }
+  }
 
-export const onMouseMove = (event, canvas) => {
-  const rect = canvas.current.getBoundingClientRect();
-  sendMouseMove(
-    new Vector(event.clientX - rect.left, -(event.clientY - rect.top))
-  );
-};
+  onMouseDown() {
+    this.game.gameState?.setMouse(this.game.playerId, true);
+    sendMouseDown();
+  }
+
+  onMouseUp() {
+    this.game.gameState?.setMouse(this.game.playerId, false);
+    sendMouseUp();
+  }
+
+  onMouseMove(event, canvas) {
+    const rect = canvas.current.getBoundingClientRect();
+    const mousePos = new Vector(
+      event.clientX - rect.left,
+      -(event.clientY - rect.top)
+    );
+    this.game.gameState?.moveMouse(this.game.playerId, mousePos);
+    sendMouseMove(mousePos);
+  }
+}

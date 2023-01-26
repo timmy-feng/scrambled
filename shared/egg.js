@@ -27,6 +27,7 @@ const SHRINK_SPEED = 0.2;
 const faces = ["( ͡° ͜ʖ ͡°)", "UwU", "◕‿↼", "( ͡° ᴥ ͡°)", "(ツ)", "(-_-)"];
 
 class Egg {
+  // requires data.id
   constructor(data) {
     this.id = data.id;
     this.name = data.name ?? faces[Math.floor(Math.random() * faces.length)];

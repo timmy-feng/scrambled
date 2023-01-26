@@ -1,5 +1,6 @@
 const Vector = require("../shared/vector");
 const GameState = require("../shared/gameState");
+const User = require("./models/user");
 
 let io;
 
@@ -16,12 +17,18 @@ let game = new GameState();
 
 const startGame = () => {
   setInterval(() => {
-    game.update();
+    for (const deadId in game.update()) {
+      User.updateOne({ _id: deadId }, { $inc: { numDeaths: 1 } });
+    }
+
     for (const id in userToSocketMap) {
       // make updating less stable for testing
-      if (Math.random() < 0.1) {
-        getSocketFromUserID(id).emit("update", { ...game, you: id });
-      }
+      // if (Math.random() < 1 / 60) {
+      getSocketFromUserID(id).emit("update", {
+        gameState: game,
+        playerId: id,
+      });
+      // }
     }
   }, 1000 / FRAMES_PER_SEC);
 };

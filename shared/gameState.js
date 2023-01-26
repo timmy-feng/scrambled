@@ -9,15 +9,12 @@ const KILL_SIZE = 640;
 const MAP_SIZE = 1280;
 
 class GameState {
-  constructor(data = null, predictMode = false) {
-    if (data) {
-      this.eggs = data.eggs.map((egg) => new Egg(egg));
-      this.gummies = data.gummies.map((gummy) => new Vector(gummy.x, gummy.y));
-    } else {
-      this.eggs = [];
-      this.gummies = [];
-    }
-    this.predictMode = predictMode;
+  constructor(data = {}) {
+    this.eggs = data.eggs ? data.eggs.map((egg) => new Egg(egg)) : [];
+    this.gummies = data.gummies
+      ? data.gummies.map((gummy) => new Vector(gummy.x, gummy.y))
+      : [];
+    this.predictMode = data.predictMode ?? false;
   }
 
   // returns list of ids of eggs that just died (for now)
@@ -86,6 +83,7 @@ class GameState {
   }
 
   moveWhite(id, dir) {
+    console.log("moved");
     this.getById(id)?.moveWhite(dir);
   }
 
