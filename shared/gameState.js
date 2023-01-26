@@ -1,12 +1,6 @@
 const Egg = require("./egg");
 const Vector = require("./vector");
-
-const GUMMY_COUNT = 8;
-const GUMMY_SIZE = 64;
-const GUMMY_BOOST = 20;
-
-const KILL_SIZE = 640;
-const MAP_SIZE = 1280;
+const { GUMMY, GAME } = require("./constants");
 
 class GameState {
   constructor(data = {}) {
@@ -35,17 +29,17 @@ class GameState {
 
       const gummiesEaten = [];
       for (const gummy of this.gummies) {
-        if (Vector.dist(egg.yolkPos, gummy) < GUMMY_SIZE) {
+        if (Vector.dist(egg.yolkPos, gummy) < GUMMY.SIZE) {
           gummiesEaten.push(gummy);
         }
       }
 
-      egg.whiteSize += GUMMY_BOOST * gummiesEaten.length;
+      egg.whiteSize += GUMMY.BOOST * gummiesEaten.length;
       for (const gummy of gummiesEaten) {
         this.gummies.splice(this.gummies.indexOf(gummy), 1);
       }
 
-      if (egg.whiteSize < KILL_SIZE) {
+      if (egg.whiteSize < GAME.KILL_SIZE) {
         deadEggs.push(egg);
       }
     }
@@ -56,9 +50,9 @@ class GameState {
 
     // respawn gummies to max number unless in predict mode
     // if we're in predict mode, we don't want to misplace random gummies
-    while (!this.predictMode && this.gummies.length < GUMMY_COUNT) {
+    while (!this.predictMode && this.gummies.length < GUMMY.COUNT) {
       this.gummies.push(
-        new Vector(Math.random() * MAP_SIZE, Math.random() * MAP_SIZE)
+        new Vector(Math.random() * GAME.MAP_SIZE, Math.random() * GAME.MAP_SIZE)
       );
     }
 

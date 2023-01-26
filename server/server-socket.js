@@ -1,5 +1,7 @@
 const Vector = require("../shared/vector");
 const GameState = require("../shared/gameState");
+const { GAME, DIRECTION } = require("../shared/constants");
+
 const User = require("./models/user");
 
 let io;
@@ -10,8 +12,6 @@ const socketToUserMap = {}; // maps socket ID to user object
 const getSocketFromUserID = (userid) => userToSocketMap[userid];
 const getUserFromSocketID = (socketid) => socketToUserMap[socketid];
 const getSocketFromSocketID = (socketid) => io.sockets.connected[socketid];
-
-const FRAMES_PER_SEC = 60;
 
 let game = new GameState();
 
@@ -30,7 +30,7 @@ const startGame = () => {
       });
       // }
     }
-  }, 1000 / FRAMES_PER_SEC);
+  }, 1000 / GAME.FRAMES_PER_SEC);
 };
 
 startGame();
@@ -77,24 +77,17 @@ module.exports = {
 
       // socket api below
 
-      const direction = [
-        new Vector(0, 1),
-        new Vector(0, -1),
-        new Vector(1, 0),
-        new Vector(-1, 0),
-      ];
-
       socket.on("arrowDown", (arrowCode) => {
         const user = getUserFromSocketID(socket.id);
         if (user) {
-          game.moveWhite(user._id, direction[arrowCode]);
+          game.moveWhite(user._id, DIRECTION[arrowCode]);
         }
       });
 
       socket.on("arrowUp", (arrowCode) => {
         const user = getUserFromSocketID(socket.id);
         if (user) {
-          game.moveWhite(user._id, Vector.scale(-1, direction[arrowCode]));
+          game.moveWhite(user._id, Vector.scale(-1, DIRECTION[arrowCode]));
         }
       });
 

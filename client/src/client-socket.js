@@ -6,6 +6,8 @@ socket.on("connect", () => {
   post("/api/initsocket", { socketid: socket.id });
 });
 
+// poll socket ping every second so client prediction is smoother
+
 export let socketPing = 0; // in ms
 
 setInterval(() => {

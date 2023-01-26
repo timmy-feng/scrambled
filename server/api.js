@@ -69,6 +69,4 @@ router.all("*", (req, res) => {
   res.status(404).send({ msg: "API route not found" });
 });
 
-User.find({}).then((users) => console.log(users));
-
 module.exports = router;

@@ -9,28 +9,7 @@ import {
   socketPing,
 } from "../client-socket.js";
 import Vector from "../../../shared/vector.js";
-
-const arrowCode = {
-  ArrowUp: 0,
-  w: 0,
-  W: 0,
-  ArrowDown: 1,
-  s: 1,
-  S: 1,
-  ArrowRight: 2,
-  d: 2,
-  D: 2,
-  ArrowLeft: 3,
-  a: 3,
-  A: 3,
-};
-
-const direction = [
-  new Vector(0, 1),
-  new Vector(0, -1),
-  new Vector(1, 0),
-  new Vector(-1, 0),
-];
+import { ARROW_CODE, DIRECTION } from "../../../shared/constants.js";
 
 export default class InputController {
   constructor(game) {
@@ -41,12 +20,12 @@ export default class InputController {
     if (event.repeat) return;
     if (event.key == " ") {
       sendSpacebarDown();
-    } else if (event.key in arrowCode) {
-      const key = arrowCode[event.key];
+    } else if (event.key in ARROW_CODE) {
+      const key = ARROW_CODE[event.key];
       sendArrowDown(key);
       setTimeout(
         () =>
-          this.game.gameState?.moveWhite(this.game.playerId, direction[key]),
+          this.game.gameState?.moveWhite(this.game.playerId, DIRECTION[key]),
         socketPing
       );
     }
@@ -55,14 +34,14 @@ export default class InputController {
   onKeyUp(event) {
     if (event.key == " ") {
       sendSpacebarUp();
-    } else if (event.key in arrowCode) {
-      const key = arrowCode[event.key];
+    } else if (event.key in ARROW_CODE) {
+      const key = ARROW_CODE[event.key];
       sendArrowUp(key);
       setTimeout(
         () =>
           this.game.gameState?.moveWhite(
             this.game.playerId,
-            Vector.scale(-1, direction[key])
+            Vector.scale(-1, DIRECTION[key])
           ),
         socketPing
       );

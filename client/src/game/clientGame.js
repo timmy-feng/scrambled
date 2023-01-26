@@ -3,12 +3,7 @@ import { Sprite, Application } from "pixi.js";
 import GameState from "../../../shared/gameState";
 
 import Vector from "../../../shared/vector";
-
-const MAP_SIZE = 1280;
-const SCREEN_SIZE = 640;
-const YOLK_SIZE = 48;
-const GUMMY_SIZE = 12;
-const FRAMES_PER_SEC = 60;
+import { GAME, YOLK } from "../../../shared/constants";
 
 const fabiTexture = PIXI.Texture.from("fabidead.png");
 
@@ -29,7 +24,10 @@ export default class ClientGame {
       height: 640,
     });
 
-    this.renderLoop = setInterval(() => this.render(), 1000 / FRAMES_PER_SEC);
+    this.renderLoop = setInterval(
+      () => this.render(),
+      1000 / GAME.FRAMES_PER_SEC
+    );
   }
 
   serverUpdate(gameState, playerId) {
@@ -39,7 +37,7 @@ export default class ClientGame {
     if (this.predictLoop) clearInterval(this.predictLoop);
     this.predictLoop = setInterval(
       () => this.gameState.update(),
-      1000 / FRAMES_PER_SEC
+      1000 / GAME.FRAMES_PER_SEC
     );
   }
 
@@ -55,7 +53,10 @@ export default class ClientGame {
         fontSize: 36,
       });
       gameOverText.anchor = { x: 0.5, y: 0.5 };
-      gameOverText.position = { x: SCREEN_SIZE / 2, y: SCREEN_SIZE / 2 };
+      gameOverText.position = {
+        x: GAME.SCREEN_SIZE / 2,
+        y: GAME.SCREEN_SIZE / 2,
+      };
       this.pixiApp.stage.addChild(gameOverText);
       return;
     }
@@ -65,24 +66,29 @@ export default class ClientGame {
     // drawing the border - still kinda messy
     const border = new PIXI.Graphics();
     border.beginFill(0x808080, 0.5);
-    border.drawRect(-offset.x, offset.y, SCREEN_SIZE + MAP_SIZE, SCREEN_SIZE);
     border.drawRect(
-      -SCREEN_SIZE - offset.x,
-      -(SCREEN_SIZE + MAP_SIZE - offset.y),
-      SCREEN_SIZE + MAP_SIZE,
-      SCREEN_SIZE
+      -offset.x,
+      offset.y,
+      GAME.SCREEN_SIZE + GAME.MAP_SIZE,
+      GAME.SCREEN_SIZE
     );
     border.drawRect(
-      -SCREEN_SIZE - offset.x,
-      -(MAP_SIZE - offset.y),
-      SCREEN_SIZE,
-      SCREEN_SIZE + MAP_SIZE
+      -GAME.SCREEN_SIZE - offset.x,
+      -(GAME.SCREEN_SIZE + GAME.MAP_SIZE - offset.y),
+      GAME.SCREEN_SIZE + GAME.MAP_SIZE,
+      GAME.SCREEN_SIZE
     );
     border.drawRect(
-      MAP_SIZE - offset.x,
-      -(MAP_SIZE + SCREEN_SIZE - offset.y),
-      SCREEN_SIZE,
-      SCREEN_SIZE + MAP_SIZE
+      -GAME.SCREEN_SIZE - offset.x,
+      -(GAME.MAP_SIZE - offset.y),
+      GAME.SCREEN_SIZE,
+      GAME.SCREEN_SIZE + GAME.MAP_SIZE
+    );
+    border.drawRect(
+      GAME.MAP_SIZE - offset.x,
+      -(GAME.MAP_SIZE + GAME.SCREEN_SIZE - offset.y),
+      GAME.SCREEN_SIZE,
+      GAME.SCREEN_SIZE + GAME.MAP_SIZE
     );
     border.endFill();
     this.pixiApp.stage.addChild(border);
@@ -112,7 +118,7 @@ export default class ClientGame {
     for (const player of this.gameState.eggs) {
       const yolk = getCircle(
         new Vector(player.yolkPos.x - offset.x, -(player.yolkPos.y - offset.y)),
-        YOLK_SIZE,
+        YOLK.SIZE,
         0xffc040
       );
 
