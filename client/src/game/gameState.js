@@ -3,7 +3,7 @@ import { Sprite } from "pixi.js";
 
 const MAP_SIZE = 1280;
 const SCREEN_SIZE = 640;
-const YOLK_SIZE = 32;
+const YOLK_SIZE = 48;
 const GUMMY_SIZE = 12;
 
 const fabiTexture = PIXI.Texture.from("fabidead.png");
@@ -78,12 +78,16 @@ export default class GameState extends PIXI.Container {
 
       for (const player of Object.values(players)) {
         const yolk = new PIXI.Graphics();
-        yolk.beginFill(0xffc040);
+        yolk.beginFill(player.defensiveMode ? 0xff8000 : 0xffc040);
         yolk.drawCircle(0, 0, YOLK_SIZE);
         yolk.endFill();
         yolk.position.x = player.yolkPos.x - offset.x;
         yolk.position.y = -(player.yolkPos.y - offset.y);
         this.addChild(yolk);
+
+        const lenny = new PIXI.Text(player.name);
+        lenny.anchor = { x: 0.5, y: 0.5 };
+        yolk.addChild(lenny);
       }
     }
   }

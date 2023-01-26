@@ -17,3 +17,7 @@ export const movePtr = (pos) => {
 export const setClick = (clicked) => {
   socket.emit("click", clicked);
 };
+
+export const setSpacebar = (isDown) => {
+  socket.emit("spacebar", isDown);
+};

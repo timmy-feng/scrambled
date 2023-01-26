@@ -4,24 +4,29 @@ const FRAMES_PER_SEC = 60;
 
 const MAP_SIZE = 1280;
 const WHITE_SIZE = 960;
-const YOLK_SIZE = 32;
+const YOLK_SIZE = 48;
 const SCREEN_SIZE = 640;
 
 const WHITE_ACCELERATION = 1000;
-const YOLK_ACCELERATION = 10000;
+const YOLK_ACCELERATION = 1000;
 const FRICTION = 0.9;
 
 const SELF_SPRING = 2000;
-const YOLK_YOLK_SPRING = 10000;
+const YOLK_YOLK_SPRING = 50;
+const DEFENSIVE_SPRING = 50;
 const YOLK_WHITE_SPRING = 200;
 const WHITE_WHITE_SPRING = 20;
 const MAP_SPRING = 20;
 
+const BITE_INTERVAL = 20;
+const BITE_SIZE = 40;
+
 const SHRINK_SPEED = 0.2;
 
 class Egg {
-  constructor(id) {
+  constructor(id, name) {
     this.id = id;
+    this.name = name;
 
     const startX = Math.random() * MAP_SIZE;
     const startY = Math.random() * MAP_SIZE;
@@ -36,6 +41,8 @@ class Egg {
     this.yolkVel = new Vector(0, 0);
     this.yolkAcc = new Vector(0, 0);
 
+    this.defensiveMode = false;
+
     this.ptrPos = new Vector(startX, startY);
     this.ptrClicked = false;
 
@@ -44,7 +51,7 @@ class Egg {
       startY + SCREEN_SIZE / 2
     );
 
-    this.collisions = [];
+    this.collisions = {};
   }
 
   movePtr(pos) {
@@ -58,7 +65,12 @@ class Egg {
   updatePosition() {
     // handle white physics
     this.whiteMapCollision();
-    this.whiteVel.add(Vector.scalarProd(1 / FRAMES_PER_SEC, this.whiteAcc));
+    this.whiteVel.add(
+      Vector.scalarProd(
+        1 / FRAMES_PER_SEC / (this.yolkInWhite() ? 1 : 2),
+        this.whiteAcc
+      )
+    );
     this.whiteVel.scale(FRICTION);
     this.whitePos.add(Vector.scalarProd(1 / FRAMES_PER_SEC, this.whiteVel));
 
@@ -66,7 +78,7 @@ class Egg {
     let yolkAcc = new Vector(0, 0);
     if (this.ptrClicked) {
       yolkAcc = Vector.diff(this.ptrPos, this.yolkPos);
-      yolkAcc.scale(YOLK_ACCELERATION / yolkAcc.norm());
+      yolkAcc.scale(YOLK_ACCELERATION / Math.sqrt(yolkAcc.norm()));
     }
 
     // spring to pull back yolk
@@ -84,7 +96,16 @@ class Egg {
     this.screenPos.y = this.whitePos.y + SCREEN_SIZE / 2;
 
     // lets try making eggs shrink as you go
-    this.whiteSize -= SHRINK_SPEED;
+    // this.whiteSize -= SHRINK_SPEED;
+  }
+
+  yolkInWhite() {
+    return this.whitePos.dist(this.yolkPos) < this.whiteSize / 10;
+  }
+
+  inDefensiveMode() {
+    // return this.defensiveMode;
+    return this.whitePos.dist(this.yolkPos) < this.whiteSize / 10;
   }
 
   whiteMapCollision() {
@@ -113,9 +134,11 @@ class Egg {
   static yolkYolkCollision = (a, b) => {
     if (a.yolkPos.dist(b.yolkPos) < 2 * YOLK_SIZE) {
       const normal = Vector.diff(b.yolkPos, a.yolkPos);
+      const springConst = b.inDefensiveMode()
+        ? DEFENSIVE_SPRING
+        : YOLK_YOLK_SPRING;
       normal.scale(
-        (-YOLK_YOLK_SPRING * ((2 * YOLK_SIZE) / normal.norm() - 1)) /
-          FRAMES_PER_SEC
+        (-springConst * ((2 * YOLK_SIZE) / normal.norm() - 1)) / FRAMES_PER_SEC
       );
       a.yolkVel.add(normal);
     }
@@ -130,8 +153,18 @@ class Egg {
       );
       a.yolkVel.add(normal);
 
-      b.whiteSize -= 1;
-      //a.whiteSize += 1;
+      if (!b.collisions[a.id]) {
+        b.collisions[a.id] = 1;
+      } else {
+        b.collisions[a.id] += 1;
+      }
+
+      if (b.collisions[a.id] == BITE_INTERVAL) {
+        b.whiteSize -= BITE_SIZE;
+        delete b.collisions[a.id];
+      }
+    } else {
+      delete b.collisions[a.id];
     }
   };
 

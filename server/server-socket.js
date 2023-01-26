@@ -68,6 +68,13 @@ module.exports = {
         }
       });
 
+      socket.on("spacebar", (isDown) => {
+        const user = getUserFromSocketID(socket.id);
+        if (user) {
+          game.setMode(user._id, isDown);
+        }
+      });
+
       socket.on("ptr", (pos) => {
         const user = getUserFromSocketID(socket.id);
         if (user) {

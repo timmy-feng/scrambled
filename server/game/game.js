@@ -73,8 +73,13 @@ const updateGameState = () => {
   }
 };
 
+const faces = ["( ͡° ͜ʖ ͡°)", "UwU", "◕‿↼", "( ͡° ᴥ ͡°)", "(ツ)", "(-_-)"];
+
 const spawnPlayer = (id) => {
-  gameState.players[id] = new Egg(id);
+  gameState.players[id] = new Egg(
+    id,
+    faces[Math.floor(Math.random() * faces.length)]
+  );
 };
 
 const killPlayer = (id) => {
@@ -94,6 +99,14 @@ const movePtr = (id, pos) => {
 const setClick = (id, clicked) => {
   if (!gameState.players[id]) return;
   gameState.players[id].ptrClicked = clicked;
+  // if (clicked) {
+  //   gameState.players[id].onClick();
+  // }
+};
+
+const setMode = (id, mode) => {
+  if (!gameState.players[id]) return;
+  gameState.players[id].defensiveMode = mode;
 };
 
 module.exports = {
@@ -104,4 +117,5 @@ module.exports = {
   movePlayer,
   movePtr,
   setClick,
+  setMode,
 };

@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { moveWhite, movePtr, setClick, socket } from "../client-socket.js";
+import {
+  moveWhite,
+  movePtr,
+  setClick,
+  socket,
+  setSpacebar,
+} from "../client-socket.js";
 import { Application } from "pixi.js";
 
 import GameState from "../game/gameState.js";
@@ -21,11 +27,14 @@ const keyToMove = {
 };
 
 const onKeyDown = (event) => {
-  if (!event.repeat && keyToMove[event.key]) moveWhite(keyToMove[event.key]);
+  if (event.repeat) return;
+  if (event.key == " ") setSpacebar(true);
+  else if (keyToMove[event.key]) moveWhite(keyToMove[event.key]);
 };
 
 const onKeyUp = (event) => {
-  if (keyToMove[event.key])
+  if (event.key == " ") setSpacebar(false);
+  else if (keyToMove[event.key])
     moveWhite({
       x: -keyToMove[event.key].x,
       y: -keyToMove[event.key].y,
