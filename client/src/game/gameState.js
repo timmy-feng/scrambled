@@ -23,6 +23,7 @@ export default class GameState extends PIXI.Container {
     } else {
       const offset = you.screenPos;
 
+      // drawing the border - still kinda messy
       const border = new PIXI.Graphics();
       border.beginFill(0x808080, 0.5);
       border.drawRect(-offset.x, offset.y, SCREEN_SIZE + MAP_SIZE, SCREEN_SIZE);
@@ -48,16 +49,6 @@ export default class GameState extends PIXI.Container {
       this.addChild(border);
 
       for (const gummy of gummies) {
-        /*
-        const yum = new PIXI.Graphics();
-        yum.beginFill(0xffc0ff);
-        yum.drawCircle(0, 0, GUMMY_SIZE);
-        yum.endFill();
-        yum.position.x = gummy.x - offset.x;
-        yum.position.y = -(gummy.y - offset.y);
-        this.addChild(yum);
-        */
-
         const fabi = new Sprite(fabiTexture);
         fabi.position.x = gummy.x - offset.x;
         fabi.position.y = -(gummy.y - offset.y);
@@ -67,28 +58,38 @@ export default class GameState extends PIXI.Container {
       }
 
       for (const player of Object.values(players)) {
-        const white = new PIXI.Graphics();
-        white.beginFill(0xffffff);
-        white.drawCircle(0, 0, player.whiteSize / 10);
-        white.endFill();
-        white.position.x = player.whitePos.x - offset.x;
-        white.position.y = -(player.whitePos.y - offset.y);
-        this.addChild(white);
+        this.drawCircle(
+          new Vector(
+            player.whitePos.x - offset.x,
+            -(player.whitePos.y - offset.y)
+          ),
+          player.whiteSize / 10,
+          0xffffff
+        );
       }
 
       for (const player of Object.values(players)) {
-        const yolk = new PIXI.Graphics();
-        yolk.beginFill(player.defensiveMode ? 0xff8000 : 0xffc040);
-        yolk.drawCircle(0, 0, YOLK_SIZE);
-        yolk.endFill();
-        yolk.position.x = player.yolkPos.x - offset.x;
-        yolk.position.y = -(player.yolkPos.y - offset.y);
-        this.addChild(yolk);
+        const yolk = this.drawCircle(
+          new Vector(
+            player.yolkPos.x - offset.x,
+            -(player.yolkPos.y - offset.y)
+          ),
+          YOLK_SIZE,
+          player.defensiveMode ? 0xff8000 : 0xffc040
+        );
 
         const lenny = new PIXI.Text(player.name);
         lenny.anchor = { x: 0.5, y: 0.5 };
         yolk.addChild(lenny);
       }
     }
+  }
+
+  drawCircle(center, radius, color) {
+    const circle = new PIXI.Graphics();
+    circle.beginFill(color);
+    circle.drawCircle(center.x, center.y, radius);
+    this.addChild(circle);
+    return circle;
   }
 }

@@ -1,3 +1,5 @@
+const { Vector } = require("./game/utilities");
+
 const game = require("./game/game");
 
 let io;
@@ -61,31 +63,65 @@ module.exports = {
         removeUser(user, socket);
       });
 
-      socket.on("move", (dir) => {
+      // socket api below
+
+      const direction = [
+        new Vector(0, 1),
+        new Vector(0, -1),
+        new Vector(1, 0),
+        new Vector(-1, 0),
+      ];
+
+      socket.on("arrowDown", (arrowCode) => {
         const user = getUserFromSocketID(socket.id);
         if (user) {
-          game.movePlayer(user._id, dir);
+          console.log("Arrow pressed :" + arrowCode);
+          game.movePlayer(user._id, direction[arrowCode]);
         }
       });
 
-      socket.on("spacebar", (isDown) => {
+      socket.on("arrowUp", (arrowCode) => {
         const user = getUserFromSocketID(socket.id);
         if (user) {
-          game.setMode(user._id, isDown);
+          game.movePlayer(
+            user._id,
+            Vector.scalarProd(-1, direction[arrowCode])
+          );
         }
       });
 
-      socket.on("ptr", (pos) => {
+      socket.on("spacebarDown", () => {
         const user = getUserFromSocketID(socket.id);
         if (user) {
-          game.movePtr(user._id, pos);
+          game.setMode(user._id, true);
         }
       });
 
-      socket.on("click", (clicked) => {
+      socket.on("spacebarUp", () => {
         const user = getUserFromSocketID(socket.id);
         if (user) {
-          game.setClick(user._id, clicked);
+          game.setMode(user._id, false);
+        }
+      });
+
+      socket.on("mouseDown", () => {
+        const user = getUserFromSocketID(socket.id);
+        if (user) {
+          game.setClick(user._id, true);
+        }
+      });
+
+      socket.on("mouseUp", () => {
+        const user = getUserFromSocketID(socket.id);
+        if (user) {
+          game.setClick(user._id, false);
+        }
+      });
+
+      socket.on("mouseMove", (mousePos) => {
+        const user = getUserFromSocketID(socket.id);
+        if (user) {
+          game.movePtr(user._id, mousePos);
         }
       });
     });

@@ -1,45 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  moveWhite,
-  movePtr,
-  setClick,
-  socket,
-  setSpacebar,
-} from "../client-socket.js";
+import { socket } from "../client-socket.js";
 import { Application } from "pixi.js";
 
 import GameState from "../game/gameState.js";
-import "./Game.css";
+import {
+  onKeyDown,
+  onKeyUp,
+  onMouseDown,
+  onMouseMove,
+  onMouseUp,
+} from "../game/inputController.js";
 import { get } from "../utilities.js";
 
-const MAP_SIZE = 1280;
-const SCREEN_SIZE = 640;
-
-const keyToMove = {
-  ArrowUp: { x: 0, y: 1 },
-  ArrowDown: { x: 0, y: -1 },
-  ArrowRight: { x: 1, y: 0 },
-  ArrowLeft: { x: -1, y: 0 },
-  w: { x: 0, y: 1 },
-  s: { x: 0, y: -1 },
-  d: { x: 1, y: 0 },
-  a: { x: -1, y: 0 },
-};
-
-const onKeyDown = (event) => {
-  if (event.repeat) return;
-  if (event.key == " ") setSpacebar(true);
-  else if (keyToMove[event.key]) moveWhite(keyToMove[event.key]);
-};
-
-const onKeyUp = (event) => {
-  if (event.key == " ") setSpacebar(false);
-  else if (keyToMove[event.key])
-    moveWhite({
-      x: -keyToMove[event.key].x,
-      y: -keyToMove[event.key].y,
-    });
-};
+import "./Game.css";
 
 const Game = (props) => {
   const canvas = useRef();
@@ -65,15 +38,17 @@ const Game = (props) => {
     socket.on("update", processUpdate);
   });
 
-  const processUpdate = (gameState) => {
+  const processUpdate = (update) => {
     if (game) {
+      // empty the stage if currently displaying
       if (game.stage.children.length > 0) {
         game.stage.removeChild(game.stage.children[0]);
       }
-      game.stage.addChild(new GameState(gameState));
+      game.stage.addChild(new GameState(update));
     }
   };
 
+  // initialize PIXI instance
   useEffect(() => {
     if (canvas) {
       setGame(
@@ -87,28 +62,18 @@ const Game = (props) => {
     }
   }, [canvas]);
 
-  const handleMouseDown = () => setClick(true);
-  const handleMouseUp = () => setClick(false);
-
-  const handleMouseMove = (event) => {
-    const rect = canvas.current.getBoundingClientRect();
-    movePtr({
-      x: event.clientX - rect.left,
-      y: -(event.clientY - rect.top),
-    });
-  };
-
   return (
     <>
       <div className="Game-container">
         <canvas
           ref={canvas}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
+          onMouseDown={onMouseDown}
+          onMouseMove={(event) => onMouseMove(event, canvas)}
+          onMouseUp={onMouseUp}
+          onMouseLeave={onMouseUp}
         />
       </div>
+
       {numDeaths ? (
         <div className="Game-container">
           <p>your egg has suffered {numDeaths} deaths</p>

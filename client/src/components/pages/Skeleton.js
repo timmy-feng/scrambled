@@ -9,7 +9,6 @@ import { Link } from "@reach/router";
 import "../../utilities.css";
 import "./Skeleton.css";
 
-//TODO: REPLACE WITH YOUR OWN CLIENT_ID
 const GOOGLE_CLIENT_ID =
   "405770742094-nsvn5kjdutoiito75u15c7b78eqmekmf.apps.googleusercontent.com";
 
