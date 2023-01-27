@@ -50,7 +50,6 @@ router.post("/initsocket", (req, res) => {
 
 router.get("/numDeaths", (req, res) => {
   if (req.user) {
-    console.log(req.user._id);
     User.findOne({ _id: req.user._id }).then((user) => {
       if (user) res.send({ numDeaths: user.numDeaths });
     });

@@ -6,6 +6,7 @@ import Vector from "../../../shared/vector";
 import { GAME, YOLK } from "../../../shared/constants";
 
 const fabiTexture = PIXI.Texture.from("fabidead.png");
+const kirbyAy = new Audio("kirbyAy.wav");
 
 const getCircle = (center, radius, color) => {
   const circle = new PIXI.Graphics();
@@ -28,6 +29,10 @@ export default class ClientGame {
       () => this.render(),
       1000 / GAME.FRAMES_PER_SEC
     );
+
+    // how many times we played AY
+    // make sure we're not behind what the game state says
+    this.playAy = 0;
   }
 
   serverUpdate(gameState, playerId) {
@@ -60,6 +65,11 @@ export default class ClientGame {
       };
       this.pixiApp.stage.addChild(gameOverText);
       return;
+    }
+
+    if (this.playAy < playerEgg.playAy) {
+      kirbyAy.play();
+      this.playAy = playerEgg.playAy;
     }
 
     const offset = playerEgg.screenPos;
@@ -123,8 +133,11 @@ export default class ClientGame {
         0xffc040
       );
 
+      const dir = Vector.diff(player.yolkPos, player.mousePos);
+
       const lenny = new PIXI.Text(player.name);
       lenny.anchor = { x: 0.5, y: 0.5 };
+      lenny.rotation = -Math.atan2(dir.y, dir.x) + Math.PI / 2;
       yolk.addChild(lenny);
 
       this.pixiApp.stage.addChild(yolk);

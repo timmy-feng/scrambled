@@ -35,6 +35,7 @@ class GameState {
       }
 
       egg.whiteSize += GUMMY.BOOST * gummiesEaten.length;
+      if (gummiesEaten.length > 0) egg.playAy += 1;
       for (const gummy of gummiesEaten) {
         this.gummies.splice(this.gummies.indexOf(gummy), 1);
       }

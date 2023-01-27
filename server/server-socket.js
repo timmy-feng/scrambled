@@ -17,11 +17,7 @@ let game = new GameState();
 const startGame = () => {
   setInterval(() => {
     for (const deadId of game.update()) {
-      User.updateOne({ _id: deadId }, { $inc: { numDeaths: 1 } }).then(
-        (user) => {
-          console.log(user);
-        }
-      );
+      User.updateOne({ _id: deadId }, { $inc: { numDeaths: 1 } });
     }
 
     for (const id in userToSocketMap) {

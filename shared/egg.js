@@ -12,7 +12,6 @@ const {
 class Egg {
   // requires data.id
   constructor(data) {
-    console.log(data.id);
     this.id = data.id;
     this.name = data.name ?? FACES[Math.floor(Math.random() * FACES.length)];
 
@@ -36,6 +35,9 @@ class Egg {
       new Vector(startX - GAME.SCREEN_SIZE / 2, startY + GAME.SCREEN_SIZE / 2);
 
     this.collisions = data.collisions ? { ...data.collisions } : {};
+
+    // let's try this again LOL
+    this.playAy = data.playAy ?? 0;
   }
 
   // mouse position is given relative to screen position
