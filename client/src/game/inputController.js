@@ -37,7 +37,7 @@ export default class InputController {
       const key = ARROW_CODE[event.key];
       sendArrowUp(key);
       setTimeout(
-        () => this.game.gameState?.setArrow(this.game.playerId, false),
+        () => this.game.gameState?.setArrow(this.game.playerId, key, false),
         socketPing
       );
     }

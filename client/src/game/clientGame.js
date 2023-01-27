@@ -31,8 +31,9 @@ export default class ClientGame {
   }
 
   serverUpdate(gameState, playerId) {
-    this.gameState = new GameState({ ...gameState, predictMode: true });
     this.playerId = playerId;
+
+    this.gameState = new GameState({ ...gameState, predictMode: true });
 
     if (this.predictLoop) clearInterval(this.predictLoop);
     this.predictLoop = setInterval(

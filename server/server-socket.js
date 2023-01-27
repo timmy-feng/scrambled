@@ -63,6 +63,11 @@ module.exports = {
     io.on("connection", (socket) => {
       console.log(`socket has connected ${socket.id}`);
 
+      // this code generates fake latency
+      // socket.use((socket, next) => {
+      //   setTimeout(() => next(), Math.random() * 300);
+      // });
+
       socket.on("disconnect", (reason) => {
         const user = getUserFromSocketID(socket.id);
         if (!user) return; // not sure why I had to add this line, but it works now
