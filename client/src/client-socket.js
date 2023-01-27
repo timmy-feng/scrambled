@@ -7,19 +7,8 @@ socket.on("connect", () => {
 });
 
 // poll socket ping so client prediction is smoother
-const PING_FREQUENCY = 1000;
-
 export let socketPing = 0; // in ms
-let pingQueue = [];
-
-setInterval(() => {
-  socket.emit("pingTest");
-  pingQueue.push(Date.now());
-}, PING_FREQUENCY);
-
-socket.on("pingResult", () => {
-  socketPing = 0.9 * socketPing + 0.1 * (Date.now() - pingQueue.shift());
-});
+socket.on("pong", (latency) => (socketPing = 0.9 * socketPing + 0.1 * latency));
 
 // socket api below
 

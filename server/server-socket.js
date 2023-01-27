@@ -60,7 +60,7 @@ const removeUser = (user, socket) => {
 
 module.exports = {
   init: (http) => {
-    io = require("socket.io")(http);
+    io = require("socket.io")(http, { pingInterval: 1000 });
 
     io.on("connection", (socket) => {
       console.log(`socket has connected ${socket.id}`);
@@ -75,10 +75,6 @@ module.exports = {
         if (!user) return; // not sure why I had to add this line, but it works now
         console.log(`Disconnected ${user._id}`);
         removeUser(user, socket);
-      });
-
-      socket.on("pingTest", () => {
-        socket.emit("pingResult");
       });
 
       // socket api below
