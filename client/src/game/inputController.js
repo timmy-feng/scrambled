@@ -38,7 +38,7 @@ export default class InputController {
       sendArrowUp(key);
       setTimeout(
         () => this.game.gameState?.setArrow(this.game.playerId, false),
-        socketPing / 2
+        socketPing
       );
     }
   }
@@ -48,7 +48,7 @@ export default class InputController {
     sendMouseDown();
     setTimeout(
       () => this.game.gameState?.setMouse(this.game.playerId, true),
-      socketPing / 2
+      socketPing
     );
   }
 
@@ -57,7 +57,7 @@ export default class InputController {
     sendMouseUp();
     setTimeout(
       () => this.game.gameState?.setMouse(this.game.playerId, false),
-      socketPing / 2
+      socketPing
     );
   }
 
@@ -70,7 +70,7 @@ export default class InputController {
     sendMouseMove(mousePos);
     setTimeout(
       () => this.game.gameState?.moveMouse(this.game.playerId, mousePos),
-      socketPing / 2
+      socketPing
     );
   }
 }

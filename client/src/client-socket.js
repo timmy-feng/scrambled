@@ -7,6 +7,7 @@ socket.on("connect", () => {
 });
 
 // poll socket ping every second so client prediction is smoother
+const PING_FREQUENCY = 200;
 
 export let socketPing = 0; // in ms
 let pingQueue = [];
@@ -15,7 +16,7 @@ setInterval(() => {
   console.log(`Ping: ${socketPing}`);
   socket.emit("pingTest");
   pingQueue.push(Date.now());
-}, 1000);
+}, PING_FREQUENCY);
 
 socket.on("pingResult", () => {
   socketPing = Date.now() - pingQueue.shift();
