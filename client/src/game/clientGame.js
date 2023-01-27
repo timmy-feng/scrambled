@@ -60,7 +60,7 @@ export default class ClientGame {
     //     }
     //   }
     // }
-    if (!this.gameState) this.gameState = nextState;
+    this.gameState = nextState;
   }
 
   render() {

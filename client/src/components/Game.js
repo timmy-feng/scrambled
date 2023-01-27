@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { getSpringAcc } from "../../../shared/egg.js";
 import { socket, socketPing } from "../client-socket.js";
 
 import ClientGame from "../game/clientGame.js";
@@ -20,9 +21,6 @@ const Game = (props) => {
 
   const [numDeaths, setNumDeaths] = useState();
   const [ping, setPing] = useState();
-
-  const [updateTime, setUpdateTime] = useState();
-  const [updateDiff, setUpdateDiff] = useState();
 
   // useEffect(() => {
   //   setInterval(() => {
@@ -56,11 +54,12 @@ const Game = (props) => {
   }, [input]);
 
   useEffect(() => {
-    socket.on("update", processUpdate);
-  });
+    if (game) {
+      socket.on("update", processUpdate);
+    }
+  }, [game]);
 
   const processUpdate = (update) => {
-    setUpdateTime(Date.now());
     if (game) game.serverUpdate(update.gameState, update.playerId);
   };
 
@@ -98,12 +97,6 @@ const Game = (props) => {
       {ping ? (
         <div className="Game-container">
           <p>ping {ping}</p>
-        </div>
-      ) : null}
-
-      {updateDiff ? (
-        <div className="Game-container">
-          <p>last update {updateDiff} ms ago</p>
         </div>
       ) : null}
     </>
