@@ -13,7 +13,6 @@ export let socketPing = 0; // in ms
 let pingQueue = [];
 
 setInterval(() => {
-  console.log(`Ping: ${socketPing}`);
   socket.emit("pingTest");
   pingQueue.push(Date.now());
 }, PING_FREQUENCY);

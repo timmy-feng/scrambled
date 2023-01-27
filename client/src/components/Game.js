@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { socket } from "../client-socket.js";
+import { socket, socketPing } from "../client-socket.js";
 
 import ClientGame from "../game/clientGame.js";
 import InputController from "../game/inputController.js";
@@ -13,10 +13,20 @@ const Game = (props) => {
   const [input, setInput] = useState();
 
   const [numDeaths, setNumDeaths] = useState();
+  const [ping, setPing] = useState();
 
   useEffect(() => {
     get("/api/numDeaths").then((result) => setNumDeaths(result.numDeaths));
   }, [props.userId]);
+
+  useEffect(() => {
+    const pingLoop = setInterval(() => {
+      setPing(Math.floor(socketPing));
+    }, 1000);
+    return () => {
+      clearInterval(pingLoop);
+    };
+  }, []);
 
   useEffect(() => {
     if (input) {
@@ -63,6 +73,12 @@ const Game = (props) => {
       {numDeaths ? (
         <div className="Game-container">
           <p>your egg has suffered {numDeaths} deaths</p>
+        </div>
+      ) : null}
+
+      {ping ? (
+        <div className="Game-container">
+          <p>ping {ping}</p>
         </div>
       ) : null}
     </>
