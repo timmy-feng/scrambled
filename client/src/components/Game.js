@@ -12,8 +12,25 @@ const Game = (props) => {
   const [game, setGame] = useState();
   const [input, setInput] = useState();
 
+  useEffect(() => {
+    setInterval(() => {
+      console.log(game);
+    }, 5000);
+  }, [game]);
+
   const [numDeaths, setNumDeaths] = useState();
   const [ping, setPing] = useState();
+
+  const [updateTime, setUpdateTime] = useState();
+  const [updateDiff, setUpdateDiff] = useState();
+
+  // useEffect(() => {
+  //   setInterval(() => {
+  //     if (updateTime) {
+  //       setUpdateDiff(Date.now() - updateTime);
+  //     }
+  //   }, 1000 / 60);
+  // }, [updateTime]);
 
   useEffect(() => {
     get("/api/numDeaths").then((result) => setNumDeaths(result.numDeaths));
@@ -22,6 +39,7 @@ const Game = (props) => {
   useEffect(() => {
     const pingLoop = setInterval(() => {
       setPing(Math.floor(socketPing));
+      // console.log(input);
     }, 1000);
     return () => {
       clearInterval(pingLoop);
@@ -42,6 +60,7 @@ const Game = (props) => {
   });
 
   const processUpdate = (update) => {
+    setUpdateTime(Date.now());
     if (game) game.serverUpdate(update.gameState, update.playerId);
   };
 
@@ -79,6 +98,12 @@ const Game = (props) => {
       {ping ? (
         <div className="Game-container">
           <p>ping {ping}</p>
+        </div>
+      ) : null}
+
+      {updateDiff ? (
+        <div className="Game-container">
+          <p>last update {updateDiff} ms ago</p>
         </div>
       ) : null}
     </>

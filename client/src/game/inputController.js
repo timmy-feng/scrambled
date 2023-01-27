@@ -11,9 +11,12 @@ import {
 import Vector from "../../../shared/vector.js";
 import { ARROW_CODE } from "../../../shared/constants.js";
 
+const MOUSE_PER_SEC = 10;
+
 export default class InputController {
   constructor(game) {
     this.game = game;
+    this.mouseTimeout = false;
   }
 
   onKeyDown(event) {
@@ -62,6 +65,8 @@ export default class InputController {
   }
 
   onMouseMove(event, canvas) {
+    if (this.mouseTimeout) return;
+
     const rect = canvas.current.getBoundingClientRect();
     const mousePos = new Vector(
       event.clientX - rect.left,
@@ -72,5 +77,8 @@ export default class InputController {
       () => this.game.gameState?.moveMouse(this.game.playerId, mousePos),
       socketPing
     );
+
+    this.mouseTimeout = true;
+    setTimeout(() => (this.mouseTimeout = false), 1000 / MOUSE_PER_SEC);
   }
 }

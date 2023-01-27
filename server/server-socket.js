@@ -14,7 +14,7 @@ const getSocketFromSocketID = (socketid) => io.sockets.connected[socketid];
 
 let game = new GameState();
 
-const UPDATES_PER_SEC = 5;
+const UPDATES_PER_SEC = 60;
 
 const startGame = () => {
   setInterval(() => {

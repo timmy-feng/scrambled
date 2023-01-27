@@ -8,7 +8,7 @@ socket.on("connect", () => {
 
 // poll socket ping so client prediction is smoother
 export let socketPing = 0; // in ms
-socket.on("pong", (latency) => (socketPing = 0.9 * socketPing + 0.1 * latency));
+socket.on("pong", (latency) => (socketPing = 0.9 * socketPing + 0.2 * latency));
 
 // socket api below
 
