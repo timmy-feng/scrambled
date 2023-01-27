@@ -195,6 +195,7 @@ class Egg {
       // only after being in contact for BITE_INTERVAL time will a bite be taken
       if (++b.collisions[a.id] == BITE.INTERVAL) {
         b.whiteSize -= BITE.SIZE;
+        // a.mouseClicked = false;
         delete b.collisions[a.id];
       }
     } else {

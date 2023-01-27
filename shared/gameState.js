@@ -1,6 +1,7 @@
 const Egg = require("./egg");
 const Vector = require("./vector");
-const { GUMMY, GAME } = require("./constants");
+const Wave = require("./wave");
+const { GUMMY, GAME, YOLK } = require("./constants");
 
 class GameState {
   constructor(data = {}) {
@@ -8,11 +9,16 @@ class GameState {
     this.gummies = data.gummies
       ? data.gummies.map((gummy) => new Vector(gummy.x, gummy.y))
       : [];
+    // this.waves = data.waves ? data.waves.map((wave) => new Wave(wave)) : [];
     this.predictMode = data.predictMode ?? false;
   }
 
   // returns list of ids of eggs that just died (for now)
   update() {
+    // for (const wave of this.waves) {
+    //   wave.updatePosition();
+    // }
+
     for (const a of this.eggs) {
       for (const b of this.eggs) {
         if (a.id != b.id) {
@@ -87,7 +93,16 @@ class GameState {
   }
 
   setMouse(id, clicked) {
-    this.getById(id)?.setMouse(clicked);
+    const egg = this.getById(id);
+    if (egg) {
+      egg.setMouse(clicked);
+      // if (clicked) {
+      //   let dir = Vector.diff(egg.mousePos, egg.yolkPos);
+      //   dir = Vector.scale(1 / dir.norm(), dir);
+      //   const pos = Vector.sum(egg.yolkPos, Vector.scale(1.5 * YOLK.SIZE, dir));
+      //   this.waves.push(new Wave({ pos, dir }));
+      // }
+    }
   }
 }
 

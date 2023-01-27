@@ -8,6 +8,15 @@ import { GAME, YOLK } from "../../../shared/constants";
 const fabiTexture = PIXI.Texture.from("fabidead.png");
 const kirbyAy = new Audio("kirbyAy.wav");
 
+const WEIGHT_OLD = 0.9;
+
+const getWeightedAverage = (prev, next) => {
+  return Vector.sum(
+    Vector.scale(WEIGHT_OLD, prev),
+    Vector.scale(1 - WEIGHT_OLD, next)
+  );
+};
+
 const getCircle = (center, radius, color) => {
   const circle = new PIXI.Graphics();
   circle.beginFill(color);
@@ -25,10 +34,12 @@ export default class ClientGame {
       height: 640,
     });
 
-    this.renderLoop = setInterval(
-      () => this.render(),
-      1000 / GAME.FRAMES_PER_SEC
-    );
+    this.renderLoop = setInterval(() => {
+      if (this.gameState) {
+        this.gameState.update();
+        this.render();
+      }
+    }, 1000 / GAME.FRAMES_PER_SEC);
 
     // how many times we played AY
     // make sure we're not behind what the game state says
@@ -37,14 +48,19 @@ export default class ClientGame {
 
   serverUpdate(gameState, playerId) {
     this.playerId = playerId;
-
-    this.gameState = new GameState({ ...gameState, predictMode: true });
-
-    if (this.predictLoop) clearInterval(this.predictLoop);
-    this.predictLoop = setInterval(
-      () => this.gameState.update(),
-      1000 / GAME.FRAMES_PER_SEC
-    );
+    const nextState = new GameState({ ...gameState, predictMode: true });
+    if (this.gameState) {
+      for (const next in nextState.eggs) {
+        const prev = this.gameState.getById(next.id);
+        if (prev) {
+          next.whitePos = getWeightedAverage(prev.whitePos, next.whitePos);
+          next.yolkPos = getWeightedAverage(prev.yolkPos, next.yolkPos);
+          next.screenPos = getWeightedAverage(prev.screenPos, next.screenPos);
+          next.mousePos = getWeightedAverage(prev.mousePos, next.mousePos);
+        }
+      }
+    }
+    this.gameState = nextState;
   }
 
   render() {
@@ -142,5 +158,15 @@ export default class ClientGame {
 
       this.pixiApp.stage.addChild(yolk);
     }
+
+    // for (const wave of this.gameState.waves) {
+    //   this.pixiApp.stage.addChild(
+    //     getCircle(
+    //       new Vector(wave.pos.x - offset.x, -(wave.pos.y - offset.y)),
+    //       20,
+    //       0x00ff00
+    //     )
+    //   );
+    // }
   }
 }
