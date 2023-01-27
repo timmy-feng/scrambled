@@ -73,7 +73,8 @@ class GameState {
   }
 
   disconnectPlayer(id) {
-    this.eggs.splice(this.indexOfId(id), 1);
+    const i = this.indexOfId(id);
+    if (i != -1) this.eggs.splice(i, 1);
   }
 
   setArrow(id, key, pressed) {
