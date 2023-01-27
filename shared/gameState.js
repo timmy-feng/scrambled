@@ -40,12 +40,12 @@ class GameState {
       }
 
       if (egg.whiteSize < GAME.KILL_SIZE) {
-        deadEggs.push(egg);
+        deadEggs.push(egg.id);
       }
     }
 
-    for (const egg of deadEggs) {
-      this.eggs.splice(this.eggs.indexOf(egg), 1);
+    for (const id of deadEggs) {
+      this.eggs.splice(this.indexOfId(id), 1);
     }
 
     // respawn gummies to max number unless in predict mode
@@ -56,7 +56,7 @@ class GameState {
       );
     }
 
-    return deadEggs.map((egg) => egg.id);
+    return deadEggs;
   }
 
   indexOfId(id) {

@@ -16,8 +16,12 @@ let game = new GameState();
 
 const startGame = () => {
   setInterval(() => {
-    for (const deadId in game.update()) {
-      User.updateOne({ _id: deadId }, { $inc: { numDeaths: 1 } });
+    for (const deadId of game.update()) {
+      User.updateOne({ _id: deadId }, { $inc: { numDeaths: 1 } }).then(
+        (user) => {
+          console.log(user);
+        }
+      );
     }
 
     for (const id in userToSocketMap) {
@@ -45,6 +49,8 @@ const addUser = (user, socket) => {
 
   userToSocketMap[user._id] = socket;
   socketToUserMap[socket.id] = user;
+
+  console.log(`${user._id} joined`);
 
   game.spawnPlayer(user._id);
 };

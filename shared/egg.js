@@ -12,6 +12,7 @@ const {
 class Egg {
   // requires data.id
   constructor(data) {
+    console.log(data.id);
     this.id = data.id;
     this.name = data.name ?? FACES[Math.floor(Math.random() * FACES.length)];
 
