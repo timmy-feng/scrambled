@@ -3,8 +3,6 @@ const { GAME } = require("../shared/constants");
 
 const User = require("./models/user");
 
-const TEST_PING = 200;
-
 let io;
 
 const userToSocketMap = {}; // maps user ID to socket object
@@ -23,14 +21,13 @@ const startGame = () => {
     }
 
     for (const id in userToSocketMap) {
-      setTimeout(
-        () =>
-          getSocketFromUserID(id)?.emit("update", {
-            gameState: game,
-            playerId: id,
-          }),
-        TEST_PING / 2
-      );
+      // make updating less stable for testing
+      // if (Math.random() < 1 / 60) {
+      getSocketFromUserID(id).emit("update", {
+        gameState: game,
+        playerId: id,
+      });
+      // }
     }
   }, 1000 / GAME.FRAMES_PER_SEC);
 };
@@ -74,27 +71,23 @@ module.exports = {
       });
 
       socket.on("pingTest", () => {
-        setTimeout(() => socket.emit("pingResult"), TEST_PING);
+        socket.emit("pingResult");
       });
 
       // socket api below
 
       socket.on("arrowDown", (arrowCode) => {
-        setTimeout(() => {
-          const user = getUserFromSocketID(socket.id);
-          if (user) {
-            game.setArrow(user._id, arrowCode, true);
-          }
-        }, TEST_PING / 2);
+        const user = getUserFromSocketID(socket.id);
+        if (user) {
+          game.setArrow(user._id, arrowCode, true);
+        }
       });
 
       socket.on("arrowUp", (arrowCode) => {
-        setTimeout(() => {
-          const user = getUserFromSocketID(socket.id);
-          if (user) {
-            game.setArrow(user._id, arrowCode, false);
-          }
-        }, TEST_PING / 2);
+        const user = getUserFromSocketID(socket.id);
+        if (user) {
+          game.setArrow(user._id, arrowCode, false);
+        }
       });
 
       // socket.on("spacebarDown", () => {
@@ -112,30 +105,24 @@ module.exports = {
       // });
 
       socket.on("mouseDown", () => {
-        setTimeout(() => {
-          const user = getUserFromSocketID(socket.id);
-          if (user) {
-            game.setMouse(user._id, true);
-          }
-        }, TEST_PING / 2);
+        const user = getUserFromSocketID(socket.id);
+        if (user) {
+          game.setMouse(user._id, true);
+        }
       });
 
       socket.on("mouseUp", () => {
-        setTimeout(() => {
-          const user = getUserFromSocketID(socket.id);
-          if (user) {
-            game.setMouse(user._id, false);
-          }
-        }, TEST_PING / 2);
+        const user = getUserFromSocketID(socket.id);
+        if (user) {
+          game.setMouse(user._id, false);
+        }
       });
 
       socket.on("mouseMove", (mousePos) => {
-        setTimeout(() => {
-          const user = getUserFromSocketID(socket.id);
-          if (user) {
-            game.moveMouse(user._id, mousePos);
-          }
-        }, TEST_PING / 2);
+        const user = getUserFromSocketID(socket.id);
+        if (user) {
+          game.moveMouse(user._id, mousePos);
+        }
       });
     });
   },

@@ -6,7 +6,7 @@ socket.on("connect", () => {
   post("/api/initsocket", { socketid: socket.id });
 });
 
-// poll socket ping every second so client prediction is smoother
+// poll socket ping so client prediction is smoother
 const PING_FREQUENCY = 200;
 
 export let socketPing = 0; // in ms
@@ -19,7 +19,7 @@ setInterval(() => {
 }, PING_FREQUENCY);
 
 socket.on("pingResult", () => {
-  socketPing = Date.now() - pingQueue.shift();
+  socketPing = 0.9 * socketPing + 0.1 * (Date.now() - pingQueue.shift());
 });
 
 // socket api below
