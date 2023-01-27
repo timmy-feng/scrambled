@@ -14,12 +14,10 @@ const getSocketFromSocketID = (socketid) => io.sockets.connected[socketid];
 
 let game = new GameState();
 
+const UPDATES_PER_SEC = 5;
+
 const startGame = () => {
   setInterval(() => {
-    for (const deadId of game.update()) {
-      User.updateOne({ _id: deadId }, { $inc: { numDeaths: 1 } });
-    }
-
     for (const id in userToSocketMap) {
       // make updating less stable for testing
       // if (Math.random() < 1 / 60) {
@@ -28,6 +26,12 @@ const startGame = () => {
         playerId: id,
       });
       // }
+    }
+  }, 1000 / UPDATES_PER_SEC);
+
+  setInterval(() => {
+    for (const deadId of game.update()) {
+      User.updateOne({ _id: deadId }, { $inc: { numDeaths: 1 } });
     }
   }, 1000 / GAME.FRAMES_PER_SEC);
 };
