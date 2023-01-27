@@ -7,7 +7,7 @@ socket.on("connect", () => {
 });
 
 // poll socket ping so client prediction is smoother
-const PING_FREQUENCY = 200;
+const PING_FREQUENCY = 1000;
 
 export let socketPing = 0; // in ms
 let pingQueue = [];
