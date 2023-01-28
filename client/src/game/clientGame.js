@@ -8,14 +8,14 @@ import { GAME, YOLK } from "../../../shared/constants";
 const fabiTexture = PIXI.Texture.from("fabidead.png");
 const kirbyAy = new Audio("kirbyAy.wav");
 
-// const WEIGHT_OLD = 0.99;
+const WEIGHT_OLD = 0.8;
 
-// const getWeightedAverage = (prev, next) => {
-//   return Vector.sum(
-//     Vector.scale(WEIGHT_OLD, prev),
-//     Vector.scale(1 - WEIGHT_OLD, next)
-//   );
-// };
+const getWeightedAverage = (prev, next) => {
+  return Vector.sum(
+    Vector.scale(WEIGHT_OLD, prev),
+    Vector.scale(1 - WEIGHT_OLD, next)
+  );
+};
 
 const getCircle = (center, radius, color) => {
   const circle = new PIXI.Graphics();
@@ -49,17 +49,17 @@ export default class ClientGame {
   serverUpdate(gameState, playerId) {
     this.playerId = playerId;
     const nextState = new GameState({ ...gameState, predictMode: true });
-    // if (this.gameState) {
-    //   for (const next in nextState.eggs) {
-    //     const prev = this.gameState.getById(next.id);
-    //     if (prev) {
-    //       next.whitePos = getWeightedAverage(prev.whitePos, next.whitePos);
-    //       next.yolkPos = getWeightedAverage(prev.yolkPos, next.yolkPos);
-    //       next.screenPos = getWeightedAverage(prev.screenPos, next.screenPos);
-    //       next.mousePos = getWeightedAverage(prev.mousePos, next.mousePos);
-    //     }
-    //   }
-    // }
+    if (this.gameState) {
+      for (const next in nextState.eggs) {
+        const prev = this.gameState.getById(next.id);
+        if (prev) {
+          next.whitePos = getWeightedAverage(prev.whitePos, next.whitePos);
+          next.yolkPos = getWeightedAverage(prev.yolkPos, next.yolkPos);
+          next.screenPos = getWeightedAverage(prev.screenPos, next.screenPos);
+          next.mousePos = getWeightedAverage(prev.mousePos, next.mousePos);
+        }
+      }
+    }
     this.gameState = nextState;
   }
 

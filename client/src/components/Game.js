@@ -13,12 +13,6 @@ const Game = (props) => {
   const [game, setGame] = useState();
   const [input, setInput] = useState();
 
-  useEffect(() => {
-    setInterval(() => {
-      console.log(game);
-    }, 5000);
-  }, [game]);
-
   const [numDeaths, setNumDeaths] = useState();
   const [ping, setPing] = useState();
 
