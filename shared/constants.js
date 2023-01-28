@@ -1,16 +1,17 @@
 const Vector = require("./vector");
 
 const GAME = {
-  MAP_SIZE: 1280,
+  MAP_SIZE: 960,
   SCREEN_SIZE: 640,
-  KILL_SIZE: 640,
   FRAMES_PER_SEC: 60,
 };
 
 const WHITE = {
-  ACCELERATION: 1500,
+  ACCELERATION: 2500,
   FRICTION: 0.9,
-  SIZE: 960,
+  INIT_SIZE: 900,
+  MAX_SIZE: 1500,
+  MIN_SIZE: 600,
 };
 
 const YOLK = {
@@ -22,20 +23,20 @@ const YOLK = {
 const SPRING = {
   SELF: 2000,
   YOLK_YOLK: 50,
-  YOLK_WHITE: 50,
+  YOLK_WHITE: 500,
   WHITE_WHITE: 20,
   MAP: 20,
 };
 
 const BITE = {
   INTERVAL: 20,
-  SIZE: 40,
+  SIZE: 150,
 };
 
 const GUMMY = {
-  COUNT: 8,
+  COUNT: 4,
   SIZE: 64,
-  BOOST: 20,
+  BOOST: 50,
 };
 
 const FACES = ["( ͡° ͜ʖ ͡°)", "UwU", "◕‿↼", "( ͡° ᴥ ͡°)", "(ツ)", "(-_-)"];

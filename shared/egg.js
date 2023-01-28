@@ -21,7 +21,7 @@ class Egg {
     this.whitePos = data.whitePos ?? new Vector(startX, startY);
     this.whiteVel = data.whiteVel ?? new Vector();
 
-    this.whiteSize = data.whiteSize ?? WHITE.SIZE;
+    this.whiteSize = data.whiteSize ?? WHITE.INIT_SIZE;
 
     this.yolkPos = data.yolkPos ?? new Vector(startX, startY);
     this.yolkVel = data.yolkVel ?? new Vector();
@@ -71,7 +71,7 @@ class Egg {
     //   whiteAcc
     // );
 
-    if (!this.yolkInWhite()) whiteAcc = Vector.scale(0.5, whiteAcc);
+    if (!this.yolkInWhite()) whiteAcc = Vector.scale(0.75, whiteAcc);
 
     return whiteAcc;
   }

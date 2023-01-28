@@ -1,7 +1,7 @@
 const Egg = require("./egg");
 const Vector = require("./vector");
 const Wave = require("./wave");
-const { GUMMY, GAME, YOLK } = require("./constants");
+const { GUMMY, GAME, WHITE } = require("./constants");
 
 class GameState {
   constructor(data = {}) {
@@ -41,12 +41,13 @@ class GameState {
       }
 
       egg.whiteSize += GUMMY.BOOST * gummiesEaten.length;
+      egg.whiteSize = Math.min(WHITE.MAX_SIZE, egg.whiteSize);
       egg.playAy += gummiesEaten.length;
       for (const gummy of gummiesEaten) {
         this.gummies.splice(this.gummies.indexOf(gummy), 1);
       }
 
-      if (egg.whiteSize < GAME.KILL_SIZE) {
+      if (egg.whiteSize < WHITE.MIN_SIZE) {
         deadEggs.push(egg.id);
       }
     }

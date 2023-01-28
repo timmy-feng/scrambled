@@ -8,7 +8,9 @@ import { GAME, YOLK } from "../../../shared/constants";
 const fabiTexture = PIXI.Texture.from("fabidead.png");
 const kirbyAy = new Audio("kirbyAy.wav");
 
-const WEIGHT_OLD = 0.8;
+// when client and server states are different,
+// use weighted average for smoothing
+const WEIGHT_OLD = 0.95;
 
 const getWeightedAverage = (prev, next) => {
   return Vector.sum(
