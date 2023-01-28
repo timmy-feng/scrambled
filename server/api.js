@@ -40,10 +40,11 @@ router.get("/whoami", (req, res) => {
 
 router.post("/initsocket", (req, res) => {
   if (req.user) {
-    socketManager.addUser(
-      req.user,
-      socketManager.getSocketFromSocketID(req.body.socketid)
-    );
+    const connection = socketManager
+      .getIo()
+      .connectionsManager.getConnection(req.body.socketid);
+    console.log(connection);
+    socketManager.addUser(req.user, connection.channel);
   }
   res.send({});
 });

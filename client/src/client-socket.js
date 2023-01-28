@@ -1,8 +1,18 @@
-import socketIOClient from "socket.io-client";
+import geckos from "@geckos.io/client";
+// import socketIOClient from "socket.io-client";
 import { post } from "./utilities";
-const endpoint = window.location.hostname + ":" + window.location.port;
-export const socket = socketIOClient(endpoint);
-socket.on("connect", () => {
+// const endpoint = window.location.hostname + ":" + window.location.port;
+// export const socket = socketIOClient(endpoint);
+// socket.on("connect", () => {
+//   post("/api/initsocket", { socketid: socket.id });
+// });
+export const socket = geckos();
+socket.onConnect((error) => {
+  if (error) {
+    console.error(error.message);
+    return;
+  }
+  console.log(socket.id);
   post("/api/initsocket", { socketid: socket.id });
 });
 
