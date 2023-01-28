@@ -70,6 +70,10 @@ const initGeckos = async () => {
       if (user) removeUser(user, channel);
     });
 
+    channel.on("ping", () => {
+      channel.emit("pong");
+    });
+
     channel.on("arrowDown", (arrowCode) => {
       const user = socketToUserMap[channel.id];
       if (user) {

@@ -1,24 +1,31 @@
 import geckos from "@geckos.io/client";
-// import socketIOClient from "socket.io-client";
 import { post } from "./utilities";
-// const endpoint = window.location.hostname + ":" + window.location.port;
-// export const socket = socketIOClient(endpoint);
-// socket.on("connect", () => {
-//   post("/api/initsocket", { socketid: socket.id });
-// });
+
 export const socket = geckos();
+
+// poll socket ping so client prediction is smoother
+export let socketPing = 0; // in ms
+let pingTime;
+
 socket.onConnect((error) => {
   if (error) {
     console.error(error.message);
     return;
   }
   console.log(socket.id);
-  post("/api/initsocket", { socketid: socket.id });
-});
 
-// poll socket ping so client prediction is smoother
-export let socketPing = 0; // in ms
-socket.on("pong", (latency) => (socketPing = 0.9 * socketPing + 0.2 * latency));
+  post("/api/initsocket", { socketid: socket.id });
+
+  setInterval(() => {
+    socket.emit("ping");
+    pingTime = Date.now();
+  }, 1000);
+
+  socket.on("pong", () => {
+    const latency = Date.now() - pingTime;
+    socketPing = 0.9 * socketPing + 0.1 * latency;
+  });
+});
 
 // socket api below
 
