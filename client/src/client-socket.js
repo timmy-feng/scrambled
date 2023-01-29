@@ -12,7 +12,7 @@ socket.onConnect((error) => {
     console.error(error.message);
     return;
   }
-  console.log(socket.id);
+  console.log(`socketid: ${socket.id}`);
 
   post("/api/initsocket", { socketid: socket.id });
 
