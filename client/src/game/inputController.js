@@ -9,13 +9,14 @@ import {
   socketPing,
 } from "../client-socket.js";
 import Vector from "../../../shared/vector.js";
-import { ARROW_CODE } from "../../../shared/constants.js";
+import { ARROW_CODE, GAME } from "../../../shared/constants.js";
 
 const MOUSE_PER_SEC = 10;
 
 export default class InputController {
-  constructor(game) {
+  constructor(game, canvas) {
     this.game = game;
+    this.canvas = canvas;
     this.mouseTimeout = false;
   }
 
@@ -48,6 +49,7 @@ export default class InputController {
 
   onMouseDown(event) {
     if (event.button != 0) return;
+    this.onMouseMove(event);
     sendMouseDown();
     setTimeout(
       () => this.game.gameState?.setMouse(this.game.playerId, true),
@@ -64,14 +66,25 @@ export default class InputController {
     );
   }
 
-  onMouseMove(event, canvas) {
+  onMouseMove(event) {
     if (this.mouseTimeout) return;
 
-    const rect = canvas.current.getBoundingClientRect();
-    const mousePos = new Vector(
+    const rect = this.canvas.current.getBoundingClientRect();
+    let mousePos = new Vector(
       event.clientX - rect.left,
-      -(event.clientY - rect.top)
+      event.clientY - rect.top
     );
+
+    if (
+      mousePos.x < 0 ||
+      mousePos.x > GAME.SCREEN_SIZE ||
+      mousePos.y < 0 ||
+      mousePos.y > GAME.SCREEN_SIZE
+    ) {
+      return;
+    }
+
+    mousePos = new Vector(mousePos.x, -mousePos.y);
     sendMouseMove(mousePos);
     setTimeout(
       () => this.game.gameState?.moveMouse(this.game.playerId, mousePos),

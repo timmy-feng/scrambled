@@ -66,7 +66,7 @@ const Game = (props) => {
 
   useEffect(() => {
     if (game) {
-      setInput(new InputController(game));
+      setInput(new InputController(game, canvas));
     }
   }, [game]);
 
@@ -75,10 +75,10 @@ const Game = (props) => {
       <div className="Game-container">
         <canvas
           ref={canvas}
-          onMouseDown={(event) => input?.onMouseDown(event)}
-          onMouseMove={(event) => input?.onMouseMove(event, canvas)}
-          onMouseUp={(event) => input?.onMouseUp(event)}
-          onMouseLeave={(event) => input?.onMouseUp(event)}
+          onPointerDown={(event) => input?.onMouseDown(event)}
+          onPointerMove={(event) => input?.onMouseMove(event, canvas)}
+          onPointerUp={(event) => input?.onMouseUp(event)}
+          onPointerCancel={(event) => input?.onMouseUp(event)}
         />
       </div>
 
