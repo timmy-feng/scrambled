@@ -43,7 +43,7 @@ router.post("/initsocket", (req, res) => {
     const connection = socketManager
       .getIo()
       .connectionsManager.getConnection(req.body.socketid);
-    console.log(connection);
+    console.log(socketManager.getIo());
     socketManager.addUser(req.user, connection.channel);
   }
   res.send({});
