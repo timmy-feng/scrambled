@@ -1,5 +1,6 @@
 const GameState = require("../shared/gameState");
 const { GAME } = require("../shared/constants");
+const Vector = require("../shared/vector");
 
 const User = require("./models/user");
 
@@ -106,6 +107,13 @@ const initGeckos = async (port) => {
       const user = socketToUserMap[channel.id];
       if (user) {
         game.moveMouse(user._id, mousePos);
+      }
+    });
+
+    channel.on("joystick", (dir) => {
+      const user = socketToUserMap[channel.id];
+      if (user) {
+        game.setDir(user._id, new Vector(dir.x, dir.y));
       }
     });
   });

@@ -95,6 +95,10 @@ class GameState {
     this.getById(id)?.moveMouse(pos);
   }
 
+  setDir(id, dir) {
+    this.getById(id)?.setDir(dir);
+  }
+
   setMouse(id, clicked) {
     const egg = this.getById(id);
     if (egg) {

@@ -2,11 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { getSpringAcc } from "../../../shared/egg.js";
 import { socket, socketPing } from "../client-socket.js";
 
-import ClientGame from "../game/clientGame.js";
+import GameController from "../game/gameController.js";
 import InputController from "../game/inputController.js";
 import { get } from "../utilities.js";
 
 import "./Game.css";
+import Joystick from "./Joystick.js";
 
 const Game = (props) => {
   const canvas = useRef();
@@ -60,7 +61,7 @@ const Game = (props) => {
   // initialize PIXI instance
   useEffect(() => {
     if (canvas) {
-      setGame(new ClientGame(canvas.current));
+      setGame(new GameController(canvas.current));
     }
   }, [canvas]);
 
@@ -80,6 +81,10 @@ const Game = (props) => {
           onPointerUp={(event) => input?.onMouseUp(event)}
           onPointerCancel={(event) => input?.onMouseUp(event)}
         />
+      </div>
+
+      <div className="Game-container">
+        <Joystick game={game}></Joystick>
       </div>
 
       {numDeaths ? (

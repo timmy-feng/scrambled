@@ -57,3 +57,7 @@ export const sendMouseUp = () => {
 export const sendMouseMove = (mousePos) => {
   socket.emit("mouseMove", mousePos);
 };
+
+export const sendJoystick = (dir) => {
+  socket.emit("joystick", dir);
+};

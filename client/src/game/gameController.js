@@ -32,13 +32,13 @@ const getCircle = (center, radius, color) => {
   return circle;
 };
 
-export default class ClientGame {
+export default class GameController {
   constructor(canvas) {
     this.pixiApp = new Application({
       view: canvas,
       backgroundColor: 0x40c0ff,
-      width: 640,
-      height: 640,
+      width: GAME.SCREEN_SIZE,
+      height: GAME.SCREEN_SIZE,
     });
 
     this.renderLoop = setInterval(() => {

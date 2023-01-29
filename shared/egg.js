@@ -21,6 +21,8 @@ class Egg {
     this.whitePos = data.whitePos ?? new Vector(startX, startY);
     this.whiteVel = data.whiteVel ?? new Vector();
 
+    this.whiteDir = data.whiteDir ?? new Vector();
+
     this.whiteSize = data.whiteSize ?? WHITE.INIT_SIZE;
 
     this.yolkPos = data.yolkPos ?? new Vector(startX, startY);
@@ -51,19 +53,28 @@ class Egg {
 
   setArrow(key, pressed) {
     this.arrowPressed[key] = pressed;
+    this.whiteDir = new Vector();
+    for (let dir = 0; dir < 4; dir++) {
+      if (this.arrowPressed[dir])
+        this.whiteDir = Vector.sum(this.whiteDir, DIRECTION[dir]);
+    }
+    if (this.whiteDir.norm() != 0)
+      this.whiteDir = Vector.scale(1 / this.whiteDir.norm(), this.whiteDir);
+  }
+
+  setDir(dir) {
+    if (dir.norm() == 0) {
+      this.whiteDir = dir;
+    } else {
+      this.whiteDir = Vector.scale(1 / dir.norm(), dir);
+    }
   }
 
   getWhiteAcc() {
-    let whiteAcc = new Vector();
-    for (let dir = 0; dir < 4; dir++) {
-      if (this.arrowPressed[dir])
-        whiteAcc = Vector.sum(whiteAcc, DIRECTION[dir]);
-    }
-
-    if (whiteAcc.norm() != 0)
-      whiteAcc = Vector.scale(1 / whiteAcc.norm(), whiteAcc);
-
-    whiteAcc = Vector.scale(WHITE.ACCELERATION / GAME.FRAMES_PER_SEC, whiteAcc);
+    let whiteAcc = Vector.scale(
+      WHITE.ACCELERATION / GAME.FRAMES_PER_SEC,
+      this.whiteDir
+    );
 
     // experimental way of making white slower the farther the yolk is
     // whiteAcc = Vector.scale(
