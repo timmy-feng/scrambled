@@ -8,6 +8,7 @@ export let socketPing = 0; // in ms
 let pingTime;
 
 socket.onConnect((error) => {
+  console.log("socket connected");
   if (error) {
     console.error(error.message);
     return;
