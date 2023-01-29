@@ -101,6 +101,8 @@ app.use((err, req, res, next) => {
 // hardcode port to 3000 for now
 const port = process.env.PORT || 3000;
 const server = http.Server(app);
+// TODO: supposedly adding this line allows for wws protocol to work on port 443
+// but this did not happen
 const expressWs = require("express-ws")(app);
 socketManager.init(port);
 

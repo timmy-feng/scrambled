@@ -12,6 +12,11 @@ const kirbyAy = new Audio("kirbyAy.wav");
 // use weighted average for smoothing
 const WEIGHT_OLD = 0.95;
 
+// since udp has no guarantee on packet ordering
+// if a packet is sent too many frames in the past,
+// we discard it
+const MAX_FRAME_JUMP = 3;
+
 const getWeightedAverage = (prev, next) => {
   return Vector.sum(
     Vector.scale(WEIGHT_OLD, prev),
@@ -52,6 +57,9 @@ export default class ClientGame {
     this.playerId = playerId;
     const nextState = new GameState({ ...gameState, predictMode: true });
     if (this.gameState) {
+      if (nextState.framesPassed + MAX_FRAME_JUMP < this.gameState.framesPassed)
+        return;
+
       for (const next in nextState.eggs) {
         const prev = this.gameState.getById(next.id);
         if (prev) {

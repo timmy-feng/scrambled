@@ -11,10 +11,12 @@ class GameState {
       : [];
     // this.waves = data.waves ? data.waves.map((wave) => new Wave(wave)) : [];
     this.predictMode = data.predictMode ?? false;
+    this.framesPassed = data.framesPassed ?? 0;
   }
 
   // returns list of ids of eggs that just died (for now)
   update() {
+    this.framesPassed += 1;
     // for (const wave of this.waves) {
     //   wave.updatePosition();
     // }
