@@ -56,9 +56,9 @@ const removeUser = (user, socket) => {
   if (user) game.disconnectPlayer(user._id);
 };
 
-const initGeckos = async () => {
+const initGeckos = async (port) => {
   const geckos = await import("@geckos.io/server");
-  io = geckos.geckos();
+  io = geckos.geckos({ port });
   io.listen();
 
   io.onConnection((channel) => {
