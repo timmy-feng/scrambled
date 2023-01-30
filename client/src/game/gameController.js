@@ -105,6 +105,8 @@ export default class GameController {
     }
 
     if (this.playAy < playerEgg.playAy) {
+      kirbyAy.pause();
+      kirbyAy.currentTime = 0;
       kirbyAy.play();
       this.playAy = playerEgg.playAy;
     }
@@ -171,8 +173,10 @@ export default class GameController {
 
     for (const player of this.gameState.eggs) {
       let color = 0xffc040;
-      if ("spring" in player.state) color = 0xff8000;
-      else if ("sprung" in player.state) color = 0xffff80;
+      if ("spring" in player.state || "freeze" in player.state)
+        color = 0xff8000;
+      else if ("sprung" in player.state || "frozen" in player.state)
+        color = 0xffff80;
 
       const yolk = getCircle(
         new Vector(player.yolkPos.x - offset.x, -(player.yolkPos.y - offset.y)),

@@ -111,7 +111,9 @@ class Egg {
 
   update() {
     this.updateWhite();
-    if (!("frozen" in this.state)) {
+    if ("frozen" in this.state) {
+      this.yolkVel = new Vector();
+    } else {
       this.updateYolk();
     }
     this.updateState();

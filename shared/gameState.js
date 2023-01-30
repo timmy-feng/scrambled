@@ -70,7 +70,7 @@ class GameState {
       while (this.gummies.length < GUMMY.COUNT) {
         this.gummies.push(
           new Gummy({
-            type: Math.random() < 0.2 ? "spring" : "gummy",
+            type: Math.random() < 0.2 ? "freeze" : "gummy",
             pos: this.getRandomPos(),
           })
         );
