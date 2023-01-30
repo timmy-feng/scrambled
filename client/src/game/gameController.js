@@ -4,6 +4,7 @@ import GameState from "../../../shared/gameState";
 
 import Vector from "../../../shared/vector";
 import { GAME, YOLK } from "../../../shared/constants";
+import EggGraphic from "./eggGraphic";
 
 const fabiTexture = {
   gummy: { icon: PIXI.Texture.from("fabidead.png"), scale: 0.2 },
@@ -46,9 +47,12 @@ export default class GameController {
       height: GAME.SCREEN_SIZE,
     });
 
+    this.eggIdToGraphic = {};
+
     this.renderLoop = setInterval(() => {
       if (this.gameState) {
         this.gameState.update();
+        this.updateEggGraphic();
         this.render();
       }
     }, 1000 / GAME.FRAMES_PER_SEC);
@@ -56,6 +60,26 @@ export default class GameController {
     // how many times we played AY
     // make sure we're not behind what the game state says
     this.playAy = 0;
+  }
+
+  updateEggGraphic() {
+    const offset = new Vector(
+      GAME.MAP_SIZE / 2 - GAME.SCREEN_SIZE / 2,
+      GAME.MAP_SIZE / 2 + GAME.SCREEN_SIZE / 2
+    );
+
+    this.gameState.eggs.forEach((egg) => {
+      if (!this.eggIdToGraphic.hasOwnProperty(egg.id)) {
+        // create a new graphic
+        let newGraphic = new EggGraphic({
+          pos: new Vector(
+            egg.whitePos.x - offset.x,
+            -(egg.whitePos.y - offset.y)
+          ),
+        });
+        this.eggIdToGraphic[egg.id] = newGraphic;
+      }
+    });
   }
 
   serverUpdate(gameState, playerId) {
@@ -158,7 +182,17 @@ export default class GameController {
       this.pixiApp.stage.addChild(fabi);
     }
 
-    for (const player of this.gameState.eggs) {
+    for (const eggId in this.eggIdToGraphic) {
+      const egg = this.gameState.getEggById(eggId);
+
+      this.eggIdToGraphic[eggId].setPos(
+        new Vector(egg.whitePos.x - offset.x, -(egg.whitePos.y - offset.y))
+      );
+      this.eggIdToGraphic[eggId].updateAcc();
+      this.pixiApp.stage.addChild(this.eggIdToGraphic[eggId]);
+    }
+
+    /* for (const player of this.gameState.eggs) {
       this.pixiApp.stage.addChild(
         getCircle(
           new Vector(
@@ -169,9 +203,9 @@ export default class GameController {
           0xffffff
         )
       );
-    }
+    } */
 
-    for (const player of this.gameState.eggs) {
+    /* for (const player of this.gameState.eggs) {
       let color = 0xffc040;
       if ("spring" in player.state || "freeze" in player.state)
         color = 0xff8000;
@@ -192,7 +226,7 @@ export default class GameController {
       yolk.addChild(lenny);
 
       this.pixiApp.stage.addChild(yolk);
-    }
+    } */
 
     // for (const wave of this.gameState.waves) {
     //   this.pixiApp.stage.addChild(

@@ -40,38 +40,45 @@ const V_WHITE = 300;
 let offsetUnitVecs = [];
 
 for (let i = 0; i < NUM_MASSES; i++) {
-  offsetUnitVecs.push(
-    Vector.polarToCartesian(1, ((2 * Math.PI) / NUM_MASSES) * i)
-  );
+  offsetUnitVecs.push(Vector.polar(1, ((2 * Math.PI) / NUM_MASSES) * i));
 }
 
 export default class EggGraphic extends Container {
   constructor(props) {
     super();
     this.pos = props.pos;
-    //this.stage = props.stage;
-    console.log("props.pos", props.pos)
+    //this.whiteColor = props.whiteColor
+    //this.yolkColor =
+    console.log("props.pos", props.pos);
 
     this.centerMass = new Mass({ pos: this.pos });
 
-    this.masses = [];
-    for (let i = 0; i < NUM_MASSES; i++) {
-      let offset = Vector.scale(R_WHITE + eq_r, offsetUnitVecs[i]);
+    //this.masses = [];
+    //this.masses = Array(8);
+    this.masses = offsetUnitVecs.map((unitVec) => {
+      let offset = Vector.scale(R_WHITE + eq_r, unitVec);
       let massPos = Vector.sum(offset, props.pos);
-      this.masses.push(new Mass({ pos: massPos }));
-    }
+      console.log("massPos", massPos);
+      return new Mass({ pos: massPos });
+    });
+
+    console.log("first masses", this.masses);
 
     // test
     let massGraphic = new Graphics();
     massGraphic.beginFill("0xffaa00");
     massGraphic.drawCircle(0, 0, 300);
     massGraphic.endFill();
-    massGraphic.x = props.pos.x
-    massGraphic.y = props.pos.y
+    massGraphic.x = props.pos.x;
+    massGraphic.y = props.pos.y;
 
-    this.addChild(massGraphic)
+    this.addChild(massGraphic);
 
-    this.updateAcc()
+    this.updateAcc();
+  }
+
+  setPos(pos) {
+    this.centerMass.pos = pos;
   }
 
   getVolume() {
@@ -100,12 +107,12 @@ export default class EggGraphic extends Container {
   addSpringAcc(m1, m2, k, D, eq) {
     // spring force
     const distVec = Vector.diff(m1.pos, m2.pos);
-    const springAcc = Vector.scale(-k * (distVec.mag() - eq), distVec.unit());
+    const springAcc = Vector.scale(-k * (distVec.norm() - eq), distVec.unit());
 
     // dampening
     const velDiff = Vector.diff(m1.vel, m2.vel);
     const dampAcc = Vector.scale(
-      (-D * Vector.dot(velDiff, distVec)) / distVec.mag(),
+      (-D * Vector.dot(velDiff, distVec)) / distVec.norm(),
       distVec.unit()
     );
 
@@ -114,6 +121,9 @@ export default class EggGraphic extends Container {
   }
 
   updateAcc() {
+    //console.log("updateacc")
+    //console.log(this.centerMass.pos)
+
     // radial springs
     for (let i = 0; i < NUM_MASSES; i++) {
       this.masses[i].setAcc(new Vector(0, 0));
@@ -139,7 +149,7 @@ export default class EggGraphic extends Container {
 
     for (let i = 0; i < NUM_MASSES; i++) {
       let j = (i + 1) % NUM_MASSES;
-      const dist = Vector.diff(this.masses[j].pos, this.masses[i].pos).mag();
+      const dist = Vector.diff(this.masses[j].pos, this.masses[i].pos).norm();
       //check volume not equal to zero?
       const pressureMag = (dist * P) / volume;
 
@@ -230,9 +240,10 @@ export default class EggGraphic extends Container {
 
   updateGraphics() {
     this.removeChildren();
+    //console.log("update graph masses", this.masses)
 
     // centermass
-    this.addChild(this.createMassGraphic(this.centerMass));
+    //this.addChild(this.createMassGraphic(this.centerMass));
 
     // bezier curve using midpoints
     const fluidWhite = new Graphics();
@@ -268,7 +279,7 @@ export default class EggGraphic extends Container {
     yolk.endFill();
     this.addChild(yolk);
 
-    // buffer 
+    // buffer
     // let white = new Graphics();
     // white.beginFill("0x00ffff");
     // white.drawCircle(this.centerMass.pos.x, this.centerMass.pos.y, R_WHITE);
@@ -288,6 +299,5 @@ export default class EggGraphic extends Container {
     //     this.createLine(this.masses[i], new Mass({ pos: connectPos }))
     //   );
     // }
-
   }
 }

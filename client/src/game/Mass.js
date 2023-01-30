@@ -1,4 +1,4 @@
-import Vector from "./vector.js"
+import Vector from "../../../shared/vector"
 
 const FRAMES_PER_SECOND = 60;
 
@@ -8,6 +8,8 @@ export default class Mass{
     this.pos = props.pos;
     this.vel = props.vel ?? new Vector(0,0);
     this.acc = props.acc ?? new Vector(0,0);
+
+    //console.log("mass constructor", this.pos)
   }
 
   getPos() {

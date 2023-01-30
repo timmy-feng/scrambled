@@ -48,6 +48,11 @@ class Vector {
   static applyDelta(v, w) {
     return Vector.sum(v, Vector.scale(1 / FRAMES_PER_SEC, w));
   }
+
+  static dot(v, w) {
+    return (v.x * w.x + v.y * w.y);
+  }
+  
 }
 
 module.exports = Vector;
