@@ -99,4 +99,5 @@ module.exports = {
   FACES,
   ARROW_CODE,
   DIR,
+  MISC,
 };

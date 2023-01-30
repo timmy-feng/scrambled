@@ -26,7 +26,7 @@ class Vector {
   }
 
   static unitNormal(v, w) {
-    return Vector.perp(Vector.diff(v, w).norm());
+    return Vector.perp(Vector.diff(v, w).unit());
   }
 
   static dist(v, w) {
@@ -50,9 +50,8 @@ class Vector {
   }
 
   static dot(v, w) {
-    return (v.x * w.x + v.y * w.y);
+    return v.x * w.x + v.y * w.y;
   }
-  
 }
 
 module.exports = Vector;

@@ -72,12 +72,10 @@ export default class GameController {
     this.gameState.eggs.forEach((egg) => {
       if (!this.eggIdToGraphic.hasOwnProperty(egg.id)) {
         // create a new graphic
-        let newGraphic = new EggGraphic({
-          pos: new Vector(
-            egg.whitePos.x - offset.x,
-            -(egg.whitePos.y - offset.y)
-          ),
-        });
+        let newGraphic = new EggGraphic(
+          new Vector(egg.whitePos.x - offset.x, -(egg.whitePos.y - offset.y)),
+          egg.whiteSize / 10
+        );
         this.eggIdToGraphic[egg.id] = newGraphic;
       }
     });
@@ -183,33 +181,57 @@ export default class GameController {
       this.pixiApp.stage.addChild(fabi);
     }
 
-    for (const eggId in this.eggIdToGraphic) {
-      const egg = this.gameState.getEggById(eggId);
+    // for (const eggId in this.eggIdToGraphic) {
+    //   const egg = this.gameState.getEggById(eggId);
 
-      this.eggIdToGraphic[eggId].setPos(
-        new Vector(egg.whitePos.x - offset.x, -(egg.whitePos.y - offset.y))
-      );
-      this.eggIdToGraphic[eggId].updateAcc();
-      this.pixiApp.stage.addChild(this.eggIdToGraphic[eggId]);
-    }
+    //   this.eggIdToGraphic[eggId].setPos(
+    //     new Vector)
+    //   );
+    //   this.eggIdToGraphic[eggId].updateAcc();
+    //   this.pixiApp.stage.addChild(this.eggIdToGraphic[eggId]);
+    // }
 
-    /* for (const player of this.gameState.eggs) {
-      let color = 0xffffff;
-      if ("speed" in player.state) color = 0xffc080;
-
-      this.pixiApp.stage.addChild(
-        getCircle(
+    for (const player of this.gameState.eggs) {
+      if (!(player.id in this.eggIdToGraphic)) {
+        // create a new graphic
+        this.eggIdToGraphic[player.id] = new EggGraphic(
           new Vector(
             player.whitePos.x - offset.x,
             -(player.whitePos.y - offset.y)
           ),
-          player.whiteSize / 10,
-          color
+          player.whiteSize / 10
+        );
+      }
+
+      const graphic = this.eggIdToGraphic[player.id];
+
+      let color = 0xffffff;
+      if ("speed" in player.state) color = 0xffc080;
+
+      graphic.setPos(
+        new Vector(
+          player.whitePos.x - offset.x,
+          -(player.whitePos.y - offset.y)
         )
       );
-    } */
+      graphic.setRadius(player.whiteSize / 10);
+      graphic.setColor(color);
+      graphic.updateAcc();
+      this.pixiApp.stage.addChild(graphic);
 
-    /* for (const player of this.gameState.eggs) {
+      // this.pixiApp.stage.addChild(
+      //   getCircle(
+      //     new Vector(
+      //       player.whitePos.x - offset.x,
+      //       -(player.whitePos.y - offset.y)
+      //     ),
+      //     player.whiteSize / 10,
+      //     color
+      //   )
+      // );
+    }
+
+    for (const player of this.gameState.eggs) {
       let color = 0xffc040;
       if ("spring" in player.state || "freeze" in player.state)
         color = 0xff8000;
@@ -230,7 +252,7 @@ export default class GameController {
       yolk.addChild(lenny);
 
       this.pixiApp.stage.addChild(yolk);
-    } */
+    }
 
     // for (const wave of this.gameState.waves) {
     //   this.pixiApp.stage.addChild(
