@@ -49,6 +49,20 @@ const GUMMY = {
     SIZE_INC: 50,
     DURATION: 120,
   },
+  speed: {
+    SIZE_INC: 50,
+    DURATION: 300,
+  },
+};
+
+const MISC = {
+  FROZEN: {
+    DURATION: 120,
+  },
+  SPRUNG: {
+    DURATION: 120,
+    VEL: 5000,
+  },
 };
 
 const FACES = ["( ͡° ͜ʖ ͡°)", "UwU", "◕‿↼", "( ͡° ᴥ ͡°)", "(ツ)", "(-_-)"];

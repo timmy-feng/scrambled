@@ -8,6 +8,7 @@ const {
   YOLK,
   SPRING,
   BITE,
+  MISC,
 } = require("./constants");
 const Gummy = require("./gummy");
 
@@ -70,7 +71,7 @@ class GameState {
       while (this.gummies.length < GUMMY.COUNT) {
         this.gummies.push(
           new Gummy({
-            type: Math.random() < 0.2 ? "freeze" : "gummy",
+            type: this.getRandomGummy(),
             pos: this.getRandomPos(),
           })
         );
@@ -90,13 +91,13 @@ class GameState {
 
       if ("spring" in you.state) {
         const dir = Vector.diff(me.whitePos, you.whitePos).unit();
-        me.state.sprung = 120;
-        me.yolkVel = Vector.scale(5000, dir);
+        me.state.sprung = MISC.SPRING.DURATION;
+        me.yolkVel = Vector.scale(MISC.SPRUNG.VEL, dir);
         delete you.state.spring;
       }
 
       if ("freeze" in you.state) {
-        me.state.frozen = 120;
+        me.state.frozen = MISC.FROZEN.DURATION;
         delete you.state.freeze;
       }
     }
@@ -215,6 +216,17 @@ class GameState {
 
   getRandomFace() {
     return FACES[Math.floor(Math.random() * FACES.length)];
+  }
+
+  getRandomGummy() {
+    const rand = Math.random();
+    if (rand < 0.05) {
+      return "speed";
+    } else if (rand < 0.2) {
+      return "freeze";
+    } else {
+      return "gummy";
+    }
   }
 }
 

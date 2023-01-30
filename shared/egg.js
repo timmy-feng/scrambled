@@ -50,12 +50,13 @@ class Egg {
     this.whiteDir = whiteDir;
   }
 
-  // TODO: Make bigger eggs move slower
+  // TODO: Make bigger eggs move slower, add constants to /shared/constants.js
   getWhiteAcc() {
     let whiteAcc = Vector.scale(WHITE.ACC, this.whiteDir);
     if (!this.yolkInWhite()) whiteAcc = Vector.scale(0.75, whiteAcc);
     if ("sprung" in this.state) whiteAcc = Vector.scale(0.75, whiteAcc);
     if ("frozen" in this.state) whiteAcc = Vector.scale(0.75, whiteAcc);
+    if ("speed" in this.state) whiteAcc = Vector.scale(2.5, whiteAcc);
     return whiteAcc;
   }
 
