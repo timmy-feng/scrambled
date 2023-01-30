@@ -8,6 +8,7 @@ import { GAME, YOLK } from "../../../shared/constants";
 const fabiTexture = {
   gummy: { icon: PIXI.Texture.from("fabidead.png"), scale: 0.2 },
   spring: { icon: PIXI.Texture.from("fabiboing.png"), scale: 0.15 },
+  freeze: { icon: PIXI.Texture.from("fabifreeze.png"), scale: 0.15 },
 };
 
 const kirbyAy = new Audio("kirbyAy.wav");

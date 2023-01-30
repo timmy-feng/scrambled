@@ -1,3 +1,6 @@
+// WARNING: if frames per second is changed, must change in this file too
+const FRAMES_PER_SEC = 60;
+
 class Vector {
   constructor(x = 0, y = 0) {
     this.x = x;
@@ -31,7 +34,7 @@ class Vector {
   }
 
   static applyDelta(v, w) {
-    return Vector.sum(v, Vector.scale(1 / 60, w));
+    return Vector.sum(v, Vector.scale(1 / FRAMES_PER_SEC, w));
   }
 }
 

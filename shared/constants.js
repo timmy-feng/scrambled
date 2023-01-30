@@ -3,7 +3,7 @@ const Vector = require("./vector");
 const GAME = {
   MAP_SIZE: 960,
   SCREEN_SIZE: 1280,
-  FRAMES_PER_SEC: 60,
+  FRAMES_PER_SEC: 60, // change in vector.js too
 };
 
 const WHITE = {
@@ -42,6 +42,10 @@ const GUMMY = {
     DURATION: 0,
   },
   spring: {
+    SIZE_INC: 50,
+    DURATION: 120,
+  },
+  freeze: {
     SIZE_INC: 50,
     DURATION: 120,
   },

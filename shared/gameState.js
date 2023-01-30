@@ -94,6 +94,11 @@ class GameState {
         me.yolkVel = Vector.scale(5000, dir);
         delete you.state.spring;
       }
+
+      if ("freeze" in you.state) {
+        me.state.frozen = 120;
+        delete you.state.freeze;
+      }
     }
   }
 

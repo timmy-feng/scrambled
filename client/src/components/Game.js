@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { getSpringAcc } from "../../../shared/egg.js";
 import { socket, socketPing } from "../client-socket.js";
 
 import GameController from "../game/gameController.js";
