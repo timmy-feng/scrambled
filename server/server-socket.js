@@ -47,14 +47,14 @@ const addUser = (user, channel) => {
 
   console.log(`${user._id} joined`);
 
-  game.spawnPlayer(user._id);
+  game.spawnEgg(user._id);
 };
 
 const removeUser = (user, socket) => {
   if (user) delete userToSocketMap[user._id];
   delete socketToUserMap[socket.id];
 
-  if (user) game.disconnectPlayer(user._id);
+  if (user) game.disconnectEgg(user._id);
 };
 
 const initGeckos = async (port) => {
@@ -75,45 +75,10 @@ const initGeckos = async (port) => {
       channel.emit("pong");
     });
 
-    channel.on("arrowDown", (arrowCode) => {
+    channel.on("input", (input) => {
       const user = socketToUserMap[channel.id];
       if (user) {
-        game.setArrow(user._id, arrowCode, true);
-      }
-    });
-
-    channel.on("arrowUp", (arrowCode) => {
-      const user = socketToUserMap[channel.id];
-      if (user) {
-        game.setArrow(user._id, arrowCode, false);
-      }
-    });
-
-    channel.on("mouseDown", () => {
-      const user = socketToUserMap[channel.id];
-      if (user) {
-        game.setMouse(user._id, true);
-      }
-    });
-
-    channel.on("mouseUp", () => {
-      const user = socketToUserMap[channel.id];
-      if (user) {
-        game.setMouse(user._id, false);
-      }
-    });
-
-    channel.on("mouseMove", (mousePos) => {
-      const user = socketToUserMap[channel.id];
-      if (user) {
-        game.moveMouse(user._id, mousePos);
-      }
-    });
-
-    channel.on("joystick", (dir) => {
-      const user = socketToUserMap[channel.id];
-      if (user) {
-        game.setDir(user._id, new Vector(dir.x, dir.y));
+        game.handleInput(user._id, input);
       }
     });
   });

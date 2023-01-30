@@ -76,10 +76,10 @@ const Game = (props) => {
       <div className="Game-container">
         <canvas
           ref={canvas}
-          onPointerDown={(event) => input?.onMouseDown(event)}
-          onPointerMove={(event) => input?.onMouseMove(event, canvas)}
-          onPointerUp={(event) => input?.onMouseUp(event)}
-          onPointerCancel={(event) => input?.onMouseUp(event)}
+          onPointerDown={(event) => input?.onPointerDown(event)}
+          onPointerMove={(event) => input?.onPointerMove(event, canvas)}
+          onPointerUp={(event) => input?.onPointerUp(event)}
+          onPointerCancel={(event) => input?.onPointerUp(event)}
         />
       </div>
 

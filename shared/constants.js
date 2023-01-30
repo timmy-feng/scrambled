@@ -2,12 +2,12 @@ const Vector = require("./vector");
 
 const GAME = {
   MAP_SIZE: 960,
-  SCREEN_SIZE: 640,
+  SCREEN_SIZE: 1280,
   FRAMES_PER_SEC: 60,
 };
 
 const WHITE = {
-  ACCELERATION: 2500,
+  ACC: 2500,
   FRICTION: 0.9,
   INIT_SIZE: 900,
   MAX_SIZE: 1500,
@@ -15,13 +15,14 @@ const WHITE = {
 };
 
 const YOLK = {
-  ACCELERATION: 1000,
+  MAX_ACC: 15000,
+  ACC: 1000,
   FRICTION: 0.9,
   SIZE: 48,
 };
 
 const SPRING = {
-  SELF: 2000,
+  SELF: 33,
   YOLK_YOLK: 50,
   YOLK_WHITE: 500,
   WHITE_WHITE: 20,
@@ -34,9 +35,16 @@ const BITE = {
 };
 
 const GUMMY = {
-  COUNT: 4,
+  COUNT: 8,
   SIZE: 64,
-  BOOST: 50,
+  gummy: {
+    SIZE_INC: 50,
+    DURATION: 0,
+  },
+  spring: {
+    SIZE_INC: 50,
+    DURATION: 120,
+  },
 };
 
 const FACES = ["( ͡° ͜ʖ ͡°)", "UwU", "◕‿↼", "( ͡° ᴥ ͡°)", "(ツ)", "(-_-)"];
@@ -56,7 +64,7 @@ const ARROW_CODE = {
   A: 3,
 };
 
-const DIRECTION = [
+const DIR = [
   new Vector(0, 1),
   new Vector(0, -1),
   new Vector(1, 0),
@@ -72,5 +80,5 @@ module.exports = {
   GUMMY,
   FACES,
   ARROW_CODE,
-  DIRECTION,
+  DIR,
 };

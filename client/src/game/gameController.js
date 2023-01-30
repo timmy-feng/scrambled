@@ -5,12 +5,16 @@ import GameState from "../../../shared/gameState";
 import Vector from "../../../shared/vector";
 import { GAME, YOLK } from "../../../shared/constants";
 
-const fabiTexture = PIXI.Texture.from("fabidead.png");
+const fabiTexture = {
+  gummy: { icon: PIXI.Texture.from("fabidead.png"), scale: 0.2 },
+  spring: { icon: PIXI.Texture.from("fabiboing.png"), scale: 0.15 },
+};
+
 const kirbyAy = new Audio("kirbyAy.wav");
 
 // when client and server states are different,
 // use weighted average for smoothing
-const WEIGHT_OLD = 0.95;
+const WEIGHT_OLD = 0.99;
 
 // since udp has no guarantee on packet ordering
 // if a packet is sent too many frames in the past,
@@ -59,9 +63,15 @@ export default class GameController {
     if (this.gameState) {
       if (nextState.framesPassed + MAX_FRAME_JUMP < this.gameState.framesPassed)
         return;
+      // while (
+      //   nextState.framesPassed + MAX_FRAME_JUMP <
+      //   this.gameState.framesPassed
+      // ) {
+      //   nextState.update();
+      // }
 
       for (const next in nextState.eggs) {
-        const prev = this.gameState.getById(next.id);
+        const prev = this.gameState.getEggById(next.id);
         if (prev) {
           next.whitePos = getWeightedAverage(prev.whitePos, next.whitePos);
           next.yolkPos = getWeightedAverage(prev.yolkPos, next.yolkPos);
@@ -78,7 +88,7 @@ export default class GameController {
 
     this.pixiApp.stage.removeChildren();
 
-    const playerEgg = this.gameState.getById(this.playerId);
+    const playerEgg = this.gameState.getEggById(this.playerId);
     if (!playerEgg) {
       const gameOverText = new PIXI.Text("Game Over | Reload to Try Again?", {
         fontFamily: "Comic Sans MS",
@@ -98,7 +108,10 @@ export default class GameController {
       this.playAy = playerEgg.playAy;
     }
 
-    const offset = playerEgg.screenPos;
+    const offset = new Vector(
+      GAME.MAP_SIZE / 2 - GAME.SCREEN_SIZE / 2,
+      GAME.MAP_SIZE / 2 + GAME.SCREEN_SIZE / 2
+    );
 
     // drawing the border - still kinda messy
     const border = new PIXI.Graphics();
@@ -131,10 +144,13 @@ export default class GameController {
     this.pixiApp.stage.addChild(border);
 
     for (const gummy of this.gameState.gummies) {
-      const fabi = new Sprite(fabiTexture);
-      fabi.position.x = gummy.x - offset.x;
-      fabi.position.y = -(gummy.y - offset.y);
-      fabi.scale = { x: 0.2, y: 0.2 };
+      const fabi = new Sprite(fabiTexture[gummy.type].icon);
+      fabi.position.x = gummy.pos.x - offset.x;
+      fabi.position.y = -(gummy.pos.y - offset.y);
+      fabi.scale = {
+        x: fabiTexture[gummy.type].scale,
+        y: fabiTexture[gummy.type].scale,
+      };
       fabi.anchor = { x: 0.5, y: 0.5 };
       this.pixiApp.stage.addChild(fabi);
     }
@@ -153,13 +169,17 @@ export default class GameController {
     }
 
     for (const player of this.gameState.eggs) {
+      let color = 0xffc040;
+      if ("spring" in player.state) color = 0xff8000;
+      else if ("sprung" in player.state) color = 0xffff80;
+
       const yolk = getCircle(
         new Vector(player.yolkPos.x - offset.x, -(player.yolkPos.y - offset.y)),
         YOLK.SIZE,
-        0xffc040
+        color
       );
 
-      const dir = Vector.diff(player.yolkPos, player.mousePos);
+      const dir = Vector.diff(player.yolkPos, player.pointerPos);
 
       const lenny = new PIXI.Text(player.name);
       lenny.anchor = { x: 0.5, y: 0.5 };

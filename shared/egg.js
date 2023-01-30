@@ -1,144 +1,120 @@
 const Vector = require("./vector");
-const {
-  GAME,
-  WHITE,
-  YOLK,
-  SPRING,
-  BITE,
-  FACES,
-  DIRECTION,
-} = require("./constants");
+const { GAME, WHITE, YOLK, SPRING, DIR } = require("./constants");
 
 class Egg {
   // requires data.id
   constructor(data) {
     this.id = data.id;
-    this.name = data.name ?? FACES[Math.floor(Math.random() * FACES.length)];
+    this.name = data.name;
 
-    const startX = Math.random() * GAME.MAP_SIZE;
-    const startY = Math.random() * GAME.MAP_SIZE;
-
-    this.whitePos = data.whitePos ?? new Vector(startX, startY);
+    this.whitePos = data.whitePos;
     this.whiteVel = data.whiteVel ?? new Vector();
-
     this.whiteDir = data.whiteDir ?? new Vector();
 
-    this.whiteSize = data.whiteSize ?? WHITE.INIT_SIZE;
-
-    this.yolkPos = data.yolkPos ?? new Vector(startX, startY);
+    this.yolkPos = data.yolkPos ?? this.whitePos;
     this.yolkVel = data.yolkVel ?? new Vector();
 
-    this.mousePos = data.mousePos ?? new Vector(startX, startY);
-    this.mouseClicked = data.mouseClicked ?? false;
-    this.arrowPressed = data.arrowPressed ?? [false, false, false, false];
+    this.whiteSize = data.whiteSize ?? WHITE.INIT_SIZE;
+    this.state = data.state ?? {};
 
-    this.screenPos =
-      data.screenPos ??
-      new Vector(startX - GAME.SCREEN_SIZE / 2, startY + GAME.SCREEN_SIZE / 2);
-
-    this.collisions = data.collisions ? { ...data.collisions } : {};
+    this.pointerPos = data.pointerPos ?? this.whitePos;
+    this.pointerDown = data.pointerDown ?? false;
+    this.arrowDown = data.arrowDown ?? [false, false, false, false];
 
     // let's try this again LOL
     this.playAy = data.playAy ?? 0;
   }
 
-  // mouse position is given relative to screen position
-  moveMouse(mousePos) {
-    this.mousePos = Vector.sum(mousePos, this.screenPos);
+  setPointerPos(pointerPos) {
+    this.pointerPos = pointerPos;
   }
 
-  setMouse(clicked) {
-    this.mouseClicked = clicked;
+  setPointerDown(pointerDown) {
+    this.pointerDown = pointerDown;
   }
 
-  setArrow(key, pressed) {
-    this.arrowPressed[key] = pressed;
+  setArrowDown(key, keyDown) {
+    this.arrowDown[key] = keyDown;
+
+    // recalculate whiteDir based on arrow keys
     this.whiteDir = new Vector();
-    for (let dir = 0; dir < 4; dir++) {
-      if (this.arrowPressed[dir])
-        this.whiteDir = Vector.sum(this.whiteDir, DIRECTION[dir]);
+    for (let i = 0; i < 4; i++) {
+      if (this.arrowDown[i]) {
+        this.whiteDir = Vector.sum(this.whiteDir, DIR[i]);
+      }
     }
-    if (this.whiteDir.norm() != 0)
-      this.whiteDir = Vector.scale(1 / this.whiteDir.norm(), this.whiteDir);
+    this.whiteDir = this.whiteDir.unit();
   }
 
-  setDir(dir) {
-    if (dir.norm() == 0) {
-      this.whiteDir = dir;
-    } else {
-      this.whiteDir = Vector.scale(1 / dir.norm(), dir);
-    }
+  setWhiteDir(whiteDir) {
+    this.whiteDir = whiteDir;
   }
 
+  // TODO: Make bigger eggs move slower
   getWhiteAcc() {
-    let whiteAcc = Vector.scale(
-      WHITE.ACCELERATION / GAME.FRAMES_PER_SEC,
-      this.whiteDir
-    );
-
-    // experimental way of making white slower the farther the yolk is
-    // whiteAcc = Vector.scale(
-    //   (1000 - Vector.dist(this.yolkPos, this.whitePos)) / 1000,
-    //   whiteAcc
-    // );
-
+    let whiteAcc = Vector.scale(WHITE.ACC, this.whiteDir);
     if (!this.yolkInWhite()) whiteAcc = Vector.scale(0.75, whiteAcc);
-
+    if ("sprung" in this.state) whiteAcc = Vector.scale(0.75, whiteAcc);
+    if ("frozen" in this.state) whiteAcc = Vector.scale(0.75, whiteAcc);
     return whiteAcc;
   }
 
-  updatePosition() {
-    // handle white physics
-    this.whiteMapCollision();
-    this.whiteVel = Vector.sum(this.whiteVel, this.getWhiteAcc());
+  updateWhite() {
+    this.handleMapCollision();
+
+    this.whiteVel = Vector.applyDelta(this.whiteVel, this.getWhiteAcc());
     this.whiteVel = Vector.scale(WHITE.FRICTION, this.whiteVel);
-    this.whitePos = Vector.sum(
-      this.whitePos,
-      Vector.scale(1 / GAME.FRAMES_PER_SEC, this.whiteVel)
+
+    this.whitePos = Vector.applyDelta(this.whitePos, this.whiteVel);
+  }
+
+  getPointerAcc() {
+    if (!this.pointerDown || "sprung" in this.state || "frozen" in this.state)
+      return new Vector();
+
+    const displ = Vector.diff(this.pointerPos, this.yolkPos);
+    const magnitude = Math.min(
+      YOLK.MAX_ACC,
+      YOLK.ACC * Math.sqrt(displ.norm())
     );
 
-    // if mouse down, pull yolk forwards
-    let yolkAcc = new Vector();
-    if (this.mouseClicked) {
-      const toMouse = Vector.diff(this.mousePos, this.yolkPos);
-      yolkAcc = Vector.sum(
-        yolkAcc,
-        Vector.scale(YOLK.ACCELERATION / Math.sqrt(toMouse.norm()), toMouse)
-      );
+    return Vector.scale(magnitude, displ.unit());
+  }
+
+  getYolkToWhiteAcc() {
+    const displ = Vector.diff(this.whitePos, this.yolkPos);
+    return Vector.scale(SPRING.SELF, displ);
+  }
+
+  updateYolk() {
+    const yolkAcc = Vector.sum(this.getPointerAcc(), this.getYolkToWhiteAcc());
+
+    this.yolkVel = Vector.applyDelta(this.yolkVel, yolkAcc);
+    this.yolkVel = Vector.scale(YOLK.FRICTION, this.yolkVel);
+
+    this.yolkPos = Vector.applyDelta(this.yolkPos, this.yolkVel);
+  }
+
+  updateState() {
+    const expired = [];
+    for (const status in this.state) {
+      this.state[status] -= 1;
+      if (this.state[status] <= 0) {
+        expired.push(status);
+      }
     }
 
-    // spring to pull back yolk
-    const toWhite = Vector.diff(this.whitePos, this.yolkPos);
-    yolkAcc = Vector.sum(
-      yolkAcc,
-      Vector.scale(SPRING.SELF / GAME.FRAMES_PER_SEC, toWhite)
-    );
+    for (const status of expired) {
+      delete this.state[status];
+    }
+  }
 
-    // handle yolk physics
-    this.yolkVel = Vector.sum(
-      this.yolkVel,
-      Vector.scale(1 / GAME.FRAMES_PER_SEC, yolkAcc)
-    );
-    this.yolkVel = Vector.scale(YOLK.FRICTION, this.yolkVel);
-    this.yolkPos = Vector.sum(
-      this.yolkPos,
-      Vector.scale(1 / GAME.FRAMES_PER_SEC, this.yolkVel)
-    );
-
-    // scroll screen with white
-    this.screenPos = Vector.sum(
-      this.screenPos,
-      Vector.scale(1 / GAME.FRAMES_PER_SEC, this.whiteVel)
-    );
-
-    // make sure mouse position stays consistent with screen scroll
-    this.mousePos = Vector.sum(
-      this.mousePos,
-      Vector.scale(1 / GAME.FRAMES_PER_SEC, this.whiteVel)
-    );
-
-    // lets try making eggs shrink as you go
-    // this.whiteSize -= SHRINK_SPEED;
+  update() {
+    this.updateWhite();
+    if (!("frozen" in this.state)) {
+      this.updateYolk();
+    }
+    this.updateState();
   }
 
   yolkInWhite() {
@@ -146,7 +122,7 @@ class Egg {
   }
 
   // TODO: refactor this code - vectors should be immutable
-  whiteMapCollision() {
+  handleMapCollision() {
     if (this.whitePos.x < this.whiteSize / 10) {
       this.whiteVel.x +=
         (-SPRING.MAP * (this.whitePos.x - this.whiteSize / 10)) /
@@ -168,64 +144,6 @@ class Egg {
         GAME.FRAMES_PER_SEC;
     }
   }
-
-  static getSpringAcc = (v, w, radius, springConst) => {
-    const normal = Vector.diff(v, w);
-    const magnitude = springConst * (radius - normal.norm());
-    return Vector.scale(
-      magnitude / normal.norm() / GAME.FRAMES_PER_SEC,
-      normal
-    );
-  };
-
-  static yolkYolkCollision = (a, b) => {
-    if (Vector.dist(a.yolkPos, b.yolkPos) < 2 * YOLK.SIZE) {
-      a.yolkVel = Vector.sum(
-        a.yolkVel,
-        this.getSpringAcc(a.yolkPos, b.yolkPos, 2 * YOLK.SIZE, SPRING.YOLK_YOLK)
-      );
-    }
-  };
-
-  static yolkWhiteCollision = (a, b) => {
-    if (Vector.dist(a.yolkPos, b.whitePos) < b.whiteSize / 10) {
-      a.yolkVel = Vector.sum(
-        a.yolkVel,
-        this.getSpringAcc(
-          a.yolkPos,
-          b.whitePos,
-          b.whiteSize / 10,
-          SPRING.YOLK_WHITE
-        )
-      );
-
-      if (!(a.id in b.collisions)) {
-        b.collisions[a.id] = 0;
-      }
-
-      // only after being in contact for BITE_INTERVAL time will a bite be taken
-      if (++b.collisions[a.id] == BITE.INTERVAL) {
-        b.whiteSize -= BITE.SIZE;
-        // a.mouseClicked = false;
-        delete b.collisions[a.id];
-      }
-    } else {
-      // reset bite counter if not in contact
-      delete b.collisions[a.id];
-    }
-  };
-
-  static whiteWhiteCollision = (a, b) => {
-    const diameter = (a.whiteSize + b.whiteSize) / 10;
-    if (Vector.dist(a.whitePos, b.whitePos) < diameter) {
-      a.whiteVel = Vector.sum(
-        a.whiteVel,
-        this.getSpringAcc(a.whitePos, b.whitePos, diameter, SPRING.WHITE_WHITE)
-      );
-    }
-  };
-
-  clone() {}
 }
 
 module.exports = Egg;

@@ -1,5 +1,5 @@
 import { Application, Graphics } from "pixi.js";
-import { sendJoystick } from "../client-socket";
+import { socket, socketPing } from "../client-socket";
 import Vector from "../../../shared/vector";
 
 const CANVAS_SIZE = 320;
@@ -44,21 +44,13 @@ export default class JoystickController {
     if (this.pointerCount == 0) return;
 
     const rect = this.canvas.current.getBoundingClientRect();
-    let pointerPos = new Vector(
-      event.clientX - rect.left,
-      event.clientY - rect.top
-    );
+    let pos = new Vector(event.clientX - rect.left, event.clientY - rect.top);
 
-    if (
-      pointerPos.x < 0 ||
-      pointerPos.x > CANVAS_SIZE ||
-      pointerPos.y < 0 ||
-      pointerPos.y > CANVAS_SIZE
-    ) {
+    if (pos.x < 0 || pos.x > CANVAS_SIZE || pos.y < 0 || pos.y > CANVAS_SIZE) {
       return;
     }
 
-    const dir = Vector.diff(pointerPos, center);
+    const dir = Vector.diff(pos, center);
     this.setDir(dir, !this.pointerTimeout);
 
     if (!this.pointerTimeout) {
@@ -76,11 +68,13 @@ export default class JoystickController {
 
   setDir(dir, send = true) {
     this.knob.position = { ...Vector.sum(dir, center) };
-    dir = new Vector(dir.x, -dir.y);
+
     if (dir.norm() < KNOB_THRESHOLD) dir = new Vector();
+    else dir = new Vector(dir.x, -dir.y).unit();
+
     if (send) {
-      sendJoystick(dir);
-      this.game.gameState?.setDir(dir);
+      socket.emit("input", { type: "joystick", dir });
+      this.game.gameState?.setWhiteDir(dir);
     }
   }
 }

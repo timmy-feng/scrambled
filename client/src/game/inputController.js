@@ -1,13 +1,4 @@
-import {
-  sendSpacebarDown,
-  sendSpacebarUp,
-  sendArrowDown,
-  sendArrowUp,
-  sendMouseDown,
-  sendMouseUp,
-  sendMouseMove,
-  socketPing,
-} from "../client-socket.js";
+import { socket, socketPing } from "../client-socket.js";
 import Vector from "../../../shared/vector.js";
 import { ARROW_CODE, GAME } from "../../../shared/constants.js";
 
@@ -17,81 +8,69 @@ export default class InputController {
   constructor(game, canvas) {
     this.game = game;
     this.canvas = canvas;
-    this.mouseTimeout = false;
+    this.pointerTimeout = false;
+  }
+
+  move(input) {
+    socket.emit("input", input);
+    setTimeout(
+      () => this.game.gameState?.handleInput(this.game.playerId, input),
+      socketPing
+    );
   }
 
   onKeyDown(event) {
     if (event.repeat) return;
-    if (event.key == " ") {
-      sendSpacebarDown();
-    } else if (event.key in ARROW_CODE) {
-      const key = ARROW_CODE[event.key];
-      sendArrowDown(key);
-      setTimeout(
-        () => this.game.gameState?.setArrow(this.game.playerId, key, true),
-        socketPing
-      );
+    if (event.key in ARROW_CODE) {
+      this.move({
+        type: "arrowDown",
+        key: ARROW_CODE[event.key],
+        keyDown: true,
+      });
     }
   }
 
   onKeyUp(event) {
-    if (event.key == " ") {
-      sendSpacebarUp();
-    } else if (event.key in ARROW_CODE) {
-      const key = ARROW_CODE[event.key];
-      sendArrowUp(key);
-      setTimeout(
-        () => this.game.gameState?.setArrow(this.game.playerId, key, false),
-        socketPing
-      );
+    if (event.key in ARROW_CODE) {
+      this.move({
+        type: "arrowUp",
+        key: ARROW_CODE[event.key],
+        keyDown: false,
+      });
     }
   }
 
-  onMouseDown(event) {
-    if (event.button != 0) return;
-    this.onMouseMove(event);
-    sendMouseDown();
-    setTimeout(
-      () => this.game.gameState?.setMouse(this.game.playerId, true),
-      socketPing
-    );
+  onPointerDown(event) {
+    this.onPointerMove(event);
+    this.move({ type: "pointerDown" });
   }
 
-  onMouseUp(event) {
-    if (event.button != 0) return;
-    sendMouseUp();
-    setTimeout(
-      () => this.game.gameState?.setMouse(this.game.playerId, false),
-      socketPing
-    );
+  onPointerUp(event) {
+    this.move({ type: "pointerUp" });
   }
 
-  onMouseMove(event) {
-    if (this.mouseTimeout) return;
+  onPointerMove(event) {
+    if (this.pointerTimeout) return;
 
     const rect = this.canvas.current.getBoundingClientRect();
-    let mousePos = new Vector(
-      event.clientX - rect.left,
-      event.clientY - rect.top
-    );
+    let pos = new Vector(event.clientX - rect.left, event.clientY - rect.top);
 
     if (
-      mousePos.x < 0 ||
-      mousePos.x > GAME.SCREEN_SIZE ||
-      mousePos.y < 0 ||
-      mousePos.y > GAME.SCREEN_SIZE
+      pos.x < 0 ||
+      pos.x > GAME.SCREEN_SIZE ||
+      pos.y < 0 ||
+      pos.y > GAME.SCREEN_SIZE
     ) {
       return;
     }
 
-    mousePos = new Vector(mousePos.x, -mousePos.y);
-    sendMouseMove(mousePos);
-    setTimeout(
-      () => this.game.gameState?.moveMouse(this.game.playerId, mousePos),
-      socketPing
+    pos = new Vector(
+      pos.x + GAME.MAP_SIZE / 2 - GAME.SCREEN_SIZE / 2,
+      -pos.y + GAME.MAP_SIZE / 2 + GAME.SCREEN_SIZE / 2
     );
+    this.move({ type: "pointerMove", pos });
 
-    this.mouseTimeout = true;
-    setTimeout(() => (this.mouseTimeout = false), 1000 / MOUSE_PER_SEC);
+    this.pointerTimeout = true;
+    setTimeout(() => (this.pointerTimeout = false), 1000 / MOUSE_PER_SEC);
   }
 }

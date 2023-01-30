@@ -27,37 +27,3 @@ socket.onConnect((error) => {
     socketPing = 0.9 * socketPing + 0.1 * latency;
   });
 });
-
-// socket api below
-
-export const sendArrowDown = (arrowCode) => {
-  socket.emit("arrowDown", arrowCode);
-};
-
-export const sendArrowUp = (arrowCode) => {
-  socket.emit("arrowUp", arrowCode);
-};
-
-export const sendSpacebarDown = () => {
-  socket.emit("spacebarDown");
-};
-
-export const sendSpacebarUp = () => {
-  socket.emit("spacebarUp");
-};
-
-export const sendMouseDown = () => {
-  socket.emit("mouseDown");
-};
-
-export const sendMouseUp = () => {
-  socket.emit("mouseUp");
-};
-
-export const sendMouseMove = (mousePos) => {
-  socket.emit("mouseMove", mousePos);
-};
-
-export const sendJoystick = (dir) => {
-  socket.emit("joystick", dir);
-};
