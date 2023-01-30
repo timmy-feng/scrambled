@@ -17,6 +17,18 @@ class Vector {
     return Vector.scale(1 / this.norm(), this);
   }
 
+  static polar(r, theta) {
+    return new Vector(r * Math.cos(theta), r * Math.sin(theta));
+  }
+
+  static perp(v) {
+    return new Vector(v.y, -v.x);
+  }
+
+  static unitNormal(v, w) {
+    return Vector.perp(Vector.diff(v, w).norm());
+  }
+
   static dist(v, w) {
     return Vector.diff(v, w).norm();
   }
