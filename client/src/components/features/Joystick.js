@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import JoystickController from "../game/joystickController";
+import JoystickController from "../../game/joystickController";
 
 const Joystick = (props) => {
   const canvas = useRef();

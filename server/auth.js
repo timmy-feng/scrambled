@@ -52,19 +52,18 @@ function logout(req, res) {
 }
 
 function populateCurrentUser(req, res, next) {
-  // simply populate "req.user" for convenience
-  req.user = req.session.user;
-
-  // or use this code to play test without logging in
-  if (process.env.STATUS == "testing") {
+  if (process.env.STATUS == "testing" && !req.session.user) {
     let _id = "";
     for (let i = 0; i < 24; ++i) {
       const digit = Math.floor(Math.random() * 16);
       if (digit < 10) _id += String.fromCharCode(48 + digit);
       else _id += String.fromCharCode(97 + digit - 10);
     }
-    req.user = { _id };
+    req.session.user = { _id };
   }
+
+  // simply populate "req.user" for convenience
+  req.user = req.session.user;
 
   next();
 }

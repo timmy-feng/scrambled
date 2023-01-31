@@ -23,7 +23,7 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
           {userId ? (
             <>
               <div className="Directions-button">
-                <Link to="/game">Play</Link>
+                <Link to="/lobby">Play</Link>
               </div>
 
               <div className="Directions-button">Achievements</div>

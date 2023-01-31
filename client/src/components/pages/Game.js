@@ -1,37 +1,22 @@
 import React, { useEffect, useRef, useState } from "react";
-import { socket, socketPing } from "../client-socket.js";
+import { socket, socketPing } from "../../client-socket.js";
 
-import GameController from "../game/gameController.js";
-import InputController from "../game/inputController.js";
-import { get } from "../utilities.js";
+import GameController from "../../game/gameController.js";
+import InputController from "../../game/inputController.js";
 
 import "./Game.css";
-import Joystick from "./Joystick.js";
+import Joystick from "../features/Joystick.js";
 
 const Game = (props) => {
   const canvas = useRef();
   const [game, setGame] = useState();
   const [input, setInput] = useState();
 
-  const [numDeaths, setNumDeaths] = useState();
   const [ping, setPing] = useState();
-
-  // useEffect(() => {
-  //   setInterval(() => {
-  //     if (updateTime) {
-  //       setUpdateDiff(Date.now() - updateTime);
-  //     }
-  //   }, 1000 / 60);
-  // }, [updateTime]);
-
-  useEffect(() => {
-    get("/api/numDeaths").then((result) => setNumDeaths(result.numDeaths));
-  }, [props.userId]);
 
   useEffect(() => {
     const pingLoop = setInterval(() => {
       setPing(Math.floor(socketPing));
-      // console.log(input);
     }, 1000);
     return () => {
       clearInterval(pingLoop);
@@ -85,12 +70,6 @@ const Game = (props) => {
       <div className="Game-container">
         <Joystick game={game}></Joystick>
       </div>
-
-      {numDeaths ? (
-        <div className="Game-container">
-          <p>your egg has suffered {numDeaths} deaths</p>
-        </div>
-      ) : null}
 
       {ping ? (
         <div className="Game-container">

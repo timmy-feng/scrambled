@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Router } from "@reach/router";
 import jwt_decode from "jwt-decode";
 
-import Game from "./Game.js";
+import Lobby from "./pages/Lobby.js";
+import Game from "./pages/Game.js";
 import NotFound from "./pages/NotFound.js";
 import Skeleton from "./pages/Skeleton.js";
 
@@ -45,6 +46,7 @@ const App = () => {
   return (
     <>
       <Router>
+        <Lobby path="/lobby" userId={userId} />
         <Game path="/game" userId={userId} />
         <Skeleton
           path="/"

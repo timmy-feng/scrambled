@@ -48,16 +48,6 @@ router.post("/initsocket", (req, res) => {
   res.send({});
 });
 
-router.get("/numDeaths", (req, res) => {
-  if (req.user) {
-    User.findOne({ _id: req.user._id }).then((user) => {
-      if (user) res.send({ numDeaths: user.numDeaths });
-    });
-  } else {
-    res.send({});
-  }
-});
-
 // |------------------------------|
 // | write your API methods below!|
 // |------------------------------|
