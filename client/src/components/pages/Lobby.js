@@ -2,6 +2,8 @@ import { navigate } from "@reach/router";
 import React, { useEffect, useState } from "react";
 import { removeSocketListener, socket } from "../../client-socket";
 
+import "./Skeleton.css";
+
 const MAPS = ["rice", "ramen", "shakshuka"];
 
 const Lobby = (props) => {
@@ -38,15 +40,14 @@ const Lobby = (props) => {
 
     if (roomCode in rooms) {
       playerList = rooms[roomCode].players.map((player, i) => (
-        <p key={i}>
-          {player}
-          {i == 0 ? " (host)" : ""}
-        </p>
+        <div className="Directions-button" key={i}>
+          {player + (i == 0 ? " (host)" : "")}
+        </div>
       ));
 
       if (rooms[roomCode].players[0] == props.userId) {
         startGameButtons = (
-          <div>
+          <div className="Directions-button">
             <span>Start Game: </span>
             {MAPS.map((map) => (
               <button key={map} onClick={() => socket.emit("startgame", map)}>
@@ -59,12 +60,21 @@ const Lobby = (props) => {
     }
 
     return (
-      <>
-        <h1>Room {roomCode}</h1>
-        {playerList}
-        {startGameButtons}
-        <button onClick={() => socket.emit("leaveroom")}>Leave Room</button>
-      </>
+      <div className="Start-container u-flex">
+        <div className="Directions-container u-flex">
+          <div className="Title-container u-flex">
+            <h2 className="Title-text">Room {roomCode}</h2>
+          </div>
+          {playerList}
+          {startGameButtons}
+          <div
+            className="Directions-button"
+            onClick={() => socket.emit("leaveroom")}
+          >
+            Leave Room
+          </div>
+        </div>
+      </div>
     );
   } else {
     const roomList = [];
@@ -80,16 +90,26 @@ const Lobby = (props) => {
     }
 
     return (
-      <>
-        <h1>Join a Room</h1>
-        {roomList}
-        <div style={{ marginTop: "20px" }}>
-          <button onClick={() => socket.emit("createroom")}>Create Room</button>
+      <div className="Start-container u-flex">
+        <div className="Directions-container u-flex">
+          <div className="Title-container u-flex">
+            <h2 className="Title-text">Join A Room</h2>
+          </div>
+          {roomList}
+          <div
+            className="Directions-button"
+            onClick={() => socket.emit("createroom")}
+          >
+            Create Room
+          </div>
+          <div
+            className="Directions-button"
+            onClick={() => socket.emit("requestrooms")}
+          >
+            Refresh
+          </div>
         </div>
-        <div>
-          <button onClick={() => socket.emit("requestrooms")}>Refresh</button>
-        </div>
-      </>
+      </div>
     );
   }
 };
