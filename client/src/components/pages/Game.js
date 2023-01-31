@@ -6,8 +6,11 @@ import InputController from "../../game/inputController.js";
 
 import "./Game.css";
 import Joystick from "../features/Joystick.js";
+import { navigate } from "@reach/router";
 
 const Game = (props) => {
+  if (!props.userId) navigate("/");
+
   const canvas = useRef();
   const [game, setGame] = useState();
   const [input, setInput] = useState();

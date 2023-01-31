@@ -1,9 +1,10 @@
 import { navigate } from "@reach/router";
 import React, { useEffect, useState } from "react";
 import { socket } from "../../client-socket";
-import { get } from "../../utilities";
 
 const Lobby = (props) => {
+  if (!props.userId) navigate("/");
+
   const [rooms, setRooms] = useState([]);
   const [roomCode, setRoomCode] = useState();
 
