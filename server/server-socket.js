@@ -128,7 +128,7 @@ const removeUser = (user, socket) => {
 const initGeckos = async (port) => {
   const geckos = await import("@geckos.io/server");
   io = geckos.geckos({ port });
-  io.listen();
+  io.listen(port);
 
   io.onConnection((socket) => {
     console.log(`socket has connected ${socket.id}`);
