@@ -263,9 +263,12 @@ class GameState {
 
   // TODO: make a way to get "random" positions that are far from other objects
   getRandomPos() {
-    return new Vector(
-      Math.random() * GAME.MAP_SIZE,
-      Math.random() * GAME.MAP_SIZE
+    return Vector.sum(
+      Vector.polar(
+        (Math.random() * GAME.MAP_SIZE) / 2,
+        Math.random() * 2 * Math.PI
+      ),
+      new Vector(GAME.MAP_SIZE / 2, GAME.MAP_SIZE / 2)
     );
   }
 

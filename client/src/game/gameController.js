@@ -49,7 +49,7 @@ export default class GameController {
     this.canvas = canvas;
     this.pixiApp = new Application({
       view: canvas,
-      backgroundColor: 0x00c0ff,
+      backgroundColor: 0xffffff,
       width: GAME.SCREEN_SIZE,
       height: GAME.SCREEN_SIZE,
     });
@@ -113,7 +113,7 @@ export default class GameController {
     this.pixiApp.stage.removeChildren();
 
     const playerEgg = this.gameState.getEggById(this.playerId);
-    if (this.playAy < playerEgg.playAy) {
+    if (playerEgg && this.playAy < playerEgg.playAy) {
       kirbyAy.pause();
       kirbyAy.currentTime = 0;
       kirbyAy.play();
@@ -125,35 +125,43 @@ export default class GameController {
       GAME.MAP_SIZE / 2 + GAME.SCREEN_SIZE / 2
     );
 
+    this.pixiApp.stage.addChild(
+      getCircle(
+        new Vector(GAME.SCREEN_SIZE / 2, GAME.SCREEN_SIZE / 2),
+        GAME.MAP_SIZE / 2,
+        0x00c0ff
+      )
+    );
+
     // drawing the border - still kinda messy
-    const border = new PIXI.Graphics();
-    border.beginFill(0x808080, 0.5);
-    border.drawRect(
-      -offset.x,
-      offset.y,
-      GAME.SCREEN_SIZE + GAME.MAP_SIZE,
-      GAME.SCREEN_SIZE
-    );
-    border.drawRect(
-      -GAME.SCREEN_SIZE - offset.x,
-      -(GAME.SCREEN_SIZE + GAME.MAP_SIZE - offset.y),
-      GAME.SCREEN_SIZE + GAME.MAP_SIZE,
-      GAME.SCREEN_SIZE
-    );
-    border.drawRect(
-      -GAME.SCREEN_SIZE - offset.x,
-      -(GAME.MAP_SIZE - offset.y),
-      GAME.SCREEN_SIZE,
-      GAME.SCREEN_SIZE + GAME.MAP_SIZE
-    );
-    border.drawRect(
-      GAME.MAP_SIZE - offset.x,
-      -(GAME.MAP_SIZE + GAME.SCREEN_SIZE - offset.y),
-      GAME.SCREEN_SIZE,
-      GAME.SCREEN_SIZE + GAME.MAP_SIZE
-    );
-    border.endFill();
-    this.pixiApp.stage.addChild(border);
+    // const border = new PIXI.Graphics();
+    // border.beginFill(0x808080, 0.5);
+    // border.drawRect(
+    //   -offset.x,
+    //   offset.y,
+    //   GAME.SCREEN_SIZE + GAME.MAP_SIZE,
+    //   GAME.SCREEN_SIZE
+    // );
+    // border.drawRect(
+    //   -GAME.SCREEN_SIZE - offset.x,
+    //   -(GAME.SCREEN_SIZE + GAME.MAP_SIZE - offset.y),
+    //   GAME.SCREEN_SIZE + GAME.MAP_SIZE,
+    //   GAME.SCREEN_SIZE
+    // );
+    // border.drawRect(
+    //   -GAME.SCREEN_SIZE - offset.x,
+    //   -(GAME.MAP_SIZE - offset.y),
+    //   GAME.SCREEN_SIZE,
+    //   GAME.SCREEN_SIZE + GAME.MAP_SIZE
+    // );
+    // border.drawRect(
+    //   GAME.MAP_SIZE - offset.x,
+    //   -(GAME.MAP_SIZE + GAME.SCREEN_SIZE - offset.y),
+    //   GAME.SCREEN_SIZE,
+    //   GAME.SCREEN_SIZE + GAME.MAP_SIZE
+    // );
+    // border.endFill();
+    // this.pixiApp.stage.addChild(border);
 
     for (const gummy of this.gameState.gummies) {
       const fabi = new Sprite(fabiTexture[gummy.type].icon);

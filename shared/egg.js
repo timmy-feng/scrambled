@@ -133,26 +133,35 @@ class Egg {
 
   // TODO: refactor this code - vectors should be immutable
   handleMapCollision() {
-    if (this.whitePos.x < this.whiteSize / 10) {
-      this.whiteVel.x +=
-        (-SPRING.MAP * (this.whitePos.x - this.whiteSize / 10)) /
-        GAME.FRAMES_PER_SEC;
+    const center = new Vector(GAME.MAP_SIZE / 2, GAME.MAP_SIZE / 2);
+    const displ = Vector.diff(this.whitePos, center);
+    if (displ.norm() > GAME.MAP_SIZE / 2 - SPRING.MAP_BUFFER) {
+      const acc = Vector.scale(
+        -SPRING.MAP * (displ.norm() - GAME.MAP_SIZE / 2 + SPRING.MAP_BUFFER),
+        displ.unit()
+      );
+      this.whiteVel = Vector.applyDelta(this.whiteVel, acc);
     }
-    if (GAME.MAP_SIZE - this.whitePos.x < this.whiteSize / 10) {
-      this.whiteVel.x +=
-        (SPRING.MAP * (GAME.MAP_SIZE - this.whitePos.x - this.whiteSize / 10)) /
-        GAME.FRAMES_PER_SEC;
-    }
-    if (this.whitePos.y < this.whiteSize / 10) {
-      this.whiteVel.y +=
-        (-SPRING.MAP * (this.whitePos.y - this.whiteSize / 10)) /
-        GAME.FRAMES_PER_SEC;
-    }
-    if (GAME.MAP_SIZE - this.whitePos.y < this.whiteSize / 10) {
-      this.whiteVel.y +=
-        (SPRING.MAP * (GAME.MAP_SIZE - this.whitePos.y - this.whiteSize / 10)) /
-        GAME.FRAMES_PER_SEC;
-    }
+    // if (this.whitePos.x < this.whiteSize / 10) {
+    //   this.whiteVel.x +=
+    //     (-SPRING.MAP * (this.whitePos.x - this.whiteSize / 10)) /
+    //     GAME.FRAMES_PER_SEC;
+    // }
+    // if (GAME.MAP_SIZE - this.whitePos.x < this.whiteSize / 10) {
+    //   this.whiteVel.x +=
+    //     (SPRING.MAP * (GAME.MAP_SIZE - this.whitePos.x - this.whiteSize / 10)) /
+    //     GAME.FRAMES_PER_SEC;
+    // }
+    // if (this.whitePos.y < this.whiteSize / 10) {
+    //   this.whiteVel.y +=
+    //     (-SPRING.MAP * (this.whitePos.y - this.whiteSize / 10)) /
+    //     GAME.FRAMES_PER_SEC;
+    // }
+    // if (GAME.MAP_SIZE - this.whitePos.y < this.whiteSize / 10) {
+    //   this.whiteVel.y +=
+    //     (SPRING.MAP * (GAME.MAP_SIZE - this.whitePos.y - this.whiteSize / 10)) /
+    //     GAME.FRAMES_PER_SEC;
+    // }
   }
 }
 

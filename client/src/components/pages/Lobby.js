@@ -83,7 +83,12 @@ const Lobby = (props) => {
       <>
         <h1>Join a Room</h1>
         {roomList}
-        <button onClick={() => socket.emit("createroom")}>Create Room</button>
+        <div style={{ marginTop: "20px" }}>
+          <button onClick={() => socket.emit("createroom")}>Create Room</button>
+        </div>
+        <div>
+          <button onClick={() => socket.emit("requestrooms")}>Refresh</button>
+        </div>
       </>
     );
   }

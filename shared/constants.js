@@ -1,7 +1,7 @@
 const Vector = require("./vector");
 
 const GAME = {
-  MAP_SIZE: 960,
+  MAP_SIZE: 1280,
   SCREEN_SIZE: 1280,
   FRAMES_PER_SEC: 60, // change in vector.js too
 };
@@ -33,6 +33,7 @@ const SPRING = {
   YOLK_WHITE: 300,
   WHITE_WHITE: 20,
   MAP: 20,
+  MAP_BUFFER: 128,
 };
 
 const BITE = {
