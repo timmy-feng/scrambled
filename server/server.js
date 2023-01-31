@@ -18,8 +18,10 @@
 const validator = require("./validator");
 validator.checkSetup();
 
-//import libraries needed for the webserver to work!
+const fs = require("fs");
 const http = require("http");
+const https = require("https");
+
 const express = require("express"); // backend framework for our node server.
 const session = require("express-session"); // library that stores info about each connected user
 const mongoose = require("mongoose"); // library to connect to MongoDB
@@ -98,14 +100,33 @@ app.use((err, req, res, next) => {
   });
 });
 
-// hardcode port to 3000 for now
-const port = process.env.PORT || 3000;
-const server = http.Server(app);
+const httpPort = process.env.HTTP_PORT || 3000;
+const httpServer = http.Server(app);
+
 // TODO: supposedly adding this line allows for wws protocol to work on port 443
 // but this did not happen
-const expressWs = require("express-ws")(app);
-socketManager.init(port);
+// const expressWs = require("express-ws")(app);
+socketManager.init(httpPort);
 
-server.listen(port, () => {
-  console.log(`Server running on port: ${port}`);
+httpServer.listen(httpPort, () => {
+  console.log(`http server running on port: ${httpPort}`);
 });
+
+if (process.env.HTTPS_PORT) {
+  const privateKey = fs.readFileSync(
+    "/etc/letsencrypt/live/scrambled.one/privkey.pem"
+  );
+  const certificate = fs.readFileSync(
+    "/etc/letsencrypt/live/scrambled.one/fullchain.pem"
+  );
+
+  const httpsPort = process.env.HTTPS_PORT;
+  const httpsServer = https.createServer(
+    { key: privateKey, cert: certificate },
+    app
+  );
+
+  httpsServer.listen(httpsPort, () => {
+    console.log(`https server running on port: ${httpsPort}`);
+  });
+}
