@@ -24,6 +24,8 @@ const getSpringAcc = (v, w, radius, springConst) => {
 
 class GameState {
   constructor(data = {}) {
+    this.map = data.map;
+
     this.eggs = data.eggs ? data.eggs.map((egg) => new Egg(egg)) : [];
     this.gummies = data.gummies
       ? data.gummies.map((gummy) => new Gummy(gummy))
@@ -272,34 +274,14 @@ class GameState {
   }
 
   getRandomGummy() {
-    const rand = Math.random();
-    // if (rand < 0.05) {
-    //   return "invisible";
-    // } else if (rand < 0.2) {
-    //   return "freeze";
-    // } else {
-    //   return "gummy";
-    // }
+    let rand = Math.random();
 
-    if (rand < 0.1) {
-      return "invisible";
-    } else if (rand < 0.4) {
-      return "freeze";
-    } else {
-      return "armed";
+    for (const gummy in GUMMY[this.map]) {
+      if (rand < GUMMY[this.map][gummy]) {
+        return gummy;
+      }
+      rand -= GUMMY[this.map][gummy];
     }
-
-    // if (rand < 0.1) {
-    //   return "invisible";
-    // } else if (rand < 0.2) {
-    //   return "freeze";
-    // } else if (rand < 0.3) {
-    //   return "speed";
-    // } else if (rand < 0.4) {
-    //   return "spring";
-    // } else {
-    //   return "gummy";
-    // }
   }
 }
 

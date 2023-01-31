@@ -32,6 +32,7 @@ const Game = (props) => {
   // kick player out of room if they leave
   useEffect(() => {
     socket.on("gameover", (winner) => {
+      // TODO: change this to some sort of modal on canvas
       window.alert(`${winner} won!`);
       navigate("/lobby");
     });

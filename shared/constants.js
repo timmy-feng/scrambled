@@ -68,6 +68,23 @@ const GUMMY = {
     DURATION: 120,
     BUFFER: 10,
   },
+
+  // maps
+  rice: {
+    speed: 0.05,
+    freeze: 0.15,
+    gummy: 0.8,
+  },
+  ramen: {
+    invisible: 0.05,
+    spring: 0.15,
+    gummy: 0.8,
+  },
+  shakshuka: {
+    invisible: 0.1,
+    freeze: 0.3,
+    armed: 0.6,
+  },
 };
 
 const MISC = {

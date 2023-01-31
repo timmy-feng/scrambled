@@ -14,7 +14,7 @@ const rooms = {};
 const userToGameMap = {};
 const userToRoomMap = {};
 
-const startGame = (user) => {
+const startGame = (user, map) => {
   if (!(user in userToRoomMap)) return;
 
   const room = rooms[userToRoomMap[user]];
@@ -23,7 +23,7 @@ const startGame = (user) => {
   room.inGame = true;
   io.emit("updaterooms", rooms);
 
-  const game = new GameState();
+  const game = new GameState({ map });
   for (const user of room.players) {
     userToGameMap[user] = game;
     userToSocketMap[user].emit("startgame");
@@ -177,10 +177,10 @@ const initGeckos = async (port) => {
       }
     });
 
-    socket.on("startgame", () => {
+    socket.on("startgame", (map) => {
       const user = socketToUserMap[socket.id];
       if (user) {
-        startGame(user._id);
+        startGame(user._id, map);
       }
     });
 
