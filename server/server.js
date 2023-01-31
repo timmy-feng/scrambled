@@ -100,9 +100,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-// TODO: supposedly adding this line allows for wws protocol to work on port 443
-// but this did not happen
-// const expressWs = require("express-ws")(app);
 const port = process.env.PORT || 3000;
 let server;
 if (process.env.HTTPS == "true") {
@@ -114,6 +111,13 @@ if (process.env.HTTPS == "true") {
   );
 
   server = https.createServer({ key: privateKey, cert: certificate }, app);
+
+  // redirect client to https
+  const httpRedirect = http.createServer((req, res) => {
+    res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
+    res.end();
+  });
+  httpRedirect.listen(80);
 } else {
   server = http.Server(app);
 }
@@ -121,5 +125,5 @@ if (process.env.HTTPS == "true") {
 socketManager.init(server);
 
 server.listen(port, () => {
-  console.log(`https server running on port: ${server}`);
+  console.log(`Server running on port: ${port}`);
 });
