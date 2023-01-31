@@ -54,12 +54,11 @@ class Egg {
   getWhiteAcc() {
     let whiteAcc = Vector.scale(WHITE.ACC, this.whiteDir);
 
-    whiteAcc = Vector.scale(
+    const sizeSlowdown =
       ((WHITE.MAX_SIZE - this.whiteSize) / (WHITE.MAX_SIZE - WHITE.MIN_SIZE) +
         1) /
-        2,
-      whiteAcc
-    );
+      2;
+    whiteAcc = Vector.scale(sizeSlowdown, whiteAcc);
 
     if (!this.yolkInWhite()) whiteAcc = Vector.scale(0.75, whiteAcc);
     if ("sprung" in this.state) whiteAcc = Vector.scale(0.75, whiteAcc);

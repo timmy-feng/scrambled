@@ -3,7 +3,7 @@ import { Sprite, Application } from "pixi.js";
 import GameState from "../../../shared/gameState";
 
 import Vector from "../../../shared/vector";
-import { GAME, YOLK } from "../../../shared/constants";
+import { GAME, YOLK, TOMATO } from "../../../shared/constants";
 import EggGraphic from "./eggGraphic";
 
 const fabiTexture = {
@@ -11,6 +11,8 @@ const fabiTexture = {
   spring: { icon: PIXI.Texture.from("fabiboing.png"), scale: 0.15 },
   freeze: { icon: PIXI.Texture.from("fabifreeze.png"), scale: 0.15 },
   speed: { icon: PIXI.Texture.from("fabispice.png"), scale: 0.15 },
+  invisible: { icon: PIXI.Texture.from("fabicloak.png"), scale: 0.15 },
+  armed: { icon: PIXI.Texture.from("fa-b-ball.png"), scale: 0.15 },
 };
 
 const kirbyAy = new Audio("kirbyAy.wav");
@@ -31,9 +33,9 @@ const getWeightedAverage = (prev, next) => {
   );
 };
 
-const getCircle = (center, radius, color) => {
+const getCircle = (center, radius, color, alpha = 1) => {
   const circle = new PIXI.Graphics();
-  circle.beginFill(color);
+  circle.beginFill(color, alpha);
   circle.drawCircle(0, 0, radius);
   circle.position = { x: center.x, y: center.y };
   return circle;
@@ -43,7 +45,7 @@ export default class GameController {
   constructor(canvas) {
     this.pixiApp = new Application({
       view: canvas,
-      backgroundColor: 0x40c0ff,
+      backgroundColor: 0x00c0ff,
       width: GAME.SCREEN_SIZE,
       height: GAME.SCREEN_SIZE,
     });
@@ -208,6 +210,19 @@ export default class GameController {
       let color = 0xffffff;
       if ("speed" in player.state) color = 0xffc080;
 
+      let alpha = 1;
+      if ("invisible" in player.state) {
+        if (
+          player.id == this.playerId ||
+          "frozen" in player.state ||
+          "sprung" in player.state
+        ) {
+          alpha = 0.5;
+        } else {
+          alpha = 0;
+        }
+      }
+
       graphic.setPos(
         new Vector(
           player.whitePos.x - offset.x,
@@ -215,7 +230,7 @@ export default class GameController {
         )
       );
       graphic.setRadius(player.whiteSize / 10);
-      graphic.setColor(color);
+      graphic.setColor(color, alpha);
       graphic.updateAcc();
       this.pixiApp.stage.addChild(graphic);
 
@@ -231,6 +246,16 @@ export default class GameController {
       // );
     }
 
+    for (const tomato of this.gameState.tomatoes) {
+      this.pixiApp.stage.addChild(
+        getCircle(
+          new Vector(tomato.pos.x - offset.x, -(tomato.pos.y - offset.y)),
+          TOMATO.SIZE,
+          0xff4000
+        )
+      );
+    }
+
     for (const player of this.gameState.eggs) {
       let color = 0xffc040;
       if ("spring" in player.state || "freeze" in player.state)
@@ -238,15 +263,30 @@ export default class GameController {
       else if ("sprung" in player.state || "frozen" in player.state)
         color = 0xffff80;
 
+      let alpha = 1;
+      if ("invisible" in player.state) {
+        if (
+          player.id == this.playerId ||
+          "frozen" in player.state ||
+          "sprung" in player.state
+        ) {
+          alpha = 0.5;
+        } else {
+          alpha = 0;
+        }
+      }
+
       const yolk = getCircle(
         new Vector(player.yolkPos.x - offset.x, -(player.yolkPos.y - offset.y)),
         YOLK.SIZE,
-        color
+        color,
+        alpha
       );
 
       const dir = Vector.diff(player.yolkPos, player.pointerPos);
 
       const lenny = new PIXI.Text(player.name);
+      lenny.alpha = alpha;
       lenny.anchor = { x: 0.5, y: 0.5 };
       lenny.rotation = -Math.atan2(dir.y, dir.x) + Math.PI / 2;
       yolk.addChild(lenny);

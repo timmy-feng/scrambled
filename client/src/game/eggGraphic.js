@@ -9,7 +9,10 @@ import Vector from "../../../shared/vector";
 import { Graphics, Container } from "pixi.js";
 import Mass from "./Mass.js";
 
-const NUM_MASSES = 5;
+// display wireframe outlines in game
+const SHOW_WIREFRAME = false;
+
+const NUM_MASSES = 9;
 
 // shape
 // const R_WHITE = 100;
@@ -50,6 +53,7 @@ export default class EggGraphic extends Container {
     this.pos = pos;
     this.radius = radius;
     this.color = 0xffffff;
+    this.alhpa = 1;
 
     this.centerMass = new Mass({ pos });
 
@@ -67,8 +71,9 @@ export default class EggGraphic extends Container {
     this.radius = radius;
   }
 
-  setColor(color) {
+  setColor(color, alpha = 1) {
     this.color = color;
+    this.alpha = alpha;
   }
 
   getVolume() {
@@ -241,7 +246,7 @@ export default class EggGraphic extends Container {
 
     // bezier curve using midpoints
     const fluidWhite = new Graphics();
-    fluidWhite.beginFill(this.color);
+    fluidWhite.beginFill(this.color, this.alpha);
     fluidWhite.lineStyle(2, 0xaaaaaa);
 
     // using convex hull instead of masses array for when masses cross edges
@@ -276,17 +281,23 @@ export default class EggGraphic extends Container {
     // yolk.endFill();
     // this.addChild(yolk);
 
-    // buffer
-    // let white = new Graphics();
-    // white.beginFill("0x00ffff");
-    // white.drawCircle(this.centerMass.pos.x, this.centerMass.pos.y, R_WHITE);
-    // white.endFill();
-    // this.addChild(white);
+    if (SHOW_WIREFRAME) {
+      // buffer
+      let white = new Graphics();
+      white.beginFill("0x00ffff");
+      white.drawCircle(
+        this.centerMass.pos.x,
+        this.centerMass.pos.y,
+        this.radius
+      );
+      white.endFill();
+      this.addChild(white);
 
-    // masses
-    // for (let i = 0; i < NUM_MASSES; i++) {
-    //   this.addChild(this.createMassGraphic(this.masses[i]));
-    // }
+      // masses
+      for (let i = 0; i < NUM_MASSES; i++) {
+        this.addChild(this.createMassGraphic(this.masses[i]));
+      }
+    }
 
     // radial springs
     // for (let i = 0; i < NUM_MASSES; i++) {

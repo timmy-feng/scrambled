@@ -9,8 +9,10 @@ const {
   SPRING,
   BITE,
   MISC,
+  TOMATO,
 } = require("./constants");
 const Gummy = require("./gummy");
+const Tomato = require("./tomato");
 
 const getSpringAcc = (v, w, radius, springConst) => {
   const displ = Vector.diff(v, w);
@@ -26,7 +28,12 @@ class GameState {
     this.gummies = data.gummies
       ? data.gummies.map((gummy) => new Gummy(gummy))
       : [];
+    this.tomatoes = data.tomatoes
+      ? data.tomatoes.map((tomato) => new Tomato(tomato))
+      : [];
+
     this.collisions = data.collisions ? data.collisions : {};
+
     this.predictMode = data.predictMode ?? false;
     this.framesPassed = data.framesPassed ?? 0;
   }
@@ -40,6 +47,36 @@ class GameState {
           this.whiteWhiteCollision(a, b);
         }
       }
+    }
+  }
+
+  updateTomatoes() {
+    const exploded = [];
+    for (const tomato of this.tomatoes) {
+      tomato.update();
+
+      for (const egg of this.eggs) {
+        if (Vector.dist(tomato.pos, egg.whitePos) < egg.whiteSize / 10) {
+          if (tomato.ownerId != egg.id) {
+            exploded.push(tomato);
+            egg.whiteSize -= TOMATO.DAMAGE;
+            break;
+          }
+        }
+      }
+
+      if (
+        tomato.pos.x < 0 ||
+        tomato.pos.x > GAME.MAP_SIZE ||
+        tomato.pos.y < 0 ||
+        tomato.pos.y > GAME.MAP_SIZE
+      ) {
+        exploded.push(tomato);
+      }
+    }
+
+    for (const tomato of exploded) {
+      this.tomatoes.splice(this.tomatoes.indexOf(tomato), 1);
     }
   }
 
@@ -91,7 +128,7 @@ class GameState {
 
       if ("spring" in you.state) {
         const dir = Vector.diff(me.whitePos, you.whitePos).unit();
-        me.state.sprung = MISC.SPRING.DURATION;
+        me.state.sprung = MISC.SPRUNG.DURATION;
         me.yolkVel = Vector.scale(MISC.SPRUNG.VEL, dir);
         delete you.state.spring;
       }
@@ -150,6 +187,8 @@ class GameState {
       egg.update();
     }
 
+    this.updateTomatoes();
+
     this.updateGummies();
 
     const dead = [];
@@ -199,6 +238,20 @@ class GameState {
       egg.setPointerPos(input.pos);
     } else if (input.type == "pointerDown") {
       egg.setPointerDown(true);
+      if (
+        "armed" in egg.state &&
+        egg.state.armed < GUMMY.armed.DURATION - GUMMY.armed.BUFFER
+      ) {
+        console.log(Vector.diff(egg.pointerPos, egg.yolkPos).unit());
+        this.tomatoes.push(
+          new Tomato({
+            pos: egg.yolkPos,
+            dir: Vector.diff(egg.pointerPos, egg.yolkPos).unit(),
+            ownerId: egg.id,
+          })
+        );
+        delete egg.state.armed;
+      }
     } else if (input.type == "pointerUp") {
       egg.setPointerDown(false);
     } else if (input.type == "joystick") {
@@ -220,13 +273,33 @@ class GameState {
 
   getRandomGummy() {
     const rand = Math.random();
-    if (rand < 0.05) {
-      return "speed";
-    } else if (rand < 0.2) {
+    // if (rand < 0.05) {
+    //   return "invisible";
+    // } else if (rand < 0.2) {
+    //   return "freeze";
+    // } else {
+    //   return "gummy";
+    // }
+
+    if (rand < 0.1) {
+      return "invisible";
+    } else if (rand < 0.4) {
       return "freeze";
     } else {
-      return "gummy";
+      return "armed";
     }
+
+    // if (rand < 0.1) {
+    //   return "invisible";
+    // } else if (rand < 0.2) {
+    //   return "freeze";
+    // } else if (rand < 0.3) {
+    //   return "speed";
+    // } else if (rand < 0.4) {
+    //   return "spring";
+    // } else {
+    //   return "gummy";
+    // }
   }
 }
 

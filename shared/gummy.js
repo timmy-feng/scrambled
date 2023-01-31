@@ -8,9 +8,9 @@
 //   narutomaki - makes yolks go boing
 //   seaweed -
 // shakshuka (tomato and eggs)
-//   cherry tomatoes -
+//   cherry tomatoes - a tomato bullet to sap other whites
 //   garlic - "
-//   feta -
+//   feta - makes you invisible for a bit
 // scrambled ultimate powerup
 
 class Gummy {

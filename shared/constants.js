@@ -21,10 +21,16 @@ const YOLK = {
   SIZE: 48,
 };
 
+const TOMATO = {
+  VEL: 1000,
+  DAMAGE: 150,
+  SIZE: 32,
+};
+
 const SPRING = {
   SELF: 33,
   YOLK_YOLK: 50,
-  YOLK_WHITE: 500,
+  YOLK_WHITE: 300,
   WHITE_WHITE: 20,
   MAP: 20,
 };
@@ -43,7 +49,7 @@ const GUMMY = {
   },
   spring: {
     SIZE_INC: 50,
-    DURATION: 120,
+    DURATION: 60,
   },
   freeze: {
     SIZE_INC: 50,
@@ -52,6 +58,15 @@ const GUMMY = {
   speed: {
     SIZE_INC: 50,
     DURATION: 300,
+  },
+  invisible: {
+    SIZE_INC: 50,
+    DURATION: 300,
+  },
+  armed: {
+    SIZE_INC: 50,
+    DURATION: 120,
+    BUFFER: 10,
   },
 };
 
@@ -100,4 +115,5 @@ module.exports = {
   ARROW_CODE,
   DIR,
   MISC,
+  TOMATO,
 };
