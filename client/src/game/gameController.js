@@ -113,20 +113,6 @@ export default class GameController {
     this.pixiApp.stage.removeChildren();
 
     const playerEgg = this.gameState.getEggById(this.playerId);
-    if (!playerEgg) {
-      const gameOverText = new PIXI.Text("Game Over | Reload to Try Again?", {
-        fontFamily: "Comic Sans MS",
-        fontSize: 36,
-      });
-      gameOverText.anchor = { x: 0.5, y: 0.5 };
-      gameOverText.position = {
-        x: GAME.SCREEN_SIZE / 2,
-        y: GAME.SCREEN_SIZE / 2,
-      };
-      this.pixiApp.stage.addChild(gameOverText);
-      return;
-    }
-
     if (this.playAy < playerEgg.playAy) {
       kirbyAy.pause();
       kirbyAy.currentTime = 0;
@@ -317,6 +303,7 @@ export default class GameController {
 
     const rect = this.canvas.getBoundingClientRect();
     let pos = new Vector(event.clientX - rect.left, event.clientY - rect.top);
+    pos = Vector.scale(GAME.SCREEN_SIZE / rect.height, pos);
 
     if (
       pos.x < 0 ||

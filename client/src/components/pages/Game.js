@@ -75,6 +75,7 @@ const Game = (props) => {
     <>
       <div className="Game-container">
         <canvas
+          className="Game-canvas"
           ref={canvas}
           onPointerDown={(event) => game.onPointerDown(event)}
           onPointerMove={(event) => game.onPointerMove(event)}

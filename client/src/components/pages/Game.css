@@ -1,4 +1,10 @@
 .Game-container {
   display: flex;
+  width: 100vw;
+  height: 100vh;
   justify-content: center;
+}
+
+.Game-canvas {
+  object-fit: fill;
 }
