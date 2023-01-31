@@ -1,4 +1,4 @@
-import { navigate } from "@reach/router";
+import { navigate, Link } from "@reach/router";
 import React, { useEffect, useState } from "react";
 import { removeSocketListener, socket } from "../../client-socket";
 
@@ -41,11 +41,11 @@ const Lobby = (props) => {
     if (roomCode in rooms) {
       playerList = rooms[roomCode].players.map((player, i) => (
         <div className="Directions-button" key={i}>
-          {player + (i == 0 ? " (host)" : "")}
+          {player.name + (i == 0 ? " (host)" : "")}
         </div>
       ));
 
-      if (rooms[roomCode].players[0] == props.userId) {
+      if (rooms[roomCode].players[0]._id == props.userId) {
         startGameButtons = (
           <div className="Directions-button">
             <span>Start Game: </span>
@@ -72,6 +72,9 @@ const Lobby = (props) => {
             onClick={() => socket.emit("leaveroom")}
           >
             Leave Room
+          </div>
+          <div className="Directions-button">
+            <Link to="/">Home</Link>
           </div>
         </div>
       </div>
@@ -107,6 +110,9 @@ const Lobby = (props) => {
             onClick={() => socket.emit("requestrooms")}
           >
             Refresh
+          </div>
+          <div className="Directions-button">
+            <Link to="/">Home</Link>
           </div>
         </div>
       </div>

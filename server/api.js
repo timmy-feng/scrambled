@@ -21,12 +21,6 @@ const router = express.Router();
 //initialize socket
 const socketManager = require("./server-socket");
 
-router.post("/devLogin", (req, res) => {
-  req.session.user = { _id: req.body.id };
-  console.log(`Logged in as ${req.body.id}`);
-  res.send({});
-});
-
 router.post("/login", auth.login);
 router.post("/logout", auth.logout);
 router.get("/whoami", (req, res) => {

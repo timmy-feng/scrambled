@@ -23,8 +23,9 @@ const getWeightedAverage = (prev, next) => {
 };
 
 export default class GameController {
-  constructor(canvas) {
+  constructor(canvas, playerId) {
     this.canvas = canvas;
+    this.playerId = playerId;
     this.graphics = new GraphicsController(canvas.getContext("2d"));
 
     this.renderLoop = setInterval(() => {
@@ -39,8 +40,7 @@ export default class GameController {
     this.playAy = 0;
   }
 
-  serverUpdate(gameState, playerId) {
-    this.playerId = playerId;
+  serverUpdate(gameState) {
     const nextState = new GameState({ ...gameState, predictMode: true });
     if (this.gameState) {
       if (nextState.framesPassed + MAX_FRAME_JUMP < this.gameState.framesPassed)

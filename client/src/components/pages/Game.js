@@ -8,7 +8,6 @@ import {
 } from "../../client-socket.js";
 import GameController from "../../game/gameController.js";
 import "./Game.css";
-import Joystick from "../features/Joystick.js";
 
 const Game = (props) => {
   if (!props.userId) navigate("/");
@@ -33,7 +32,7 @@ const Game = (props) => {
   useEffect(() => {
     socket.on("gameover", (winner) => {
       // TODO: change this to some sort of modal on canvas
-      window.alert(`${winner} won!`);
+      window.alert(`${winner.name} won!`);
       navigate("/lobby");
     });
     return () => {
@@ -52,7 +51,7 @@ const Game = (props) => {
 
   useEffect(() => {
     if (canvas) {
-      setGame(new GameController(canvas.current));
+      setGame(new GameController(canvas.current, props.userId));
     }
   }, [canvas]);
 

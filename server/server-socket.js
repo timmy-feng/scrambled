@@ -15,26 +15,25 @@ const userToGameMap = {};
 const userToRoomMap = {};
 
 const startGame = (user, map) => {
-  if (!(user in userToRoomMap)) return;
+  if (!(user._id in userToRoomMap)) return;
 
-  const room = rooms[userToRoomMap[user]];
-  if (room.players[0] != user) return;
+  const room = rooms[userToRoomMap[user._id]];
+  if (room.inGame || room.players[0] != user) return;
 
   room.inGame = true;
   io.emit("updaterooms", rooms);
 
   const game = new GameState({ map });
   for (const user of room.players) {
-    userToGameMap[user] = game;
-    userToSocketMap[user].emit("startgame");
-    game.spawnEgg(user);
+    userToGameMap[user._id] = game;
+    userToSocketMap[user._id].emit("startgame");
+    game.spawnEgg(user._id);
   }
 
   const sendLoop = setInterval(() => {
     for (const user of room.players) {
-      userToSocketMap[user].emit("update", {
+      userToSocketMap[user._id].emit("update", {
         gameState: game,
-        playerId: user,
       });
     }
   }, 1000 / UPDATES_PER_SEC);
@@ -49,9 +48,14 @@ const startGame = (user, map) => {
         room.inGame = false;
         io.emit("updaterooms", rooms);
 
+        User.findOne({ _id: game.eggs[0].id }).then((winner) => {
+          for (const user of room.players) {
+            userToSocketMap[user._id].emit("gameover", winner);
+          }
+        });
+
         for (const user of room.players) {
-          userToSocketMap[user].emit("gameover", game.eggs[0]?.id);
-          delete userToGameMap[user];
+          delete userToGameMap[user._id];
         }
 
         clearInterval(sendLoop);
@@ -70,36 +74,36 @@ const getRandomCode = () => {
 };
 
 const createRoom = (user) => {
-  if (user in userToRoomMap) return;
+  if (user._id in userToRoomMap) return;
   const roomCode = getRandomCode();
   rooms[roomCode] = { roomCode, inGame: false, players: [] };
   joinRoom(user, roomCode);
 };
 
 const joinRoom = (user, roomCode) => {
-  if (user in userToRoomMap) return;
+  if (user._id in userToRoomMap) return;
   if (roomCode in rooms) {
     rooms[roomCode].players.push(user);
-    userToRoomMap[user] = roomCode;
+    userToRoomMap[user._id] = roomCode;
     io.emit("updaterooms", rooms);
   }
 };
 
 const leaveRoom = (user) => {
-  if (user in userToRoomMap) {
-    const players = rooms[userToRoomMap[user]].players;
+  if (user._id in userToRoomMap) {
+    const players = rooms[userToRoomMap[user._id]].players;
     players.splice(players.indexOf(user), 1);
 
     if (players.length == 0) {
-      delete rooms[userToRoomMap[user]];
+      delete rooms[userToRoomMap[user._id]];
     }
 
-    if (user in userToGameMap) {
-      userToGameMap[user].disconnectEgg(user);
-      delete userToGameMap[user];
+    if (user._id in userToGameMap) {
+      userToGameMap[user._id].disconnectEgg(user._id);
+      delete userToGameMap[user._id];
     }
 
-    delete userToRoomMap[user];
+    delete userToRoomMap[user._id];
     io.emit("updaterooms", rooms);
   }
 };
@@ -156,7 +160,7 @@ const initGeckos = async (server, port) => {
     socket.on("createroom", () => {
       const user = socketToUserMap[socket.id];
       if (user) {
-        createRoom(user._id);
+        createRoom(user);
         socket.emit("updateroom", userToRoomMap[user._id]);
       }
     });
@@ -164,7 +168,7 @@ const initGeckos = async (server, port) => {
     socket.on("joinroom", (roomCode) => {
       const user = socketToUserMap[socket.id];
       if (user) {
-        joinRoom(user._id, roomCode);
+        joinRoom(user, roomCode);
         socket.emit("updateroom", roomCode);
       }
     });
@@ -172,7 +176,7 @@ const initGeckos = async (server, port) => {
     socket.on("leaveroom", () => {
       const user = socketToUserMap[socket.id];
       if (user) {
-        leaveRoom(user._id);
+        leaveRoom(user);
         socket.emit("updateroom", undefined);
       }
     });
@@ -180,7 +184,7 @@ const initGeckos = async (server, port) => {
     socket.on("startgame", (map) => {
       const user = socketToUserMap[socket.id];
       if (user) {
-        startGame(user._id, map);
+        startGame(user, map);
       }
     });
 
