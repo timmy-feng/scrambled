@@ -6,5 +6,5 @@
 }
 
 .Game-canvas {
-  object-fit: fill;
+  object-fit: contain;
 }

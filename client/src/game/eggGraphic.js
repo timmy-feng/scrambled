@@ -6,7 +6,6 @@ moveTo changes the drawing position, but not the actual position
 */
 
 import Vector from "../../../shared/vector";
-import { Graphics, Container } from "pixi.js";
 import Mass from "./Mass.js";
 
 // display wireframe outlines in game
@@ -46,13 +45,11 @@ for (let i = 0; i < NUM_MASSES; i++) {
   offsetUnitVecs.push(Vector.polar(1, ((2 * Math.PI) / NUM_MASSES) * i));
 }
 
-export default class EggGraphic extends Container {
+export default class EggGraphic {
   constructor(pos, radius) {
-    super();
-
     this.pos = pos;
     this.radius = radius;
-    this.color = 0xffffff;
+    this.color = "#ffffff";
     this.alhpa = 1;
 
     this.centerMass = new Mass({ pos });
@@ -211,8 +208,6 @@ export default class EggGraphic extends Container {
     } */
 
     //this.centerMass.updatePos();
-
-    this.updateGraphics();
   }
 
   /* GRAPHICS */
@@ -237,17 +232,18 @@ export default class EggGraphic extends Container {
     return line;
   }
 
-  updateGraphics() {
-    this.removeChildren();
+  render(context) {
     //console.log("update graph masses", this.masses)
 
     // centermass
     //this.addChild(this.createMassGraphic(this.centerMass));
 
     // bezier curve using midpoints
-    const fluidWhite = new Graphics();
-    fluidWhite.beginFill(this.color, this.alpha);
-    fluidWhite.lineStyle(2, 0xaaaaaa);
+    context.beginPath();
+    context.fillStyle = this.color;
+    context.globalAlhpa = this.alpha;
+    context.lineWidth = 2;
+    context.strokeStyle = "#aaaaaa";
 
     // using convex hull instead of masses array for when masses cross edges
     const convexHull = this.getConvexHull();
@@ -262,8 +258,8 @@ export default class EggGraphic extends Container {
       let midpt2_x = (convexHull[j].x + convexHull[k].x) / 2;
       let midpt2_y = (convexHull[j].y + convexHull[k].y) / 2;
 
-      if (i === 0) fluidWhite.moveTo(midpt1_x, midpt1_y);
-      fluidWhite.quadraticCurveTo(
+      if (i === 0) context.moveTo(midpt1_x, midpt1_y);
+      context.quadraticCurveTo(
         convexHull[j].x,
         convexHull[j].y,
         midpt2_x,
@@ -271,7 +267,9 @@ export default class EggGraphic extends Container {
       );
     }
 
-    this.addChild(fluidWhite);
+    context.fill();
+
+    context.globalAlpha = 1;
 
     // yolk
     // let yolk = new Graphics();
@@ -283,20 +281,19 @@ export default class EggGraphic extends Container {
 
     if (SHOW_WIREFRAME) {
       // buffer
-      let white = new Graphics();
-      white.beginFill("0x00ffff");
-      white.drawCircle(
-        this.centerMass.pos.x,
-        this.centerMass.pos.y,
-        this.radius
-      );
-      white.endFill();
-      this.addChild(white);
-
-      // masses
-      for (let i = 0; i < NUM_MASSES; i++) {
-        this.addChild(this.createMassGraphic(this.masses[i]));
-      }
+      // let white = new Graphics();
+      // white.beginFill("0x00ffff");
+      // white.drawCircle(
+      //   this.centerMass.pos.x,
+      //   this.centerMass.pos.y,
+      //   this.radius
+      // );
+      // white.endFill();
+      // this.addChild(white);
+      // // masses
+      // for (let i = 0; i < NUM_MASSES; i++) {
+      //   this.addChild(this.createMassGraphic(this.masses[i]));
+      // }
     }
 
     // radial springs

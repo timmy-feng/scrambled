@@ -76,6 +76,8 @@ const Game = (props) => {
       <div className="Game-container">
         <canvas
           className="Game-canvas"
+          width="1280"
+          height="1280"
           ref={canvas}
           onPointerDown={(event) => game.onPointerDown(event)}
           onPointerMove={(event) => game.onPointerMove(event)}
@@ -84,9 +86,9 @@ const Game = (props) => {
         />
       </div>
 
-      <div className="Game-container">
+      {/* <div className="Game-container">
         <Joystick game={game}></Joystick>
-      </div>
+      </div> */}
 
       {ping ? (
         <div className="Game-container">
