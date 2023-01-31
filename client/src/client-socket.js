@@ -22,8 +22,6 @@ socket.onConnect((error) => {
     pingTime = Date.now();
   }, 1000);
 
-  console.log(socket);
-
   socket.on("pong", () => {
     const latency = Date.now() - pingTime;
     socketPing = 0.9 * socketPing + 0.1 * latency;
@@ -32,5 +30,4 @@ socket.onConnect((error) => {
 
 export const removeSocketListener = (eventName) => {
   socket.bridge.eventEmitter.off(eventName);
-  console.log(socket);
 };

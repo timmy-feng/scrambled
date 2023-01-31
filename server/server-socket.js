@@ -17,31 +17,46 @@ const userToRoomMap = {};
 const startGame = (user) => {
   if (!(user in userToRoomMap)) return;
 
-  const players = rooms[userToRoomMap[user]].players;
-  if (players[0] != user) return;
+  const room = rooms[userToRoomMap[user]];
+  if (room.players[0] != user) return;
 
-  rooms[userToRoomMap[user]].inGame = true;
+  room.inGame = true;
   io.emit("updaterooms", rooms);
 
   const game = new GameState();
-  for (const user of players) {
+  for (const user of room.players) {
     userToGameMap[user] = game;
-    userToSocketMap[user]?.emit("startgame");
+    userToSocketMap[user].emit("startgame");
     game.spawnEgg(user);
   }
 
-  setInterval(() => {
-    for (const user of players) {
-      userToSocketMap[user]?.emit("update", {
+  const sendLoop = setInterval(() => {
+    for (const user of room.players) {
+      userToSocketMap[user].emit("update", {
         gameState: game,
         playerId: user,
       });
     }
   }, 1000 / UPDATES_PER_SEC);
 
-  setInterval(() => {
-    for (const dead of game.update()) {
-      User.updateOne({ _id: dead }, { $inc: { numDeaths: 1 } });
+  const updateLoop = setInterval(() => {
+    game.update();
+
+    // game over
+    if (game.eggs.length <= 1) {
+      // let game play out a bit before ending
+      setTimeout(() => {
+        room.inGame = false;
+        io.emit("updaterooms", rooms);
+
+        for (const user of room.players) {
+          userToSocketMap[user].emit("gameover", game.eggs[0]?.id);
+          delete userToGameMap[user];
+        }
+
+        clearInterval(sendLoop);
+      }, 2000);
+      clearInterval(updateLoop);
     }
   }, 1000 / GAME.FRAMES_PER_SEC);
 };

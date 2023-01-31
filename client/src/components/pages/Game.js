@@ -1,26 +1,42 @@
+import { navigate } from "@reach/router";
 import React, { useEffect, useRef, useState } from "react";
-import { socket, socketPing } from "../../client-socket.js";
 
+import {
+  removeSocketListener,
+  socket,
+  socketPing,
+} from "../../client-socket.js";
 import GameController from "../../game/gameController.js";
-import InputController from "../../game/inputController.js";
-
 import "./Game.css";
 import Joystick from "../features/Joystick.js";
-import { navigate } from "@reach/router";
 
 const Game = (props) => {
   if (!props.userId) navigate("/");
 
   const canvas = useRef();
   const [game, setGame] = useState();
-  const [input, setInput] = useState();
 
   const [ping, setPing] = useState();
 
+  const processUpdate = (update) => {
+    game.serverUpdate(update.gameState, update.playerId);
+  };
+
+  useEffect(() => {
+    socket.on("update", (update) => processUpdate(update));
+    return () => {
+      removeSocketListener("update");
+    };
+  }, [game]);
+
   // kick player out of room if they leave
   useEffect(() => {
+    socket.on("gameover", (winner) => {
+      window.alert(`${winner} won!`);
+      navigate("/lobby");
+    });
     return () => {
-      socket.emit("leaveroom");
+      removeSocketListener("gameover");
     };
   }, []);
 
@@ -34,26 +50,6 @@ const Game = (props) => {
   }, []);
 
   useEffect(() => {
-    if (input) {
-      const tempInput = input;
-      // TODO: figure out scope of event listener
-      window.addEventListener("keydown", (event) => tempInput.onKeyDown(event));
-      window.addEventListener("keyup", (event) => tempInput.onKeyUp(event));
-    }
-  }, [input]);
-
-  useEffect(() => {
-    if (game) {
-      socket.on("update", processUpdate);
-    }
-  }, [game]);
-
-  const processUpdate = (update) => {
-    if (game) game.serverUpdate(update.gameState, update.playerId);
-  };
-
-  // initialize PIXI instance
-  useEffect(() => {
     if (canvas) {
       setGame(new GameController(canvas.current));
     }
@@ -61,7 +57,16 @@ const Game = (props) => {
 
   useEffect(() => {
     if (game) {
-      setInput(new InputController(game, canvas));
+      const onKeyDown = (event) => game.onKeyDown(event);
+      const onKeyUp = (event) => game.onKeyUp(event);
+
+      window.addEventListener("keydown", onKeyDown);
+      window.addEventListener("keyup", onKeyUp);
+
+      return () => {
+        window.removeEventListener("keydown", onKeyDown);
+        window.removeEventListener("keyup", onKeyUp);
+      };
     }
   }, [game]);
 
@@ -70,10 +75,10 @@ const Game = (props) => {
       <div className="Game-container">
         <canvas
           ref={canvas}
-          onPointerDown={(event) => input?.onPointerDown(event)}
-          onPointerMove={(event) => input?.onPointerMove(event, canvas)}
-          onPointerUp={(event) => input?.onPointerUp(event)}
-          onPointerCancel={(event) => input?.onPointerUp(event)}
+          onPointerDown={(event) => game.onPointerDown(event)}
+          onPointerMove={(event) => game.onPointerMove(event)}
+          onPointerUp={(event) => game.onPointerUp(event)}
+          onPointerCancel={(event) => game.onPointerUp(event)}
         />
       </div>
 

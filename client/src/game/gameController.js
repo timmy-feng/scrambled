@@ -1,9 +1,10 @@
 import * as PIXI from "pixi.js";
 import { Sprite, Application } from "pixi.js";
-import GameState from "../../../shared/gameState";
 
+import GameState from "../../../shared/gameState";
+import { socket, socketPing } from "../client-socket";
 import Vector from "../../../shared/vector";
-import { GAME, YOLK, TOMATO } from "../../../shared/constants";
+import { GAME, YOLK, TOMATO, ARROW_CODE } from "../../../shared/constants";
 import EggGraphic from "./eggGraphic";
 
 const fabiTexture = {
@@ -26,6 +27,8 @@ const WEIGHT_OLD = 0.99;
 // we discard it
 const MAX_FRAME_JUMP = 3;
 
+const MOUSE_PER_SEC = 10;
+
 const getWeightedAverage = (prev, next) => {
   return Vector.sum(
     Vector.scale(WEIGHT_OLD, prev),
@@ -43,6 +46,7 @@ const getCircle = (center, radius, color, alpha = 1) => {
 
 export default class GameController {
   constructor(canvas) {
+    this.canvas = canvas;
     this.pixiApp = new Application({
       view: canvas,
       backgroundColor: 0x00c0ff,
@@ -50,7 +54,7 @@ export default class GameController {
       height: GAME.SCREEN_SIZE,
     });
 
-    this.eggIdToGraphic = {};
+    this.idToGraphicMap = {};
 
     this.renderLoop = setInterval(() => {
       if (this.gameState) {
@@ -72,13 +76,13 @@ export default class GameController {
     );
 
     this.gameState.eggs.forEach((egg) => {
-      if (!this.eggIdToGraphic.hasOwnProperty(egg.id)) {
+      if (!this.idToGraphicMap.hasOwnProperty(egg.id)) {
         // create a new graphic
         let newGraphic = new EggGraphic(
           new Vector(egg.whitePos.x - offset.x, -(egg.whitePos.y - offset.y)),
           egg.whiteSize / 10
         );
-        this.eggIdToGraphic[egg.id] = newGraphic;
+        this.idToGraphicMap[egg.id] = newGraphic;
       }
     });
   }
@@ -89,12 +93,6 @@ export default class GameController {
     if (this.gameState) {
       if (nextState.framesPassed + MAX_FRAME_JUMP < this.gameState.framesPassed)
         return;
-      // while (
-      //   nextState.framesPassed + MAX_FRAME_JUMP <
-      //   this.gameState.framesPassed
-      // ) {
-      //   nextState.update();
-      // }
 
       for (const next in nextState.eggs) {
         const prev = this.gameState.getEggById(next.id);
@@ -183,20 +181,10 @@ export default class GameController {
       this.pixiApp.stage.addChild(fabi);
     }
 
-    // for (const eggId in this.eggIdToGraphic) {
-    //   const egg = this.gameState.getEggById(eggId);
-
-    //   this.eggIdToGraphic[eggId].setPos(
-    //     new Vector)
-    //   );
-    //   this.eggIdToGraphic[eggId].updateAcc();
-    //   this.pixiApp.stage.addChild(this.eggIdToGraphic[eggId]);
-    // }
-
     for (const player of this.gameState.eggs) {
-      if (!(player.id in this.eggIdToGraphic)) {
+      if (!(player.id in this.idToGraphicMap)) {
         // create a new graphic
-        this.eggIdToGraphic[player.id] = new EggGraphic(
+        this.idToGraphicMap[player.id] = new EggGraphic(
           new Vector(
             player.whitePos.x - offset.x,
             -(player.whitePos.y - offset.y)
@@ -205,7 +193,7 @@ export default class GameController {
         );
       }
 
-      const graphic = this.eggIdToGraphic[player.id];
+      const graphic = this.idToGraphicMap[player.id];
 
       let color = 0xffffff;
       if ("speed" in player.state) color = 0xffc080;
@@ -233,17 +221,6 @@ export default class GameController {
       graphic.setColor(color, alpha);
       graphic.updateAcc();
       this.pixiApp.stage.addChild(graphic);
-
-      // this.pixiApp.stage.addChild(
-      //   getCircle(
-      //     new Vector(
-      //       player.whitePos.x - offset.x,
-      //       -(player.whitePos.y - offset.y)
-      //     ),
-      //     player.whiteSize / 10,
-      //     color
-      //   )
-      // );
     }
 
     for (const tomato of this.gameState.tomatoes) {
@@ -293,15 +270,70 @@ export default class GameController {
 
       this.pixiApp.stage.addChild(yolk);
     }
+  }
 
-    // for (const wave of this.gameState.waves) {
-    //   this.pixiApp.stage.addChild(
-    //     getCircle(
-    //       new Vector(wave.pos.x - offset.x, -(wave.pos.y - offset.y)),
-    //       20,
-    //       0x00ff00
-    //     )
-    //   );
-    // }
+  // input handling code below
+
+  move(input) {
+    socket.emit("input", input);
+    setTimeout(
+      () => this.gameState?.handleInput(this.playerId, input),
+      socketPing
+    );
+  }
+
+  onKeyDown(event) {
+    if (event.repeat) return;
+    if (event.key in ARROW_CODE) {
+      this.move({
+        type: "arrowDown",
+        key: ARROW_CODE[event.key],
+        keyDown: true,
+      });
+    }
+  }
+
+  onKeyUp(event) {
+    if (event.key in ARROW_CODE) {
+      this.move({
+        type: "arrowUp",
+        key: ARROW_CODE[event.key],
+        keyDown: false,
+      });
+    }
+  }
+
+  onPointerDown(event) {
+    this.onPointerMove(event);
+    this.move({ type: "pointerDown" });
+  }
+
+  onPointerUp(event) {
+    this.move({ type: "pointerUp" });
+  }
+
+  onPointerMove(event) {
+    if (this.pointerTimeout) return;
+
+    const rect = this.canvas.getBoundingClientRect();
+    let pos = new Vector(event.clientX - rect.left, event.clientY - rect.top);
+
+    if (
+      pos.x < 0 ||
+      pos.x > GAME.SCREEN_SIZE ||
+      pos.y < 0 ||
+      pos.y > GAME.SCREEN_SIZE
+    ) {
+      return;
+    }
+
+    pos = new Vector(
+      pos.x + GAME.MAP_SIZE / 2 - GAME.SCREEN_SIZE / 2,
+      -pos.y + GAME.MAP_SIZE / 2 + GAME.SCREEN_SIZE / 2
+    );
+    this.move({ type: "pointerMove", pos });
+
+    this.pointerTimeout = true;
+    setTimeout(() => (this.pointerTimeout = false), 1000 / MOUSE_PER_SEC);
   }
 }
