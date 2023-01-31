@@ -1,6 +1,6 @@
 import { navigate } from "@reach/router";
 import React, { useEffect, useState } from "react";
-import { socket } from "../../client-socket";
+import { removeSocketListener, socket } from "../../client-socket";
 
 const Lobby = (props) => {
   if (!props.userId) navigate("/");
@@ -12,7 +12,6 @@ const Lobby = (props) => {
     socket.on("updaterooms", (rooms) => {
       setRooms(rooms);
     });
-    socket.emit("requestrooms");
 
     socket.on("updateroom", (room) => {
       setRoomCode(room);
@@ -21,6 +20,14 @@ const Lobby = (props) => {
     socket.on("startgame", () => {
       navigate("/game");
     });
+
+    socket.emit("requestrooms");
+
+    return () => {
+      removeSocketListener("updaterooms");
+      removeSocketListener("updateroom");
+      removeSocketListener("startgame");
+    };
   }, []);
 
   if (roomCode) {
@@ -28,13 +35,14 @@ const Lobby = (props) => {
     let startGameButton = null;
 
     if (roomCode in rooms) {
-      playerList = rooms[roomCode].map((player, i) => (
+      playerList = rooms[roomCode].players.map((player, i) => (
         <p key={i}>
           {player}
           {i == 0 ? " (host)" : ""}
         </p>
       ));
-      if (rooms[roomCode][0] == props.userId) {
+
+      if (rooms[roomCode].players[0] == props.userId) {
         startGameButton = (
           <button onClick={() => socket.emit("startgame")}>Start Game</button>
         );
@@ -50,11 +58,17 @@ const Lobby = (props) => {
       </>
     );
   } else {
-    const roomList = Object.keys(rooms).map((room, i) => (
-      <div key={i}>
-        <button onClick={() => socket.emit("joinroom", room)}>{room}</button>
-      </div>
-    ));
+    const roomList = [];
+    for (const room in rooms) {
+      if (!rooms[room].inGame)
+        roomList.push(
+          <div key={room}>
+            <button onClick={() => socket.emit("joinroom", room)}>
+              {room}
+            </button>
+          </div>
+        );
+    }
 
     return (
       <>

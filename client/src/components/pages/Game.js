@@ -17,6 +17,13 @@ const Game = (props) => {
 
   const [ping, setPing] = useState();
 
+  // kick player out of room if they leave
+  useEffect(() => {
+    return () => {
+      socket.emit("leaveroom");
+    };
+  }, []);
+
   useEffect(() => {
     const pingLoop = setInterval(() => {
       setPing(Math.floor(socketPing));
