@@ -1,7 +1,9 @@
 import geckos from "@geckos.io/client";
 import { post } from "./utilities";
 
-export const socket = geckos();
+let port = window.location.hostname == "scrambled.one" ? 443 : 3000;
+
+export const socket = geckos({ port });
 
 // poll socket ping so client prediction is smoother
 export let socketPing = 0; // in ms

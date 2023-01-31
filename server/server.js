@@ -100,13 +100,12 @@ app.use((err, req, res, next) => {
   });
 });
 
-const httpPort = process.env.HTTP_PORT || 3000;
-const httpServer = http.Server(app);
-
 // TODO: supposedly adding this line allows for wws protocol to work on port 443
 // but this did not happen
 // const expressWs = require("express-ws")(app);
-if (process.env.HTTPS_PORT) {
+const port = process.env.PORT || 3000;
+let server;
+if (process.env.HTTPS == "true") {
   const privateKey = fs.readFileSync(
     "/etc/letsencrypt/live/scrambled.one/privkey.pem"
   );
@@ -114,21 +113,13 @@ if (process.env.HTTPS_PORT) {
     "/etc/letsencrypt/live/scrambled.one/fullchain.pem"
   );
 
-  const httpsPort = process.env.HTTPS_PORT;
-  const httpsServer = https.createServer(
-    { key: privateKey, cert: certificate },
-    app
-  );
-
-  socketManager.init(httpsPort);
-
-  httpsServer.listen(httpsPort, () => {
-    console.log(`https server running on port: ${httpsPort}`);
-  });
+  server = https.createServer({ key: privateKey, cert: certificate }, app);
 } else {
-  socketManager.init(httpPort);
+  server = http.Server(app);
 }
 
-httpServer.listen(httpPort, () => {
-  console.log(`http server running on port: ${httpPort}`);
+socketManager.init(server);
+
+server.listen(port, () => {
+  console.log(`https server running on port: ${server}`);
 });
