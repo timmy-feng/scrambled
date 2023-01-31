@@ -5,8 +5,8 @@
   "main": "server/server.js",
   "scripts": {
     "hotloader": "webpack serve --config ./webpack.config.js --mode development --port 5050",
-    "start": "nodemon --ignore client/",
-    "build": "webpack"
+    "start": "cross-env nodemon --ignore client/",
+    "build": "cross-env webpack"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
     "@react-oauth/google": "^0.6.0",
     "connect-ensure-login": "^0.1.1",
     "core-js": "^3.8.1",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
