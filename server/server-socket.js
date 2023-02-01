@@ -19,24 +19,25 @@ const results = {};
 const startGame = (user, map) => {
   if (!(user._id in userToRoomMap)) return;
 
-  const room = rooms[userToRoomMap[user._id]];
-  if (room.inGame || room.players[0] != user) return;
-
-  room.inGame = true;
-  io.emit("updaterooms", rooms);
+  const room = [...rooms[userToRoomMap[user._id]]];
+  if (room[0] != user) return;
 
   const game = new GameState({ map });
-  for (const user of room.players) {
+  for (const user of room) {
     delete results[user._id];
     results[user._id] = { user, stats: {} };
 
+    leaveRoom(user);
+    delete userToRoomMap[user._id];
+
     userToGameMap[user._id] = game;
-    userToSocketMap[user._id].emit("startgame");
     game.spawnEgg(user._id);
+
+    userToSocketMap[user._id].emit("startgame");
   }
 
   const sendLoop = setInterval(() => {
-    for (const user of room.players) {
+    for (const user of room) {
       userToSocketMap[user._id]?.emit("update", {
         gameState: game,
       });
@@ -57,7 +58,7 @@ const startGame = (user, map) => {
       isGameOver = true;
       // let game play out a bit before ending
       setTimeout(() => {
-        for (const user of room.players) {
+        for (const user of room) {
           if (user._id in results) {
             results[user._id].won = user._id == game.eggs[0].id;
 
@@ -80,9 +81,6 @@ const startGame = (user, map) => {
           delete userToGameMap[user._id];
         }
 
-        room.inGame = false;
-        io.emit("updaterooms", rooms);
-
         clearInterval(sendLoop);
         clearInterval(updateLoop);
       }, 2000);
@@ -101,14 +99,14 @@ const getRandomCode = () => {
 const createRoom = (user) => {
   if (user._id in userToRoomMap) return;
   const roomCode = getRandomCode();
-  rooms[roomCode] = { roomCode, inGame: false, players: [] };
+  rooms[roomCode] = [];
   joinRoom(user, roomCode);
 };
 
 const joinRoom = (user, roomCode) => {
   if (user._id in userToRoomMap) return;
   if (roomCode in rooms) {
-    rooms[roomCode].players.push(user);
+    rooms[roomCode].push(user);
     userToRoomMap[user._id] = roomCode;
     io.emit("updaterooms", rooms);
   }
@@ -116,20 +114,22 @@ const joinRoom = (user, roomCode) => {
 
 const leaveRoom = (user) => {
   if (user._id in userToRoomMap) {
-    const players = rooms[userToRoomMap[user._id]].players;
+    const players = rooms[userToRoomMap[user._id]];
     players.splice(players.indexOf(user), 1);
 
     if (players.length == 0) {
       delete rooms[userToRoomMap[user._id]];
     }
 
-    if (user._id in userToGameMap) {
-      userToGameMap[user._id].disconnectEgg(user._id);
-      delete userToGameMap[user._id];
-    }
-
     delete userToRoomMap[user._id];
     io.emit("updaterooms", rooms);
+  }
+};
+
+const leaveGame = (user) => {
+  if (user._id in userToGameMap) {
+    userToGameMap[user._id].disconnectEgg(user._id);
+    delete userToGameMap[user._id];
   }
 };
 
@@ -151,6 +151,7 @@ const removeUser = (user, socket) => {
     delete userToSocketMap[user._id];
     delete results[user._id];
     leaveRoom(user._id);
+    leaveGame(user._id);
   }
   delete socketToUserMap[socket.id];
 };
@@ -241,6 +242,13 @@ const initGeckos = async (server, port) => {
       const user = socketToUserMap[socket.id];
       if (user) {
         startGame(user, map);
+      }
+    });
+
+    socket.on("leavegame", () => {
+      const user = socketToUserMap[socket.id];
+      if (user) {
+        leaveGame(user);
       }
     });
 
