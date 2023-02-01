@@ -11,12 +11,12 @@ const imageFrom = (src) => {
 };
 
 const fabiTexture = {
-  scallion: { icon: imageFrom("fabidead.png"), scale: 0.2 },
-  fishcake: { icon: imageFrom("fabiboing.png"), scale: 0.15 },
-  garlic: { icon: imageFrom("fabifreeze.png"), scale: 0.15 },
-  pepper: { icon: imageFrom("fabispice.png"), scale: 0.15 },
-  sarah: { icon: imageFrom("fabicloak.png"), scale: 0.15 },
-  tomato: { icon: imageFrom("fa-b-ball.png"), scale: 0.15 },
+  scallion: { icon: imageFrom("scallion-power.png"), scale: 0.2 },
+  fishcake: { icon: imageFrom("fishcake-power.png"), scale: 0.15 },
+  garlic: { icon: imageFrom("garlic-power.png"), scale: 0.15 },
+  pepper: { icon: imageFrom("pepper-power.png"), scale: 0.15 },
+  sarah: { icon: imageFrom("egg-power.png"), scale: 0.15 },
+  tomato: { icon: imageFrom("tomato-power.png"), scale: 0.15 },
   seaweed: { icon: imageFrom("fabisees.png"), scale: 0.15 },
 };
 
