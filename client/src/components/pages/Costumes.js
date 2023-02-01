@@ -85,10 +85,12 @@ const Costumes = (props) => {
             <span>{description[details]}</span>
           </div>
         )}
-        <div className="Directions-button button-pushable">
-          <span className="button-front">
-            <Link to="/">Home</Link>
-          </span>
+        <div className="Directions-button button-pushable u-flex u-center">
+          <div>
+            <span className="">
+              <Link to="/">Home</Link>
+            </span>
+          </div>
         </div>
       </div>
     </div>

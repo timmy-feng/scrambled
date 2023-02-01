@@ -37,6 +37,10 @@
   justify-content: center;
 }
 
+.Title-text{
+    margin-top: 16px;
+}
+
 .Directions-button {
   font-size: 48px;
   width: 24rem;
@@ -68,7 +72,7 @@
 .button-pushable {
   width: 100%;
   border-radius: 12px;
-  background-color: #f4f4f2;
+  background-color: #f4f4f2; /*blue*/
 
   outline-offset: 4px;
 }

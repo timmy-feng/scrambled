@@ -1,110 +1,50 @@
 @import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
 
+.u-font {
+  font-family: "Jua", sans-serif;
+}
+
 .Rooms-container {
-    width : 32rem;
-    height: 24rem;
-    border-radius: 12px; 
-    border: 4px solid #3a220a;
-    
+  width: 32rem;
+  height: 24rem;
+  border: 4px solid #eeb007;
+  border-radius: 12px;
+  background-color: #eeb007;
 }
 
 .Rooms-list {
-    overflow: hidden;
-    overflow-y: scroll;
-    list-style: none;
-    padding: 0;
-    margin:0
+  list-style-position: inside;
+  padding:0;
+  margin:0;
+  background-color: #eea107;
+  list-style: none;
 }
 
-.Room-button {
-    border: none;
-    margin: none;
-    padding: 0;
-    background-color: #f4f4f2;
-    
-
-    
-    font-size: 2rem;
-    display: block;
-    will-change: transform;
-    transition: transform 150ms;
+.Room-available {
+  font-size: 48px; 
+  /*border-radius: 12px;*/
+  padding: 24px 16px; 
+  margin: 8px;
+  background-color: #f8c947;
 }
 
-.Rooms-list li {
-    margin: 0;
-    padding: 16px 24px ;
-    background-color: #f4f4f2;
-    border-bottom: 4px solid white;
-    will-change: transform;
-    transition: transform 150ms;
-    cursor: pointer;
+.Room-available-text {
+    background-color: #f8c947;
 }
 
-.Rooms-list li:hover {
-    background-color: #dededc; 
-    
-    transform: translate(1px, 1px);
+.u-white {
+    color: white;
 }
 
-.Rooms-list li:hover .Room-button {
-    background-color: #dededc;  
-  
+.u-brown {
+    color: #3a220a;
+}
+
+.u-orange {
+    color: #f56d0c;
 }
 
 .space {
-    height: 4rem;
+    height: 64px;
 }
 
-.Escape-container {
-    width: 24rem;
-}
-
-.Split-button {
-    font-size: 48px;
-    width: 100%;
-    border: none;
-    padding: 4px;
-    width: 10rem;
-    font-family: "Jua", sans-serif;
-    background-color: #fdf8ed;
-}
-
-.u-space-between {
-    justify-content: space-between;
-}
-
-.u-rounded {
-    border-radius: 12px;
-}
-
-.img-Container {
-    width: 100%;
-    height: 100%;
-    background-color: #fdf8ed;
-}
-
-.map-img {
-    width: 6rem;
-    height: 6rem;
-    background-color: #fdf8ed;
-}
-
-.map-title {
-    color: 4px solid #3a220a;
-    font-family: "Jua", sans-serif;
-    font-size: 16px;
-}
-
-.Map-container{
-    width: 28rem;
-    border-radius: 12px;
-    padding: 8px;
-    background-color: #fdf8ed;
-    margin-bottom: 2rem;
-}
-
-.Map-button{
-    margin: 0;
-    padding:0;
-    cursor: pointer;
-}
