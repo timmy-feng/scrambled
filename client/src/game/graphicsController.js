@@ -138,13 +138,13 @@ export default class GraphicsController {
           "frozen" in player.state ||
           "sprung" in player.state
         ) {
-          this.context.globalAlpha = 0.5;
+          yolk.setAlpha(0.5);
         } else {
-          this.context.globalAlpha = 0;
+          yolk.setAlpha(0);
         }
+      } else {
+        yolk.setAlpha(1);
       }
-
-      this.context.globalAlpha = 1;
 
       yolk.setPos(this.convert(player.yolkPos));
 

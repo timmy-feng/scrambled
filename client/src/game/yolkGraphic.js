@@ -33,6 +33,10 @@ export default class YolkGraphic {
     this.pos = pos;
   }
 
+  setAlpha(alpha) {
+    this.alpha = alpha;
+  }
+
   // eating, stunned, tomato
   setAnim(anim) {
     this.anim = anim;
@@ -48,6 +52,7 @@ export default class YolkGraphic {
     if (this.anim == "hurt") image = yolkHurt;
 
     context.save();
+    context.globalAlpha = this.alpha;
     context.translate(this.pos.x, this.pos.y);
     context.rotate(this.rotation);
     context.drawImage(
