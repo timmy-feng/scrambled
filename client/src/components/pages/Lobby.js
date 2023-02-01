@@ -90,7 +90,12 @@ const Lobby = (props) => {
       <div className="Start-container u-flex">
         <div className="Directions-container u-flex">
           <div className="Title-container u-flex">
-            <h2 className="Title-text">Room {roomCode}</h2>
+            <div>
+              <h2 className="Title-text">Room {roomCode}</h2>
+              <div className="u-brown Title-subtext">
+                eat other eggs to win!
+              </div>
+            </div>
           </div>
           {playerList}
           {startGameButtons}
