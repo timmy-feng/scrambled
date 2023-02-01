@@ -32,7 +32,7 @@ const Game = (props) => {
   useEffect(() => {
     socket.on("gameover", (winner) => {
       // TODO: change this to some sort of modal on canvas
-      window.alert(`${winner.name} won!`);
+      window.alert(`${winner?.name} won!`);
       navigate("/lobby");
     });
     return () => {

@@ -42,7 +42,7 @@ const startGame = (user, map) => {
     game.update();
 
     // game over
-    if (game.eggs.length <= 1) {
+    if (process.env.SOLO != "true" && game.eggs.length <= 1) {
       // let game play out a bit before ending
       setTimeout(() => {
         room.inGame = false;

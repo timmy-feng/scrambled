@@ -49,8 +49,6 @@ export default class EggGraphic {
   constructor(pos, radius) {
     this.pos = pos;
     this.radius = radius;
-    this.color = "#ffffff";
-    this.alhpa = 1;
 
     this.centerMass = new Mass({ pos });
 
@@ -66,11 +64,6 @@ export default class EggGraphic {
 
   setRadius(radius) {
     this.radius = radius;
-  }
-
-  setColor(color, alpha = 1) {
-    this.color = color;
-    this.alpha = alpha;
   }
 
   getVolume() {
@@ -240,8 +233,6 @@ export default class EggGraphic {
 
     // bezier curve using midpoints
     context.beginPath();
-    context.fillStyle = this.color;
-    context.globalAlhpa = this.alpha;
     context.lineWidth = 2;
     context.strokeStyle = "#aaaaaa";
 
@@ -268,8 +259,6 @@ export default class EggGraphic {
     }
 
     context.fill();
-
-    context.globalAlpha = 1;
 
     // yolk
     // let yolk = new Graphics();

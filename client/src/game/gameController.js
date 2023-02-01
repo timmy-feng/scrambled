@@ -26,7 +26,7 @@ export default class GameController {
   constructor(canvas, playerId) {
     this.canvas = canvas;
     this.playerId = playerId;
-    this.graphics = new GraphicsController(canvas.getContext("2d"));
+    this.graphics = new GraphicsController(canvas.getContext("2d"), playerId);
 
     this.renderLoop = setInterval(() => {
       if (this.gameState) {

@@ -20,8 +20,10 @@ const fabiTexture = {
 const kirbyAy = new Audio("kirbyAy.wav");
 
 export default class GraphicsController {
-  constructor(context) {
+  constructor(context, playerId) {
     this.context = context;
+    this.playerId = playerId;
+
     this.idToGraphicMap = {};
 
     this.offset = new Vector(
@@ -70,25 +72,27 @@ export default class GraphicsController {
       let color = "#ffffff";
       if ("speed" in player.state) color = "#ffc080";
 
-      let alpha = 1;
       if ("invisible" in player.state) {
         if (
           player.id == this.playerId ||
           "frozen" in player.state ||
           "sprung" in player.state
         ) {
-          alpha = 0.5;
+          this.context.globalAlpha = 0.5;
         } else {
-          alpha = 0;
+          this.context.globalAlpha = 0;
         }
       }
 
       graphic.setPos(this.convert(player.whitePos));
       graphic.setRadius(player.whiteSize / 10);
-      graphic.setColor(color, alpha);
       graphic.updateAcc();
 
+      this.context.fillStyle = color;
+
       graphic.render(this.context);
+
+      this.context.globalAlpha = 1;
     }
 
     for (const tomato of gameState.tomatoes) {
@@ -102,21 +106,20 @@ export default class GraphicsController {
       else if ("sprung" in player.state || "frozen" in player.state)
         color = "#ffff80";
 
-      let alpha = 1;
       if ("invisible" in player.state) {
         if (
           player.id == this.playerId ||
           "frozen" in player.state ||
           "sprung" in player.state
         ) {
-          alpha = 0.5;
+          this.context.globalAlpha = 0.5;
         } else {
-          alpha = 0;
+          this.context.globalAlpha = 0;
         }
       }
 
       const pos = this.convert(player.yolkPos);
-      this.drawCircle(pos, YOLK.SIZE, color, alpha);
+      this.drawCircle(pos, YOLK.SIZE, color);
 
       const dir = Vector.diff(player.yolkPos, player.pointerPos);
 
@@ -128,17 +131,16 @@ export default class GraphicsController {
       this.context.fillStyle = "#000000";
       this.context.fillText(player.name, 0, 0);
       this.context.restore();
+
+      this.context.globalAlpha = 1;
     }
   }
 
-  drawCircle(center, radius, color, alpha = 1) {
+  drawCircle(center, radius, color) {
     this.context.beginPath();
     this.context.fillStyle = color;
-    this.context.globalAlpha = alpha;
     this.context.arc(center.x, center.y, radius, 0, Math.PI * 2);
     this.context.fill();
-
-    this.context.globalAlpha = 1;
   }
 
   drawImage(image, center) {
