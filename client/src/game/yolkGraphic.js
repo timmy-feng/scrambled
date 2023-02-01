@@ -73,11 +73,11 @@ export default class YolkGraphic {
   setFire(fire) {}
 
   render(context) {
-    let image = yolkNormal;
+    /* let image = yolkNormal;
     if (this.anim == "stun") image = yolkStun;
     if (this.anim == "eat") image = yolkEat;
     if (this.anim == "shoot") image = yolkShoot;
-    if (this.anim == "hurt") image = yolkHurt;
+    if (this.anim == "hurt") image = yolkHurt; */
 
     context.save();
     context.globalAlpha = this.alpha;

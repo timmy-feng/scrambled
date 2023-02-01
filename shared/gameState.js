@@ -93,7 +93,7 @@ class GameState {
         ) {
           if (Vector.dist(egg.yolkPos, gummy.pos) < GUMMY.SIZE) {
             eaten.push(gummy);
-            egg.state.eat = 5;
+            egg.state.eat = 20;
             updates.push({
               id: egg.id,
               type: gummy.type,
