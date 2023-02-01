@@ -28,23 +28,23 @@ for (let i = 0; i < 8; ++i) {
 const Costumes = (props) => {
   if (!props.userId) navigate("/");
 
-  const [enabled, setEnabled] = useState(Array(8).fill(true));
+  const [enabled, setEnabled] = useState(Array(8).fill(false));
   const [selected, setSelected] = useState();
   const [details, setDetails] = useState();
 
-  // useEffect(() => {
-  //   socket.on("costumes", (result) => {
-  //     console.log(result);
-  //     setEnabled(result.enabled);
-  //     setSelected(result.selected);
-  //   });
+  useEffect(() => {
+    socket.on("costumes", (result) => {
+      console.log(result);
+      setEnabled(result.enabled);
+      setSelected(result.selected);
+    });
 
-  //   socket.emit("requestcostumes");
+    socket.emit("requestcostumes");
 
-  //   return () => {
-  //     removeSocketListener("costumes");
-  //   };
-  // }, []);
+    return () => {
+      removeSocketListener("costumes");
+    };
+  }, []);
 
   const costumeList = [];
   for (let i = 0; i < 8; i++) {
