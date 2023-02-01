@@ -61,7 +61,7 @@ class GameState {
         if (Vector.dist(tomato.pos, egg.whitePos) < egg.whiteSize / 10) {
           if (tomato.ownerId != egg.id) {
             exploded.push(tomato);
-            egg.whiteSize -= TOMATO.DAMAGE;
+            egg.damage(TOMATO.DAMAGE, tomato.ownerId);
             break;
           }
         }
@@ -82,7 +82,7 @@ class GameState {
     }
   }
 
-  updateGummies() {
+  updateGummies(updates) {
     for (const egg of this.eggs) {
       // try to eat gummies
       if (!("frozen" in egg.state || "sprung" in egg.state)) {
@@ -90,6 +90,10 @@ class GameState {
         for (const gummy of this.gummies) {
           if (Vector.dist(egg.yolkPos, gummy.pos) < GUMMY.SIZE) {
             eaten.push(gummy);
+            updates.push({
+              id: egg.id,
+              type: gummy.type,
+            });
           }
         }
 
@@ -115,6 +119,23 @@ class GameState {
           })
         );
       }
+    }
+  }
+
+  updateDead(updates) {
+    const dead = [];
+    for (const egg of this.eggs) {
+      if (egg.whiteSize < WHITE.MIN_SIZE) {
+        dead.push(egg.id);
+        updates.push({
+          id: egg.killerId,
+          type: "kill",
+        });
+      }
+    }
+
+    for (const id of dead) {
+      this.eggs.splice(this.indexOfEgg(id), 1);
     }
   }
 
@@ -163,7 +184,7 @@ class GameState {
       this.collisions[collisionId] += 1;
       // only after being in contact for BITE_INTERVAL time will a bite be taken
       if (this.collisions[collisionId] == BITE.INTERVAL) {
-        you.whiteSize -= BITE.SIZE;
+        you.damage(BITE.SIZE, me.id);
         delete this.collisions[collisionId];
       }
     } else {
@@ -181,31 +202,21 @@ class GameState {
     me.whiteVel = Vector.applyDelta(me.whiteVel, acc);
   };
 
-  // returns list of ids of eggs that just died (for now)
   update() {
+    const updates = [];
+
     this.updatePairCollisions();
 
-    for (const egg of this.eggs) {
-      egg.update();
-    }
+    for (const egg of this.eggs) egg.update();
 
     this.updateTomatoes();
 
-    this.updateGummies();
+    this.updateGummies(updates);
 
-    const dead = [];
-    for (const egg of this.eggs) {
-      if (egg.whiteSize < WHITE.MIN_SIZE) {
-        dead.push(egg.id);
-      }
-    }
-
-    for (const id of dead) {
-      this.eggs.splice(this.indexOfEgg(id), 1);
-    }
+    this.updateDead(updates);
 
     this.framesPassed += 1;
-    return dead;
+    return updates;
   }
 
   indexOfEgg(id) {
@@ -229,6 +240,8 @@ class GameState {
   }
 
   handleInput(id, input) {
+    if (this.isGameOver()) return;
+
     const egg = this.getEggById(id);
     if (!egg) return;
 
@@ -259,6 +272,11 @@ class GameState {
     } else if (input.type == "joystick") {
       egg.setWhiteDir(input.dir);
     }
+  }
+
+  isGameOver() {
+    // return this.framesPassed < 20 * 60;
+    return this.eggs.length <= 1;
   }
 
   // TODO: make a way to get "random" positions that are far from other objects

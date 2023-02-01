@@ -52,7 +52,7 @@ function logout(req, res) {
 }
 
 function populateCurrentUser(req, res, next) {
-  if (process.env.STATUS == "testing" && !req.session.user) {
+  if (process.env.LOGIN == "false" && !req.session.user) {
     let _id = "";
     for (let i = 0; i < 24; ++i) {
       const digit = Math.floor(Math.random() * 16);

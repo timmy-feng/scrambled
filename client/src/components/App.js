@@ -12,6 +12,7 @@ import "../utilities.css";
 import { socket } from "../client-socket.js";
 
 import { get, post } from "../utilities";
+import Results from "./pages/Results.js";
 
 /**
  * Define the "App" component
@@ -48,6 +49,7 @@ const App = () => {
       <Router>
         <Lobby path="/lobby" userId={userId} />
         <Game path="/game" userId={userId} />
+        <Results path="/results" userId={userId} />
         <Skeleton
           path="/"
           handleLogin={handleLogin}

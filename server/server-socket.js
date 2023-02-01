@@ -14,6 +14,8 @@ const rooms = {};
 const userToGameMap = {};
 const userToRoomMap = {};
 
+const results = {};
+
 const startGame = (user, map) => {
   if (!(user._id in userToRoomMap)) return;
 
@@ -25,6 +27,9 @@ const startGame = (user, map) => {
 
   const game = new GameState({ map });
   for (const user of room.players) {
+    delete results[user._id];
+    results[user._id] = { user, stats: {} };
+
     userToGameMap[user._id] = game;
     userToSocketMap[user._id].emit("startgame");
     game.spawnEgg(user._id);
@@ -32,35 +37,40 @@ const startGame = (user, map) => {
 
   const sendLoop = setInterval(() => {
     for (const user of room.players) {
-      userToSocketMap[user._id].emit("update", {
+      userToSocketMap[user._id]?.emit("update", {
         gameState: game,
       });
     }
   }, 1000 / UPDATES_PER_SEC);
 
+  let isGameOver = false;
   const updateLoop = setInterval(() => {
-    game.update();
+    for (const update of game.update()) {
+      if (update.id in results) {
+        if (!(update.type in results[update.id].stats))
+          results[update.id].stats[update.type] = 0;
+        results[update.id].stats[update.type] += 1;
+      }
+    }
 
-    // game over
-    if (process.env.SOLO != "true" && game.eggs.length <= 1) {
+    if (!isGameOver && game.isGameOver()) {
+      isGameOver = true;
       // let game play out a bit before ending
       setTimeout(() => {
-        room.inGame = false;
-        io.emit("updaterooms", rooms);
-
-        User.findOne({ _id: game.eggs[0].id }).then((winner) => {
-          for (const user of room.players) {
-            userToSocketMap[user._id].emit("gameover", winner);
-          }
-        });
-
         for (const user of room.players) {
+          if (user._id in results) {
+            results[user._id].won = user._id == game.eggs[0].id;
+          }
+          userToSocketMap[user._id]?.emit("gameover");
           delete userToGameMap[user._id];
         }
 
+        room.inGame = false;
+        io.emit("updaterooms", rooms);
+
         clearInterval(sendLoop);
+        clearInterval(updateLoop);
       }, 2000);
-      clearInterval(updateLoop);
     }
   }, 1000 / GAME.FRAMES_PER_SEC);
 };
@@ -124,6 +134,7 @@ const addUser = (user, socket) => {
 const removeUser = (user, socket) => {
   if (user) {
     delete userToSocketMap[user._id];
+    delete results[user._id];
     leaveRoom(user._id);
   }
   delete socketToUserMap[socket.id];
@@ -185,6 +196,17 @@ const initGeckos = async (server, port) => {
       const user = socketToUserMap[socket.id];
       if (user) {
         startGame(user, map);
+      }
+    });
+
+    socket.on("requestresults", () => {
+      const user = socketToUserMap[socket.id];
+      if (user) {
+        if (user._id in results && !(user._id in userToGameMap)) {
+          socket.emit("results", results[user._id]);
+        } else {
+          socket.emit("results");
+        }
       }
     });
 

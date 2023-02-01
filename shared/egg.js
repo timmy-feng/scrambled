@@ -21,6 +21,8 @@ class Egg {
     this.pointerDown = data.pointerDown ?? false;
     this.arrowDown = data.arrowDown ?? [false, false, false, false];
 
+    this.killerId = data.killerId ?? null;
+
     // let's try this again LOL
     this.playAy = data.playAy ?? 0;
   }
@@ -48,6 +50,11 @@ class Egg {
 
   setWhiteDir(whiteDir) {
     this.whiteDir = whiteDir;
+  }
+
+  damage(delta, killerId) {
+    this.whiteSize -= delta;
+    this.killerId = killerId;
   }
 
   // TODO: add constants to /shared/constants.js
@@ -131,7 +138,6 @@ class Egg {
     return Vector.dist(this.whitePos, this.yolkPos) < this.whiteSize / 10;
   }
 
-  // TODO: refactor this code - vectors should be immutable
   handleMapCollision() {
     const center = new Vector(GAME.MAP_SIZE / 2, GAME.MAP_SIZE / 2);
     const displ = Vector.diff(this.whitePos, center);
@@ -142,26 +148,6 @@ class Egg {
       );
       this.whiteVel = Vector.applyDelta(this.whiteVel, acc);
     }
-    // if (this.whitePos.x < this.whiteSize / 10) {
-    //   this.whiteVel.x +=
-    //     (-SPRING.MAP * (this.whitePos.x - this.whiteSize / 10)) /
-    //     GAME.FRAMES_PER_SEC;
-    // }
-    // if (GAME.MAP_SIZE - this.whitePos.x < this.whiteSize / 10) {
-    //   this.whiteVel.x +=
-    //     (SPRING.MAP * (GAME.MAP_SIZE - this.whitePos.x - this.whiteSize / 10)) /
-    //     GAME.FRAMES_PER_SEC;
-    // }
-    // if (this.whitePos.y < this.whiteSize / 10) {
-    //   this.whiteVel.y +=
-    //     (-SPRING.MAP * (this.whitePos.y - this.whiteSize / 10)) /
-    //     GAME.FRAMES_PER_SEC;
-    // }
-    // if (GAME.MAP_SIZE - this.whitePos.y < this.whiteSize / 10) {
-    //   this.whiteVel.y +=
-    //     (SPRING.MAP * (GAME.MAP_SIZE - this.whitePos.y - this.whiteSize / 10)) /
-    //     GAME.FRAMES_PER_SEC;
-    // }
   }
 }
 

@@ -22,7 +22,16 @@ const kirbyAy = new Audio("kirbyAy.wav");
 export default class GraphicsController {
   constructor(context, playerId) {
     this.context = context;
+    this.context.textAlign = "center";
+
     this.playerId = playerId;
+
+    // 0 nothing
+    // 1 player dead
+    // 2 player dead (click to exit)
+    // 3 nothing
+    // 4 game over
+    this.panelState = 0;
 
     this.idToGraphicMap = {};
 
@@ -126,13 +135,49 @@ export default class GraphicsController {
       this.context.save();
       this.context.translate(pos.x, pos.y);
       this.context.rotate(Math.PI / 2 - Math.atan2(dir.y, dir.x));
-      this.context.textAlign = "center";
-      this.context.font = "24px arial";
       this.context.fillStyle = "#000000";
+      this.context.font = "24px arial";
       this.context.fillText(player.name, 0, 0);
       this.context.restore();
 
       this.context.globalAlpha = 1;
+    }
+
+    if (gameState.isGameOver()) {
+      this.panelState = 4;
+    }
+
+    if (!playerEgg && this.panelState == 0) {
+      this.panelState = 1;
+      setTimeout(() => (this.panelState = 2), 1000);
+    }
+
+    if (this.panelState == 1 || this.panelState == 2) {
+      // egg dead panel
+      this.context.globalAlpha = 0.5;
+      this.context.fillStyle = "#ff4000";
+      this.context.fillRect(0, 0, GAME.SCREEN_SIZE, GAME.SCREEN_SIZE);
+      this.context.globalAlpha = 1;
+      this.context.fillStyle = "#000000";
+      this.context.font = "72px arial bold";
+      this.context.fillText(
+        "YOU CRACKED",
+        GAME.SCREEN_SIZE / 2,
+        GAME.SCREEN_SIZE / 2
+      );
+    } else if (this.panelState == 4) {
+      // game over panel
+      this.context.globalAlpha = 0.5;
+      this.context.fillStyle = "#00ff40";
+      this.context.fillRect(0, 0, GAME.SCREEN_SIZE, GAME.SCREEN_SIZE);
+      this.context.globalAlpha = 1;
+      this.context.fillStyle = "#000000";
+      this.context.font = "72px arial bold";
+      this.context.fillText(
+        "GAME OVER",
+        GAME.SCREEN_SIZE / 2,
+        GAME.SCREEN_SIZE / 2
+      );
     }
   }
 

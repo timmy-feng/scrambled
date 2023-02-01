@@ -91,6 +91,9 @@ export default class GameController {
   }
 
   onPointerDown(event) {
+    if (this.graphics.panelState == 2) {
+      this.graphics.panelState = 3;
+    }
     this.onPointerMove(event);
     this.move({ type: "pointerDown" });
   }

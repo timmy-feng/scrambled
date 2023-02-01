@@ -39,6 +39,7 @@ const Lobby = (props) => {
     let startGameButtons = null;
 
     if (roomCode in rooms) {
+      if (rooms[roomCode].inGame) navigate("/game");
       playerList = rooms[roomCode].players.map((player, i) => (
         <div className="Directions-button" key={i}>
           {player.name + (i == 0 ? " (host)" : "")}
