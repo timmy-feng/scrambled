@@ -2,6 +2,7 @@ import Vector from "../../../shared/vector";
 import { GAME, YOLK, TOMATO } from "../../../shared/constants";
 import EggGraphic from "./eggGraphic";
 import Weed from "./weed";
+import YolkGraphic from "./yolkGraphic";
 
 const imageFrom = (src) => {
   const image = new Image();
@@ -43,7 +44,8 @@ export default class GraphicsController {
 
     this.weeds = [];
 
-    this.idToGraphicMap = {};
+    this.whiteMap = {};
+    this.yolkMap = {};
 
     this.offset = new Vector(
       GAME.MAP_SIZE / 2 - GAME.SCREEN_SIZE / 2,
@@ -65,11 +67,10 @@ export default class GraphicsController {
     }
 
     this.context.clearRect(0, 0, GAME.SCREEN_SIZE, GAME.SCREEN_SIZE);
-    this.drawImage(
-      mapTexture[gameState.map],
-      new Vector(GAME.SCREEN_SIZE / 2, GAME.SCREEN_SIZE / 2),
-      GAME.SCREEN_SIZE
-    );
+    this.drawImage(mapTexture[gameState.map], {
+      center: new Vector(GAME.SCREEN_SIZE / 2, GAME.SCREEN_SIZE / 2),
+      size: GAME.SCREEN_SIZE,
+    });
 
     // this.drawCircle(
     //   new Vector(GAME.SCREEN_SIZE / 2, GAME.SCREEN_SIZE / 2),
@@ -78,23 +79,22 @@ export default class GraphicsController {
     // );
 
     for (const gummy of gameState.gummies) {
-      this.drawImage(
-        fabiTexture[gummy.type].icon,
-        this.convert(gummy.pos),
-        100
-      );
+      this.drawImage(fabiTexture[gummy.type].icon, {
+        center: this.convert(gummy.pos),
+        size: 100,
+      });
     }
 
     for (const player of gameState.eggs) {
-      if (!(player.id in this.idToGraphicMap)) {
+      if (!(player.id in this.whiteMap)) {
         // create a new graphic
-        this.idToGraphicMap[player.id] = new EggGraphic(
+        this.whiteMap[player.id] = new EggGraphic(
           this.convert(player.whitePos),
           player.whiteSize / 10
         );
       }
 
-      const graphic = this.idToGraphicMap[player.id];
+      const graphic = this.whiteMap[player.id];
 
       let color = "#ffffff";
       if ("pepper" in player.state) color = "#ffc080";
@@ -127,11 +127,10 @@ export default class GraphicsController {
     }
 
     for (const player of gameState.eggs) {
-      let color = "#ffc040";
-      if ("fishcake" in player.state || "garlic" in player.state)
-        color = "#ff8000";
-      else if ("sprung" in player.state || "frozen" in player.state)
-        color = "#ffff80";
+      let yolk = this.yolkMap[player.id];
+      if (!yolk) {
+        yolk = this.yolkMap[player.id] = new YolkGraphic();
+      }
 
       if ("invisible" in player.state) {
         if (
@@ -145,20 +144,24 @@ export default class GraphicsController {
         }
       }
 
-      const pos = this.convert(player.yolkPos);
-      this.drawCircle(pos, YOLK.SIZE, color);
+      this.context.globalAlpha = 1;
+
+      yolk.setPos(this.convert(player.yolkPos));
 
       const dir = Vector.diff(player.yolkPos, player.pointerPos);
+      yolk.setRotation(Math.PI / 2 - Math.atan2(dir.y, dir.x));
 
-      this.context.save();
-      this.context.translate(pos.x, pos.y);
-      this.context.rotate(Math.PI / 2 - Math.atan2(dir.y, dir.x));
-      this.context.fillStyle = "#000000";
-      this.context.font = "24px arial";
-      this.context.fillText(player.name, 0, 0);
-      this.context.restore();
+      if ("frozen" in player.state || "sprung" in player.state) {
+        yolk.setAnim("stun");
+      } else if ("eat" in player.state) {
+        yolk.setAnim("eat");
+      } else {
+        yolk.setAnim("normal");
+      }
 
-      this.context.globalAlpha = 1;
+      yolk.setFire("pepper" in player.state);
+
+      yolk.render(this.context);
     }
 
     if (playerEgg && "seaweed" in playerEgg.state) {
@@ -222,13 +225,13 @@ export default class GraphicsController {
     this.context.fill();
   }
 
-  drawImage(image, center, size) {
+  drawImage(image, props) {
     this.context.drawImage(
       image,
-      center.x - size / 2,
-      center.y - size / 2,
-      size,
-      size
+      props.center.x - props.size / 2,
+      props.center.y - props.size / 2,
+      props.size,
+      props.size
     );
   }
 }

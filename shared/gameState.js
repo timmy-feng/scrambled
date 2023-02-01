@@ -93,6 +93,7 @@ class GameState {
         ) {
           if (Vector.dist(egg.yolkPos, gummy.pos) < GUMMY.SIZE) {
             eaten.push(gummy);
+            egg.state.eat = 5;
             updates.push({
               id: egg.id,
               type: gummy.type,
@@ -185,6 +186,7 @@ class GameState {
       }
 
       this.collisions[collisionId] += 1;
+      me.state.eat = 5;
       // only after being in contact for BITE_INTERVAL time will a bite be taken
       if (this.collisions[collisionId] == BITE.INTERVAL) {
         you.damage(BITE.SIZE, me.id);
@@ -217,6 +219,8 @@ class GameState {
     this.updateGummies(updates);
 
     this.updateDead(updates);
+
+    console.log(this.collisions);
 
     this.framesPassed += 1;
     return updates;
