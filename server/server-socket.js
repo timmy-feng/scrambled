@@ -167,7 +167,7 @@ const enabledCostumes = (user) => {
   enabled[4] = user.kill >= 100;
   enabled[5] = user.seaweed >= 50;
   enabled[6] = user.scallion >= 500;
-  enabled[7] = user.fishcake >= 1000;
+  enabled[7] = user.fishcake + user.garlic >= 1000;
   return enabled;
 };
 

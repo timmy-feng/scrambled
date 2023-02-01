@@ -12,7 +12,7 @@ const description = [
   "Get 100 Kills",
   "Eat 50 Seaweed",
   "Eat 500 Scallion",
-  "Eat 500 Fish Cakes",
+  "Eat 1000 Garlic or Fish Cake",
 ];
 
 // pics
@@ -94,13 +94,13 @@ const Costumes = (props) => {
             </>
           )}
         </div>
-        <div className="Directions-button button-pushable">
+        <button className="Directions-button button-pushable">
           <div className="button-front u-flex u-justify-content">
             <span>
               <Link to="/">Home</Link>
             </span>
           </div>
-        </div>
+        </button>
       </div>
     </div>
   );
