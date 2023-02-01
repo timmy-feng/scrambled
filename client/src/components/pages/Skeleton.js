@@ -12,6 +12,9 @@ import "./Skeleton.css";
 const GOOGLE_CLIENT_ID =
   "405770742094-nsvn5kjdutoiito75u15c7b78eqmekmf.apps.googleusercontent.com";
 
+let test = "scrambled   text";
+test = test.split("");
+
 const Skeleton = ({ userId, handleLogin, handleLogout }) => {
   return (
     <div className="Start-container u-flex">
@@ -44,6 +47,16 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
             />
           )}
           <div className="Directions-button">How to Play</div>
+          <div className="Scrambled-text-container u-flex">
+            {test.map((letter) => (
+              <div
+                className="Scrambled-text-letter"
+                style={{ rotate: `${20 - 40 * Math.random()}deg` }}
+              >
+                {letter}
+              </div>
+            ))}
+          </div>
           <div>{}</div>
         </div>
       </GoogleOAuthProvider>

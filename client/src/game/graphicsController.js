@@ -11,12 +11,12 @@ const imageFrom = (src) => {
 };
 
 const fabiTexture = {
-  gummy: { icon: imageFrom("fabidead.png"), scale: 0.2 },
-  spring: { icon: imageFrom("fabiboing.png"), scale: 0.15 },
-  freeze: { icon: imageFrom("fabifreeze.png"), scale: 0.15 },
-  speed: { icon: imageFrom("fabispice.png"), scale: 0.15 },
-  invisible: { icon: imageFrom("fabicloak.png"), scale: 0.15 },
-  armed: { icon: imageFrom("fa-b-ball.png"), scale: 0.15 },
+  scallion: { icon: imageFrom("fabidead.png"), scale: 0.2 },
+  fishcake: { icon: imageFrom("fabiboing.png"), scale: 0.15 },
+  garlic: { icon: imageFrom("fabifreeze.png"), scale: 0.15 },
+  pepper: { icon: imageFrom("fabispice.png"), scale: 0.15 },
+  sarah: { icon: imageFrom("fabicloak.png"), scale: 0.15 },
+  tomato: { icon: imageFrom("fa-b-ball.png"), scale: 0.15 },
   seaweed: { icon: imageFrom("fabisees.png"), scale: 0.15 },
 };
 
@@ -97,9 +97,9 @@ export default class GraphicsController {
       const graphic = this.whiteMap[player.id];
 
       let color = "#ffffff";
-      if ("speed" in player.state) color = "#ffc080";
+      if ("pepper" in player.state) color = "#ffc080";
 
-      if ("invisible" in player.state) {
+      if ("sarah" in player.state) {
         if (
           player.id == this.playerId ||
           "frozen" in player.state ||
@@ -132,7 +132,7 @@ export default class GraphicsController {
         yolk = this.yolkMap[player.id] = new YolkGraphic();
       }
 
-      if ("invisible" in player.state) {
+      if ("sarah" in player.state) {
         if (
           player.id == this.playerId ||
           "frozen" in player.state ||

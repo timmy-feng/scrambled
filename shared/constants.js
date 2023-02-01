@@ -44,27 +44,30 @@ const BITE = {
 const GUMMY = {
   COUNT: 8,
   SIZE: 64,
-  gummy: {
+  scallion: {
     SIZE_INC: 50,
     DURATION: 0,
   },
-  spring: {
+  fishcake: {
     SIZE_INC: 50,
     DURATION: 60,
+    VEL: 5000,
+    SPRUNG: 60,
   },
-  freeze: {
+  garlic: {
     SIZE_INC: 50,
     DURATION: 120,
+    FROZEN: 120,
   },
-  speed: {
+  pepper: {
     SIZE_INC: 50,
     DURATION: 300,
   },
-  invisible: {
+  sarah: {
     SIZE_INC: 50,
     DURATION: 300,
   },
-  armed: {
+  tomato: {
     SIZE_INC: 50,
     DURATION: 120,
     BUFFER: 10,
@@ -76,29 +79,19 @@ const GUMMY = {
 
   // maps
   rice: {
-    speed: 0.05,
-    freeze: 0.15,
-    gummy: 0.8,
+    pepper: 0.05,
+    garlic: 0.15,
+    scallion: 0.8,
   },
   ramen: {
     seaweed: 0.2,
-    spring: 0.3,
-    gummy: 0.5,
+    fishcake: 0.3,
+    scallion: 0.5,
   },
   shakshuka: {
-    invisible: 0.1,
-    freeze: 0.3,
-    armed: 0.6,
-  },
-};
-
-const MISC = {
-  FROZEN: {
-    DURATION: 120,
-  },
-  SPRUNG: {
-    DURATION: 60,
-    VEL: 5000,
+    sarah: 0.1,
+    garlic: 0.3,
+    tomato: 0.6,
   },
 };
 
@@ -136,6 +129,5 @@ module.exports = {
   FACES,
   ARROW_CODE,
   DIR,
-  MISC,
   TOMATO,
 };

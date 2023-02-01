@@ -60,6 +60,21 @@ const startGame = (user, map) => {
         for (const user of room.players) {
           if (user._id in results) {
             results[user._id].won = user._id == game.eggs[0].id;
+
+            const update = { ...results[user._id].stats };
+            if (results[user._id].won) {
+              update.win = 1;
+            }
+            update[game.map] = 1;
+            update.game = 1;
+
+            User.updateOne({ _id: user._id }, { $inc: update }).then((res) => {
+              if (res.n) {
+                console.log("Updated user " + user.name);
+              } else {
+                console.log("Did not find user " + user.name);
+              }
+            });
           }
           userToSocketMap[user._id]?.emit("gameover");
           delete userToGameMap[user._id];

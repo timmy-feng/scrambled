@@ -153,18 +153,16 @@ class GameState {
     if (acc.norm() != 0) {
       me.yolkVel = Vector.applyDelta(me.yolkVel, acc);
 
-      if ("spring" in you.state) {
+      if ("fishcake" in you.state) {
         const dir = Vector.diff(me.whitePos, you.whitePos).unit();
-        me.state.sprung = MISC.SPRUNG.DURATION;
-        me.yolkVel = Vector.scale(MISC.SPRUNG.VEL, dir);
-        me.state.hurt = 20;
-        delete you.state.spring;
+        me.state.sprung = GUMMY.fishcake.SPRUNG;
+        me.yolkVel = Vector.scale(GUMMY.fishcake.VEL, dir);
+        delete you.state.fishcake;
       }
 
-      if ("freeze" in you.state) {
-        me.state.frozen = MISC.FROZEN.DURATION;
-        me.state.hurt = 20;
-        delete you.state.freeze;
+      if ("garlic" in you.state) {
+        me.state.frozen = GUMMY.garlic.FROZEN;
+        delete you.state.garlic;
       }
     }
   }
@@ -263,8 +261,8 @@ class GameState {
     } else if (input.type == "pointerDown") {
       egg.setPointerDown(true);
       if (
-        "armed" in egg.state &&
-        egg.state.armed < GUMMY.armed.DURATION - GUMMY.armed.BUFFER
+        "tomato" in egg.state &&
+        egg.state.tomato < GUMMY.tomato.DURATION - GUMMY.tomato.BUFFER
       ) {
         egg.state.shoot = 20;
         this.tomatoes.push(
@@ -274,7 +272,7 @@ class GameState {
             ownerId: egg.id,
           })
         );
-        delete egg.state.armed;
+        delete egg.state.tomato;
       }
     } else if (input.type == "pointerUp") {
       egg.setPointerDown(false);
@@ -284,8 +282,8 @@ class GameState {
   }
 
   isGameOver() {
-    //return this.framesPassed > 20 * 60;
-    return this.eggs.length <= 1;
+    return this.framesPassed > 20 * 60;
+    //return this.eggs.length <= 1;
   }
 
   // TODO: make a way to get "random" positions that are far from other objects
