@@ -120,19 +120,7 @@ const Lobby = (props) => {
           <div className="Title-container u-flex">
             <h2 className="Title-text">Join a Room</h2>
           </div>
-          {roomList.length === 0 ? roomList : <div>no rooms!</div>}
           {roomList}
-
-          <div className="Rooms-container">
-            <ul className="Rooms-list">
-              <li>
-                <button className="Room-button">ASHJ</button>
-              </li>
-              <li>
-                <button className="Room-button">ADPO</button>
-              </li>
-            </ul>
-          </div>
 
           <div className="space"></div>
 
