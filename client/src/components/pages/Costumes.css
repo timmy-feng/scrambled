@@ -43,8 +43,6 @@
   flex-direction: column;
 }
 
-/* Fill me in :) */
-
 @import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
 
 * {
@@ -55,6 +53,21 @@
 .Title-container {
   font-family: "Jua", sans-serif;
   font-size: 64px;
+}
+
+.Costumes-descriptionContainer {
+  margin-top: 32px;
+  margin-bottom: 24px;
+  font-family: "Jua", sans-serif;
+  font-size: 24px;
+}
+
+.Costumes-lockedText {
+  color: red;
+}
+
+.Title-text {
+  margin-bottom: 0;
 }
 
 #start-anim {
@@ -121,4 +134,12 @@ a {
 
 .Scrambled-text-container {
   margin-top: 8px;
+}
+
+.u-flex {
+  display: flex;
+}
+
+.u-justify-content {
+  justify-content: center;
 }

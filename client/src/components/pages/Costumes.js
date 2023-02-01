@@ -78,22 +78,28 @@ const Costumes = (props) => {
   return (
     <div className="Costumes-mainContainer u-flex">
       <div className="Costumes-secondaryContainer u-flex">
-        <h2>eggcessories</h2>
+        <div className="Title-container u-flex">
+          <h2 className="Title-text">Eggcessories</h2>
+        </div>
         <div className="Costumes-costumeContainer">{costumeList}</div>
-        {details == undefined ? null : (
-          <div>
-            {enabled[details] ? (
-              <span>Unlocked: </span>
-            ) : (
-              <span className="Costumes-lockedText">LOCKED: </span>
-            )}
-            <span>{description[details]}</span>
-          </div>
-        )}
+        <div className="Costumes-descriptionContainer">
+          {details == undefined ? null : (
+            <>
+              {enabled[details] ? (
+                <span>Unlocked: </span>
+              ) : (
+                <span className="Costumes-lockedText">LOCKED: </span>
+              )}
+              <span>{description[details]}</span>
+            </>
+          )}
+        </div>
         <div className="Directions-button button-pushable">
-          <span className="button-front">
-            <Link to="/">Home</Link>
-          </span>
+          <div className="button-front u-flex u-justify-content">
+            <span>
+              <Link to="/">Home</Link>
+            </span>
+          </div>
         </div>
       </div>
     </div>
