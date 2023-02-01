@@ -93,7 +93,7 @@ class GameState {
         ) {
           if (Vector.dist(egg.yolkPos, gummy.pos) < GUMMY.SIZE) {
             eaten.push(gummy);
-            egg.state.eat = 5;
+            egg.state.eat = 20;
             updates.push({
               id: egg.id,
               type: gummy.type,
@@ -286,8 +286,8 @@ class GameState {
   }
 
   isGameOver() {
-    return this.framesPassed > 20 * 60;
-    //return this.eggs.length <= 1;
+    // return this.framesPassed > 20 * 60;
+    return this.eggs.length <= 1;
   }
 
   getRandomPos() {
@@ -304,7 +304,7 @@ class GameState {
     let score = Infinity;
     let pos;
 
-    for (let i = 0; i < 10; ++i) {
+    for (let i = 0; i < 5; ++i) {
       const testPos = this.getRandomPos();
       let testScore = 0;
 

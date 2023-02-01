@@ -226,6 +226,9 @@ export default class EggGraphic {
   }
 
   render(context) {
+    context.fillStyle = "#ffffff";
+    context.lineWidth = 3;
+    context.strokeStyle = "#6f4c2c";
     //console.log("update graph masses", this.masses)
 
     // centermass
@@ -233,8 +236,6 @@ export default class EggGraphic {
 
     // bezier curve using midpoints
     context.beginPath();
-    context.lineWidth = 2;
-    context.strokeStyle = "#aaaaaa";
 
     // using convex hull instead of masses array for when masses cross edges
     const convexHull = this.getConvexHull();
@@ -259,6 +260,7 @@ export default class EggGraphic {
     }
 
     context.fill();
+    context.stroke();
 
     // yolk
     // let yolk = new Graphics();

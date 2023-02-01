@@ -95,10 +95,6 @@ export default class GraphicsController {
       }
 
       const graphic = this.whiteMap[player.id];
-
-      let color = "#ffffff";
-      if ("pepper" in player.state) color = "#ffc080";
-
       if ("sarah" in player.state) {
         if (
           player.id == this.playerId ||
@@ -115,7 +111,9 @@ export default class GraphicsController {
       graphic.setRadius(player.whiteSize / 10);
       graphic.updateAcc();
 
-      this.context.fillStyle = color;
+      this.context.fillStyle = "#ffffff";
+      this.context.lineWidth = 2;
+      this.context.lineStyle = "#000000";
 
       graphic.render(this.context);
 
