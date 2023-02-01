@@ -164,6 +164,36 @@ export default class GraphicsController {
       yolk.setFire("pepper" in player.state);
 
       yolk.render(this.context);
+
+      if ("garlic" in player.state) {
+        this.drawImage(fabiTexture.garlic.icon, {
+          center: Vector.sum(
+            this.convert(player.yolkPos),
+            new Vector(YOLK.SIZE, YOLK.SIZE)
+          ),
+          size: 50,
+        });
+      }
+
+      if ("fishcake" in player.state) {
+        this.drawImage(fabiTexture.fishcake.icon, {
+          center: Vector.sum(
+            this.convert(player.yolkPos),
+            new Vector(YOLK.SIZE, YOLK.SIZE)
+          ),
+          size: 50,
+        });
+      }
+
+      if ("tomato" in player.state) {
+        this.drawImage(fabiTexture.tomato.icon, {
+          center: Vector.sum(
+            this.convert(player.yolkPos),
+            new Vector(-YOLK.SIZE, YOLK.SIZE)
+          ),
+          size: 50,
+        });
+      }
     }
 
     if (playerEgg && "seaweed" in playerEgg.state) {
