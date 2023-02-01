@@ -173,6 +173,13 @@ const initGeckos = async (server, port) => {
       socket.emit("pong");
     });
 
+    socket.on("requestcostumes", () => {
+      const user = socketToUserMap[socket.id];
+      if (user) {
+        socket.emit("updatecostumes");
+      }
+    });
+
     socket.on("requestrooms", () => {
       const user = socketToUserMap[socket.id];
       if (user) {

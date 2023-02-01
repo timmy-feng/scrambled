@@ -1,0 +1,9 @@
+.Costumes-costumeContainer {
+  display: grid;
+  grid-template-columns: 25% 25% 25% 25%;
+}
+
+.Costumes-icon {
+  height: 100px;
+  width: auto;
+}

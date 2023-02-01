@@ -29,7 +29,10 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
                 <Link to="/lobby">Play</Link>
               </div>
 
-              <div className="Directions-button">Achievements</div>
+              <div className="Directions-button">
+                <Link to="/costumes">Costumes</Link>
+              </div>
+
               <div
                 className="Directions-button"
                 onClick={() => {
