@@ -1,8 +1,20 @@
 import { navigate, Link } from "@reach/router";
 import React, { useEffect, useState } from "react";
 import { removeSocketListener, socket } from "../../client-socket";
+import Mascot from "../features/Mascot";
 
-import "./Skeleton.css";
+import "./Results.css";
+
+const statIcons = {
+  fishcake: "fishcake-power.png",
+  garlic: "garlic-power.png",
+  pepper: "pepper-power.png",
+  scallion: "scallion-power.png",
+  seaweed: "seaweed-power.png",
+  tomato: "tomato-power.png",
+  sarah: "egg-power.png",
+  kill: "stun-1.png",
+};
 
 const Results = (props) => {
   if (!props.userId) navigate("/");
@@ -28,7 +40,8 @@ const Results = (props) => {
   for (const stat in result.stats) {
     statList.push(
       <div key={stat}>
-        x{result.stats[stat]} | {stat}
+        <img className="Results-icon" src={statIcons[stat]} />
+        <span className="Results-count"> x {result.stats[stat]}</span>
       </div>
     );
   }
@@ -41,14 +54,21 @@ const Results = (props) => {
             {result.won ? "Eggceptional!" : "Cracked Under Pressure?"}
           </h2>
         </div>
-        <div className="Directions-button">{result.user.name}</div>
-        <div className="Directions-container">{statList}</div>
-        <div className="Directions-container">
-          <div className="Directions-button">
-            <Link to="/lobby">Lobby</Link>
+        <Mascot name={result.user.name} costume={result.user.costume} />
+        <div className="Results-statContainer">{statList}</div>
+        <div className="Escape-container u-split buttons u-flex u-space-between ">
+          <div
+            className="Split-button button-pushable"
+            onClick={() => socket.emit("leaveroom")}
+          >
+            <span className=" button-front">
+              <Link to="/lobby">Lobby</Link>
+            </span>
           </div>
-          <div className="Directions-button">
-            <Link to="/">Home</Link>
+          <div className="Split-button button-pushable">
+            <span className="button-front">
+              <Link to="/">Home</Link>
+            </span>
           </div>
         </div>
       </div>
