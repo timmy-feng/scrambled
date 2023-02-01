@@ -119,7 +119,7 @@ class GameState {
         this.gummies.push(
           new Gummy({
             type: this.getRandomGummy(),
-            pos: this.getRandomPos(),
+            pos: this.getCuratedPos(),
           })
         );
       }
@@ -237,7 +237,11 @@ class GameState {
 
   spawnEgg(id) {
     this.eggs.push(
-      new Egg({ id, name: this.getRandomFace(), whitePos: this.getRandomPos() })
+      new Egg({
+        id,
+        name: this.getRandomFace(),
+        whitePos: this.getCuratedPos(),
+      })
     );
   }
 
@@ -286,7 +290,6 @@ class GameState {
     //return this.eggs.length <= 1;
   }
 
-  // TODO: make a way to get "random" positions that are far from other objects
   getRandomPos() {
     return Vector.sum(
       Vector.polar(
@@ -295,6 +298,32 @@ class GameState {
       ),
       new Vector(GAME.MAP_SIZE / 2, GAME.MAP_SIZE / 2)
     );
+  }
+
+  getCuratedPos() {
+    let score = Infinity;
+    let pos;
+
+    for (let i = 0; i < 10; ++i) {
+      const testPos = this.getRandomPos();
+      let testScore = 0;
+
+      for (const egg of this.eggs) {
+        testScore += 1 / Vector.dist(egg.yolkPos, testPos);
+        testScore += 1 / Vector.dist(egg.whitePos, testPos);
+      }
+
+      for (const gummy of this.gummies) {
+        testScore += 1 / Vector.dist(gummy.pos, testPos);
+      }
+
+      if (testScore < score) {
+        pos = testPos;
+        score = testScore;
+      }
+    }
+
+    return pos;
   }
 
   getRandomFace() {
