@@ -56,19 +56,15 @@ const Lobby = (props) => {
       if (rooms[roomCode][0]._id == props.userId) {
         startGameButtons = (
           <div className="u-rounded">
-            <div className="Map-container u-flex">
+            <div className="Map-container u-flex u-rounded">
             {MAPS.map((map) => (
-              
               <button className= "Map-button Directions-button" key={map} onClick={() => socket.emit("startgame", map)}>
                 <div className="img-Container">
                   <img className="map-img" src={`${map}.png`} />
                 </div>
-                
                 <p className="map-title">{map}</p>
               </button>
             ))}
-
-
             </div>
             
 
@@ -124,19 +120,7 @@ const Lobby = (props) => {
           <div className="Title-container u-flex">
             <h2 className="Title-text">Join a Room</h2>
           </div>
-          {roomList.length === 0 ? roomList : <div>no rooms!</div>}
           {roomList}
-
-          <div className="Rooms-container">
-            <ul className="Rooms-list">
-              <li>
-                <button className="Room-button">ASHJ</button>
-              </li>
-              <li>
-                <button className="Room-button">ADPO</button>
-              </li>
-            </ul>
-          </div>
 
           <div className="space"></div>
 

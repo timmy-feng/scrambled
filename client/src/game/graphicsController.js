@@ -194,7 +194,7 @@ export default class GraphicsController {
     if (this.panelState == 1 || this.panelState == 2) {
       // egg dead panel
       this.context.globalAlpha = 0.5;
-      this.context.fillStyle = "#ff4000";
+      this.context.fillStyle = "#ffffff";
       this.context.fillRect(0, 0, GAME.SCREEN_SIZE, GAME.SCREEN_SIZE);
       this.context.globalAlpha = 1;
       this.context.fillStyle = "#000000";
@@ -207,7 +207,7 @@ export default class GraphicsController {
     } else if (this.panelState == 4) {
       // game over panel
       this.context.globalAlpha = 0.5;
-      this.context.fillStyle = "#00ff40";
+      this.context.fillStyle = "#ffffff";
       this.context.fillRect(0, 0, GAME.SCREEN_SIZE, GAME.SCREEN_SIZE);
       this.context.globalAlpha = 1;
       this.context.fillStyle = "#000000";
