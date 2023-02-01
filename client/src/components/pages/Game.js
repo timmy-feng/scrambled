@@ -88,16 +88,8 @@ const Game = (props) => {
           onPointerCancel={(event) => game.onPointerUp(event)}
         />
       </div>
-
-      {/* <div className="Game-container">
-        <Joystick game={game}></Joystick>
-      </div> */}
-
-      {ping ? (
-        <div className="Game-container">
-          <p>ping {ping}</p>
-        </div>
-      ) : null}
+      <img id="howto1" src="howto/instructions.png" />
+      <img id="howto2" src="howto/powerups.png" />
     </>
   );
 };
