@@ -20,18 +20,26 @@ const STUNNED = ["stun-2.png", "stun-3.png"];
 const FIRE = ["fire-overlay-1.png", "fire-overlay-2.png"];
 const SHOOT = ["eat-1.png", "eat-2.png"];
 
+const COSTUMES = [];
+for (let i = 0; i < 8; ++i) {
+  COSTUMES.push(`costumes/cos${i}.png`);
+}
+
 const eatImgs = EAT.map((eat) => imageFrom(eat));
 const stunnedImgs = STUNNED.map((stun) => imageFrom(stun));
 const fireImgs = FIRE.map((fire) => imageFrom(fire));
 const shootImgs = SHOOT.map((shoot) => imageFrom(shoot));
+const costumeImgs = COSTUMES.map((costume) => imageFrom(costume));
 const normalImg = imageFrom("yolk-head.png");
 const hurtImg = imageFrom("stun-1.png");
 
 export default class YolkGraphic {
-  constructor() {
+  constructor(costume) {
     this.anim = "normal";
     this.frame = 0;
     this.fire = false;
+
+    this.costume = costume;
   }
 
   setRotation(rotation) {
@@ -94,6 +102,15 @@ export default class YolkGraphic {
       2 * YOLK.SIZE,
       2 * YOLK.SIZE
     );
+    if (this.costume) {
+      context.drawImage(
+        costumeImgs[this.costume],
+        -YOLK.SIZE,
+        -1.7 * YOLK.SIZE,
+        1.1 * 2 * YOLK.SIZE,
+        1.1 * 2.6 * YOLK.SIZE
+      );
+    }
     context.restore();
 
     this.frame += 1;

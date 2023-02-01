@@ -31,16 +31,17 @@ const startGame = (user, map) => {
     delete userToRoomMap[user._id];
 
     userToGameMap[user._id] = game;
-    game.spawnEgg(user._id);
+    game.spawnEgg(user._id, user.costume);
 
     userToSocketMap[user._id].emit("startgame");
   }
 
   const sendLoop = setInterval(() => {
     for (const user of room) {
-      userToSocketMap[user._id]?.emit("update", {
-        gameState: game,
-      });
+      if (userToGameMap[user._id] == game)
+        userToSocketMap[user._id]?.emit("update", {
+          gameState: game,
+        });
     }
   }, 1000 / UPDATES_PER_SEC);
 
@@ -60,7 +61,7 @@ const startGame = (user, map) => {
       setTimeout(() => {
         for (const user of room) {
           if (user._id in results) {
-            results[user._id].won = user._id == game.eggs[0].id;
+            results[user._id].won = user._id == game.eggs[0]?.id;
 
             const update = { ...results[user._id].stats };
             if (results[user._id].won) {

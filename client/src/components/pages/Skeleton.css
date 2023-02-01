@@ -59,7 +59,7 @@ a {
   display: block;
   transform: translate(-10px, -10px);
   will-change: transform;
-    transition: transform 150ms;
+  transition: transform 150ms;
 }
 
 .button-pushable {
@@ -75,5 +75,5 @@ a {
 }
 
 .Scrambled-text-container {
-    margin-top: 8px;
+  margin-top: 8px;
 }

@@ -59,7 +59,7 @@ function populateCurrentUser(req, res, next) {
       if (digit < 10) _id += String.fromCharCode(48 + digit);
       else _id += String.fromCharCode(97 + digit - 10);
     }
-    req.session.user = { name: `Guest ${_id}`, _id };
+    req.session.user = { name: `Guest ${_id}`, costume: 0, _id };
   }
 
   // simply populate "req.user" for convenience

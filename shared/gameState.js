@@ -235,11 +235,11 @@ class GameState {
     return i == -1 ? null : this.eggs[i];
   }
 
-  spawnEgg(id) {
+  spawnEgg(id, costume) {
     this.eggs.push(
       new Egg({
         id,
-        name: this.getRandomFace(),
+        costume,
         whitePos: this.getCuratedPos(),
       })
     );
@@ -286,7 +286,7 @@ class GameState {
   }
 
   isGameOver() {
-    // return this.framesPassed > 20 * 60;
+    return this.framesPassed > 20 * 60;
     return this.eggs.length <= 1;
   }
 
