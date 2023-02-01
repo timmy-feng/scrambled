@@ -25,12 +25,19 @@ const Lobby = (props) => {
       navigate("/game");
     });
 
-    socket.emit("requestrooms");
-
     return () => {
       removeSocketListener("updaterooms");
       removeSocketListener("updateroom");
       removeSocketListener("startgame");
+    };
+  }, []);
+
+  useEffect(() => {
+    const requestLoop = setInterval(() => {
+      socket.emit("requestrooms");
+    }, 200);
+    return () => {
+      clearInterval(requestLoop);
     };
   }, []);
 
@@ -39,14 +46,13 @@ const Lobby = (props) => {
     let startGameButtons = null;
 
     if (roomCode in rooms) {
-      if (rooms[roomCode].inGame) navigate("/game");
-      playerList = rooms[roomCode].players.map((player, i) => (
+      playerList = rooms[roomCode].map((player, i) => (
         <div className="Directions-button" key={i}>
           {player.name + (i == 0 ? " (host)" : "")}
         </div>
       ));
 
-      if (rooms[roomCode].players[0]._id == props.userId) {
+      if (rooms[roomCode][0]._id == props.userId) {
         startGameButtons = (
           <div className="Directions-button">
             <span>Start Game: </span>
@@ -82,15 +88,14 @@ const Lobby = (props) => {
     );
   } else {
     const roomList = [];
-    for (const room in rooms) {
-      if (!rooms[room].inGame)
-        roomList.push(
-          <div key={room}>
-            <button onClick={() => socket.emit("joinroom", room)}>
-              {room}
-            </button>
-          </div>
-        );
+    for (const roomCode in rooms) {
+      roomList.push(
+        <div key={roomCode}>
+          <button onClick={() => socket.emit("joinroom", roomCode)}>
+            {roomCode}
+          </button>
+        </div>
+      );
     }
 
     return (
