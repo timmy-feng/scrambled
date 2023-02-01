@@ -127,15 +127,10 @@ export default class GraphicsController {
     }
 
     for (const player of gameState.eggs) {
-      if (!(player.id in this.yolkMap)) {
-        this.yolkMap[player.id] = new YolkGraphic();
+      let yolk = this.yolkMap[player.id];
+      if (!yolk) {
+        yolk = this.yolkMap[player.id] = new YolkGraphic();
       }
-
-      let color = "#ffc040";
-      if ("spring" in player.state || "freeze" in player.state)
-        color = "#ff8000";
-      else if ("sprung" in player.state || "frozen" in player.state)
-        color = "#ffff80";
 
       if ("invisible" in player.state) {
         if (
@@ -149,14 +144,24 @@ export default class GraphicsController {
         }
       }
 
-      this.yolkMap[player.id].setPos(this.convert(player.yolkPos));
+      this.context.globalAlpha = 1;
+
+      yolk.setPos(this.convert(player.yolkPos));
 
       const dir = Vector.diff(player.yolkPos, player.pointerPos);
-      this.yolkMap[player.id].setRotation(
-        Math.PI / 2 - Math.atan2(dir.y, dir.x)
-      );
+      yolk.setRotation(Math.PI / 2 - Math.atan2(dir.y, dir.x));
 
-      this.yolkMap[player.id].render(this.context);
+      if ("frozen" in player.state || "sprung" in player.state) {
+        yolk.setAnim("stun");
+      } else if ("eat" in player.state) {
+        yolk.setAnim("eat");
+      } else {
+        yolk.setAnim("normal");
+      }
+
+      yolk.setFire("pepper" in player.state);
+
+      yolk.render(this.context);
     }
 
     if (playerEgg && "seaweed" in playerEgg.state) {

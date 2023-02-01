@@ -15,9 +15,13 @@ const imageFrom = (src) => {
 };
 
 const yolkNormal = imageFrom("yolk-head.png");
+const yolkEat = imageFrom("eat-3.png");
+const yolkStun = imageFrom("stun-1.png");
 
 export default class YolkGraphic {
-  constructor() {}
+  constructor() {
+    this.anim = "normal";
+  }
 
   setRotation(rotation) {
     this.rotation = rotation;
@@ -28,21 +32,22 @@ export default class YolkGraphic {
   }
 
   // eating, stunned, tomato
-  setAction(action) {
-    if (action != this.action) {
-      this.action = action;
-      this.animation = action;
-      this.frame = 0;
-    }
+  setAnim(anim) {
+    this.anim = anim;
   }
 
+  setFire(fire) {}
+
   render(context) {
+    let image = yolkNormal;
+    if (this.anim == "stun") image = yolkStun;
+    if (this.anim == "eat") image = yolkEat;
+
     context.save();
     context.translate(this.pos.x, this.pos.y);
     context.rotate(this.rotation);
-    console.log(`draw at ${this.pos}`);
     context.drawImage(
-      yolkNormal,
+      image,
       -YOLK.SIZE,
       -YOLK.SIZE,
       2 * YOLK.SIZE,
