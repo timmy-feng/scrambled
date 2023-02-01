@@ -5,7 +5,7 @@ class Egg {
   // requires data.id
   constructor(data) {
     this.id = data.id;
-    this.name = data.name;
+    this.costume = data.costume;
 
     this.whitePos = data.whitePos;
     this.whiteVel = data.whiteVel ?? new Vector();

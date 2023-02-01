@@ -16,30 +16,35 @@ const description = [
 ];
 
 // pics
-const lockedEgg = Array(8).fill("/stun-1.png");
-const selectedEgg = Array(8).fill("/eat-4.png");
-const unlockedEgg = Array(8).fill("/yolk-head.png");
+const lockedEgg = "/stun-1.png";
+const selectedEgg = "/eat-4.png";
+const unlockedEgg = "/yolk-head.png";
+
+const costumes = [];
+for (let i = 0; i < 8; ++i) {
+  costumes.push(`/costumes/cos${i}.png`);
+}
 
 const Costumes = (props) => {
   if (!props.userId) navigate("/");
 
-  const [enabled, setEnabled] = useState(Array(8).fill(false));
+  const [enabled, setEnabled] = useState(Array(8).fill(true));
   const [selected, setSelected] = useState();
   const [details, setDetails] = useState();
 
-  useEffect(() => {
-    socket.on("costumes", (result) => {
-      console.log(result);
-      setEnabled(result.enabled);
-      setSelected(result.selected);
-    });
+  // useEffect(() => {
+  //   socket.on("costumes", (result) => {
+  //     console.log(result);
+  //     setEnabled(result.enabled);
+  //     setSelected(result.selected);
+  //   });
 
-    socket.emit("requestcostumes");
+  //   socket.emit("requestcostumes");
 
-    return () => {
-      removeSocketListener("costumes");
-    };
-  }, []);
+  //   return () => {
+  //     removeSocketListener("costumes");
+  //   };
+  // }, []);
 
   const costumeList = [];
   for (let i = 0; i < 8; i++) {
@@ -55,34 +60,37 @@ const Costumes = (props) => {
         }}
       >
         <img
-          className="Costumes-icon"
+          className="Costumes-egg"
           src={
-            enabled[i]
-              ? i == selected
-                ? selectedEgg[i]
-                : unlockedEgg[i]
-              : lockedEgg[i]
+            enabled[i] ? (i == selected ? selectedEgg : unlockedEgg) : lockedEgg
           }
         />
+        {i ? <img className="Costumes-costume" src={costumes[i]} /> : null}
       </div>
     );
   }
 
   return (
-    <div>
-      <h2>eggcessories</h2>
-      <div className="Costumes-costumeContainer">{costumeList}</div>
-      {details ? (
-        <div>
-          {enabled[details] ? (
-            <span>Unlocked: </span>
-          ) : (
-            <span className="Costumes-lockedText">LOCKED: </span>
-          )}
-          <span>{description[details]}</span>
+    <div className="Costumes-mainContainer u-flex">
+      <div className="Costumes-secondaryContainer u-flex">
+        <h2>eggcessories</h2>
+        <div className="Costumes-costumeContainer">{costumeList}</div>
+        {details == undefined ? null : (
+          <div>
+            {enabled[details] ? (
+              <span>Unlocked: </span>
+            ) : (
+              <span className="Costumes-lockedText">LOCKED: </span>
+            )}
+            <span>{description[details]}</span>
+          </div>
+        )}
+        <div className="Directions-button button-pushable">
+          <span className="button-front">
+            <Link to="/">Home</Link>
+          </span>
         </div>
-      ) : null}
-      <Link to="/">home</Link>
+      </div>
     </div>
   );
 };

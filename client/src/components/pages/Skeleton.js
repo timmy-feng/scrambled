@@ -154,7 +154,6 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
 
   return (
     <>
-      <head></head>
       <div className="Start-container u-flex">
         <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
           <div className="Directions-container u-flex">
