@@ -16,24 +16,22 @@ const imageFrom = (src) => {
 };
 
 const EAT = ["eat-1.png", "eat-2.png", "eat-3.png", "eat-4.png"];
-const STUNNED = ["stun-1.png", "stun-2.png", "stun-3.png"];
+const STUNNED = ["stun-2.png", "stun-3.png"];
 const FIRE = ["fire-overlay-1.png", "fire-overlay-2.png"];
+const SHOOT = ["eat-1.png", "eat-2.png"];
 
 const eatImgs = EAT.map((eat) => imageFrom(eat));
 const stunnedImgs = STUNNED.map((stun) => imageFrom(stun));
 const fireImgs = FIRE.map((fire) => imageFrom(fire));
-
-const yolkNormal = imageFrom("yolk-head.png");
-const yolkEat = imageFrom("eat-3.png");
-const yolkStun = imageFrom("stun-2.png");
-const yolkShoot = imageFrom("eat-1.png");
-const yolkHurt = imageFrom("stun-1.png");
+const shootImgs = SHOOT.map((shoot) => imageFrom(shoot));
+const normalImg = imageFrom("yolk-head.png");
+const hurtImg = imageFrom("stun-1.png");
 
 export default class YolkGraphic {
   constructor() {
     this.anim = "normal";
-    this.i = 0;
-    this.image = yolkNormal;
+    this.frame = 0;
+    this.fire = false;
   }
 
   setRotation(rotation) {
@@ -50,103 +48,54 @@ export default class YolkGraphic {
 
   // eating, stunned, tomato
   setAnim(anim) {
-    if (anim !== this.anim) {
+    if (anim != this.anim) {
       this.anim = anim;
-      this.i = 0;
+      this.frame = 0;
     }
-
-    if (this.anim === "eat") {
-      this.updateEatAnim();
-    } else if (this.anim === "normal") this.image = yolkNormal;
   }
 
-  updateEatAnim() {
-   
-    this.i = this.i % (eatImgs.length * frameConstant);
-    if (this.i % frameConstant === 0) {
-      this.image = eatImgs[this.i / frameConstant];
-    }
-
-    this.i = this.i + 1;
+  setFire(fire) {
+    this.fire = fire;
   }
-
-  setFire(fire) {}
 
   render(context) {
-    /* let image = yolkNormal;
-    if (this.anim == "stun") image = yolkStun;
-    if (this.anim == "eat") image = yolkEat;
-    if (this.anim == "shoot") image = yolkShoot;
-    if (this.anim == "hurt") image = yolkHurt; */
+    let image = normalImg;
+    if (this.anim == "eat") {
+      image = eatImgs[Math.floor(this.frame / frameConstant) % eatImgs.length];
+    } else if (this.anim == "stun") {
+      image =
+        stunnedImgs[
+          Math.floor(this.frame / frameConstant) % stunnedImgs.length
+        ];
+    } else if (this.anim == "hurt") {
+      image = hurtImg;
+    } else if (this.anim == "shoot") {
+      image =
+        shootImgs[Math.floor(this.frame / frameConstant) % shootImgs.length];
+    }
 
     context.save();
     context.globalAlpha = this.alpha;
     context.translate(this.pos.x, this.pos.y);
     context.rotate(this.rotation);
+    if (this.fire) {
+      context.drawImage(
+        fireImgs[Math.floor(this.frame / frameConstant) % fireImgs.length],
+        -YOLK.SIZE,
+        -3 * YOLK.SIZE,
+        2 * YOLK.SIZE,
+        4 * YOLK.SIZE
+      );
+    }
     context.drawImage(
-      this.image,
+      image,
       -YOLK.SIZE,
       -YOLK.SIZE,
       2 * YOLK.SIZE,
       2 * YOLK.SIZE
     );
     context.restore();
+
+    this.frame += 1;
   }
 }
-
-/* const EAT = ["eat-1.png", "eat-2.png", "eat-3.png", "eat-4.png"];
-const STUNNED = ["stun-1.png", "stun-2.png", "stun-3.png"];
-const FIRE = ["fire-overlay-1.png", "fire-overlay-2.png"];
-
-export default class YolkGraphic {
-  constructor(props) {
-    this.action = props.action; // "eat", "stunned", "fire"
-    this.yolkImgUrl = "yolk.png";
-    this.action = "normal";
-    this.i = 0;
-  }
-
-  setAnim(action) {
-    if (action !== this.action) {
-      this.i = 0;
-
-      if (action === "eat") {
-        //update eat animation
-      }
-      else if (action === "stun") {
-
-      }
-    }
-  }
-
-  updateEatAnim() {
-    // while action equals bite, loop through images
-    i = i % EAT.length;
-    this.yolkImgUrl = EAT[i];
-    i++;
-  }
-
-  updateStunAnim () {
-    if (i === 0) {
-        this.yolkImgUrl = "stun-1.png";
-    }
-    else {
-        i = i % 2;
-    }
-
-  }
-
-  render() {
-    // yolk image at position
-  }
-} */
-
-// pass {bite: false, shoot: false. stunned: false } normally
-// but pass {bite: true} if completed a bite
-// startAction = "bite", "shoot", "stunned"
-// if startAction changes value,
-//      start at index 0 of action animation loop
-//      render image at index
-//      increase index for next render
-
-// set bite taken to true

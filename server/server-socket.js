@@ -166,7 +166,7 @@ const initGeckos = async (server, port) => {
     socket.onDisconnect(() => {
       const user = socketToUserMap[socket.id];
       console.log(`socket has disconnected ${socket.id}`);
-      if (user) removeUser(user, socket);
+      removeUser(user, socket);
     });
 
     socket.on("ping", () => {
