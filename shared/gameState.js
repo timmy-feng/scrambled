@@ -220,7 +220,7 @@ class GameState {
 
     this.updateDead(updates);
 
-    console.log(this.collisions);
+    //console.log(this.collisions);
 
     this.framesPassed += 1;
     return updates;
