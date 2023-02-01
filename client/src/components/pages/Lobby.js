@@ -2,6 +2,8 @@ import { navigate, Link } from "@reach/router";
 import React, { useEffect, useState } from "react";
 import { removeSocketListener, socket } from "../../client-socket";
 
+import Mascot from "../features/Mascot";
+
 import "./Skeleton.css";
 import "./Lobby.css";
 
@@ -49,14 +51,9 @@ const Lobby = (props) => {
     if (roomCode in rooms) {
       playerList = (
         <div className="Players-container">
-          <h3 className="u-font">Players</h3>
-          <ul className = "Players-list">
-            {rooms[roomCode].map((player, i) => (
-              <li className="u-font" key={i}>
-                {player.name + (i == 0 ? " (host)" : "")}
-              </li>
-            ))}
-          </ul>
+          {rooms[roomCode].map((player, i) => (
+            <Mascot name={player.name} costume={player.costume} />
+          ))}
         </div>
       );
 
@@ -69,24 +66,20 @@ const Lobby = (props) => {
                   <button
                     className="Map-button"
                     key={map}
-                    onClick={() => socket.emit("startgame", map)}
+                    onClick={() => {
+                      console.log("clicked");
+                      socket.emit("startgame", map);
+                    }}
                   >
                     <div className="img-container">
                       <img className="map-img" src={`${map}.png`} />
                     </div>
                     <div className="Map-title-container">
-                    <p className="Map-title u-font">{map}</p>
+                      <p className="Map-title u-font">{map}</p>
                     </div>
-                    
                   </button>
                 </div>
               ))}
-            </div>
-
-            <div className="Room-start-container">
-              <button className=" Directions-button button-pushable">
-                <span className="button-front">Start Game: </span>
-              </button>
             </div>
           </div>
         );
@@ -106,7 +99,7 @@ const Lobby = (props) => {
               className="Split-button button-pushable"
               onClick={() => socket.emit("leaveroom")}
             >
-              <span className=" button-front u-font">Leave Room</span>
+              <span className=" button-front u-font">Leave</span>
             </div>
             <div className="Split-button button-pushable">
               <span className="button-front u-font">

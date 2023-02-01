@@ -192,9 +192,6 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
                 onError={(err) => console.log(err)}
               />
             )}
-            <button className="Directions-button button-pushable">
-              <span className="button-front">How to Play</span>
-            </button>
             <div className="Scrambled-text-container u-flex">
               {test.map((letter) => (
                 <div

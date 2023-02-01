@@ -6,6 +6,7 @@ import Lobby from "./pages/Lobby.js";
 import Game from "./pages/Game.js";
 import NotFound from "./pages/NotFound.js";
 import Skeleton from "./pages/Skeleton.js";
+import HowToPlay from "./pages/HowToPlay.js";
 
 import "../utilities.css";
 
@@ -52,6 +53,7 @@ const App = () => {
         <Game path="/game" userId={userId} />
         <Results path="/results" userId={userId} />
         <Costumes path="/costumes" userId={userId} />
+        <HowToPlay path="/howtoplay" userId={userId} />
         <Skeleton
           path="/"
           handleLogin={handleLogin}

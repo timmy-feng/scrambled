@@ -14,25 +14,24 @@
 
 .Rooms-list {
   list-style-position: inside;
-  padding:0;
-  margin:0;
+  padding: 0;
+  margin: 0;
   background-color: #eea107;
   list-style: none;
 }
 
 ul {
-list-style-position: inside;
-  padding:0;
-  margin:0;
-
+  list-style-position: inside;
+  padding: 0;
+  margin: 0;
 }
 
 .Room-available {
-    display: block;
-    cursor:pointer;
-  font-size: 48px; 
+  display: block;
+  cursor: pointer;
+  font-size: 48px;
   /*border-radius: 12px;*/
-  padding: 24px 16px; 
+  padding: 24px 16px;
   margin: 8px;
   background-color: #f8c947;
   will-change: transform;
@@ -40,104 +39,93 @@ list-style-position: inside;
 }
 
 .Room-available:active {
-    transform: translate(1px, 1px);
-  }
-  
-.Room-available:hover{
-    transform: translate(-4px, -4px);
-  }
+  transform: translate(1px, 1px);
+}
+
+.Room-available:hover {
+  transform: translate(-4px, -4px);
+}
 
 .Room-available-text {
-    background-color: #f8c947;
+  background-color: #f8c947;
 }
 
 .u-white {
-    color: white;
+  color: white;
 }
 
 .u-brown {
-    color: #3a220a;
+  color: #3a220a;
 }
 
 .u-orange {
-    color: #f56d0c;
+  color: #f56d0c;
 }
 
 .space {
-    height: 64px;
+  height: 64px;
 }
 
 .Maps-container {
-    background-color: #fffbf7;
-    justify-content: space-around;
-    width: 28rem;
-    padding: 32px 8px;
-    border-radius: 12px;
-   
+  background-color: #fffbf7;
+  justify-content: space-around;
+  width: 28rem;
+  padding: 32px 8px;
+  border-radius: 12px;
 }
 .Maps-behind {
-    width: 30rem;
-    background-color: #f4f4f2;
-    border-radius: 12px;
-    height: 16rem;
-   
-
+  width: 30rem;
+  background-color: #f4f4f2;
+  border-radius: 12px;
+  height: 16rem;
 }
 
 .Map-card {
-    /* background-color: orange; */
-    width: 8rem;
-    /* border: 2px solid green; */
-    padding: 0;
-    
+  /* background-color: orange; */
+  width: 8rem;
+  /* border: 2px solid green; */
+  padding: 0;
 }
 .Map-button {
-    border:none;
-    background-color: #fffbf7;
-    width: 100%;
-    height:100%;
-    border-radius: 12px;
-    padding:0;
+  border: none;
+  background-color: #fffbf7;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  padding: 0;
 }
 .img-container {
-    position: relative;
-    width:100%;
-    height: 0;
-    padding-top: 100%;
-    /* background: green; */
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-top: 100%;
+  /* background: green; */
 }
 
 .map-img {
-    position: absolute;
-    top:0;
-    left:0;
-    width: 100%;
-    height: 100%;
-   
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .Players-container {
-    width: 28rem;
+  display: flex;
 }
 
-
-
-.Map-title-container{
-    /* background-color: blue; */
-    margin-top:8px;
-    border-radius: 12px;
+.Map-title-container {
+  /* background-color: blue; */
+  margin-top: 8px;
+  border-radius: 12px;
 }
 
-.Map-title{
-    font-size: 32px;
-    padding: 0;
-    margin:0;
+.Map-title {
+  font-size: 32px;
+  padding: 0;
+  margin: 0;
 }
 
 .Room-start-container {
-   margin-top: 48px;
-}
-
-.Escape-container {
-    margin-top: 10rem;
+  margin-top: 48px;
 }
