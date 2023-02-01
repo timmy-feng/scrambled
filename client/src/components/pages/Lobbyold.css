@@ -1,0 +1,109 @@
+@import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
+
+.Rooms-container {
+    width : 32rem;
+    height: 24rem;
+    border-radius: 12px; 
+    border: 4px solid #f4f4f2;
+    
+}
+
+.Rooms-list {
+    overflow: hidden;
+    overflow-y: scroll;
+    list-style: none;
+    padding: 0;
+    margin:0
+}
+
+.Room-button {
+    border: none;
+    margin: none;
+    padding: 0;
+    background-color: #f4f4f2;
+
+    
+    font-size: 2rem;
+    display: block;
+    will-change: transform;
+    transition: transform 150ms;
+}
+
+.Rooms-list li {
+    margin: 0;
+    padding: 16px 24px ;
+    background-color: #f4f4f2;
+    border-bottom: 4px solid white;
+    will-change: transform;
+    transition: transform 150ms;
+    cursor: pointer;
+}
+
+.Rooms-list li:hover {
+    background-color: #dededc; 
+    
+    transform: translate(1px, 1px);
+}
+
+.Rooms-list li:hover .Room-button {
+    background-color: #dededc;  
+  
+}
+
+.space {
+    height: 4rem;
+}
+
+.Escape-container {
+    width: 24rem;
+}
+
+.Split-button {
+    font-size: 48px;
+    width: 100%;
+    border: none;
+    padding: 4px;
+    width: 10rem;
+    font-family: "Jua", sans-serif;
+    background-color: #fdf8ed;
+}
+
+.u-space-between {
+    justify-content: space-between;
+}
+
+.u-rounded {
+    border-radius: 12px;
+}
+
+.img-Container {
+    width: 100%;
+    height: 100%;
+    background-color: #fdf8ed;
+}
+
+.map-img {
+    width: 6rem;
+    height: 6rem;
+    background-color: #fdf8ed;
+}
+
+.map-title {
+    color: 4px solid #3a220a;
+    font-family: "Jua", sans-serif;
+    font-size: 16px;
+}
+
+.Map-container{
+    width: 28rem;
+    border-radius: 12px;
+    padding: 8px;
+    background-color: #fdf8ed;
+    margin-bottom: 2rem;
+}
+
+.Map-button{
+    margin: 0;
+    padding:0;
+    cursor: pointer;
+}

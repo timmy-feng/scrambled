@@ -57,16 +57,19 @@ const Lobby = (props) => {
         startGameButtons = (
           <div className="u-rounded">
             <div className="Map-container u-flex u-rounded">
-            {MAPS.map((map) => (
-              <button className= "Map-button Directions-button" key={map} onClick={() => socket.emit("startgame", map)}>
-                <div className="img-Container">
-                  <img className="map-img" src={`${map}.png`} />
-                </div>
-                <p className="map-title">{map}</p>
-              </button>
-            ))}
+              {MAPS.map((map) => (
+                <button
+                  className="Map-button Directions-button"
+                  key={map}
+                  onClick={() => socket.emit("startgame", map)}
+                >
+                  <div className="img-Container">
+                    <img className="map-img" src={`${map}.png`} />
+                  </div>
+                  <p className="map-title">{map}</p>
+                </button>
+              ))}
             </div>
-            
 
             <div>
               <button className=" Directions-button button-pushable">
@@ -114,13 +117,24 @@ const Lobby = (props) => {
       );
     }
 
+    //const roomList1 = ["AHJS", "AOQJ"];
     return (
       <div className="Start-container u-flex">
         <div className="Directions-container u-flex">
           <div className="Title-container u-flex">
             <h2 className="Title-text">Join a Room</h2>
           </div>
-          {roomList}
+          <>
+            <div className="Rooms-container">
+              <ul className="Rooms-list">
+                {roomList.map((room) => (
+                  <li className="u-font u-rounded u-brown Room-available">
+                    <span className="u-white Room-available-text">{room}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </>
 
           <div className="space"></div>
 
