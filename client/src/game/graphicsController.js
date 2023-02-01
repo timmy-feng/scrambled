@@ -19,6 +19,12 @@ const fabiTexture = {
   seaweed: { icon: imageFrom("fabisees.png"), scale: 0.15 },
 };
 
+const mapTexture = {
+  rice: imageFrom("rice.png"),
+  ramen: imageFrom("ramen.png"),
+  shakshuka: imageFrom("shakshuka.png"),
+};
+
 const kirbyAy = new Audio("kirbyAy.wav");
 
 export default class GraphicsController {
@@ -58,17 +64,25 @@ export default class GraphicsController {
       this.playAy = playerEgg.playAy;
     }
 
-    this.context.fillStyle = "#ffffff";
-    this.context.fillRect(0, 0, GAME.SCREEN_SIZE, GAME.SCREEN_SIZE);
-
-    this.drawCircle(
+    this.context.clearRect(0, 0, GAME.SCREEN_SIZE, GAME.SCREEN_SIZE);
+    this.drawImage(
+      mapTexture[gameState.map],
       new Vector(GAME.SCREEN_SIZE / 2, GAME.SCREEN_SIZE / 2),
-      GAME.MAP_SIZE / 2,
-      "#00c0ff"
+      GAME.SCREEN_SIZE
     );
 
+    // this.drawCircle(
+    //   new Vector(GAME.SCREEN_SIZE / 2, GAME.SCREEN_SIZE / 2),
+    //   GAME.MAP_SIZE / 2,
+    //   "#00c0ff"
+    // );
+
     for (const gummy of gameState.gummies) {
-      this.drawImage(fabiTexture[gummy.type].icon, this.convert(gummy.pos));
+      this.drawImage(
+        fabiTexture[gummy.type].icon,
+        this.convert(gummy.pos),
+        100
+      );
     }
 
     for (const player of gameState.eggs) {
@@ -208,7 +222,13 @@ export default class GraphicsController {
     this.context.fill();
   }
 
-  drawImage(image, center) {
-    this.context.drawImage(image, center.x - 50, center.y - 50, 100, 100);
+  drawImage(image, center, size) {
+    this.context.drawImage(
+      image,
+      center.x - size / 2,
+      center.y - size / 2,
+      size,
+      size
+    );
   }
 }
