@@ -31,10 +31,8 @@ const startGame = (user, map) => {
     delete userToRoomMap[user._id];
 
     userToGameMap[user._id] = game;
-    User.findOne({ _id: user._id }).then((serverUser) => {
-      game.spawnEgg(user._id, serverUser ? serverUser.costume : 0);
-      userToSocketMap[user._id].emit("startgame");
-    });
+    game.spawnEgg(user._id, user.costume);
+    userToSocketMap[user._id].emit("startgame");
   }
 
   const sendLoop = setInterval(() => {
@@ -70,6 +68,11 @@ const startGame = (user, map) => {
             }
             update[game.map] = 1;
             update.game = 1;
+
+            // change user props locally too
+            for (const prop in update) {
+              user[prop] += update[prop];
+            }
 
             User.updateOne({ _id: user._id }, { $inc: update }).then((res) => {
               if (res.n) {
@@ -192,18 +195,9 @@ const initGeckos = async (server, port) => {
     socket.on("requestcostumes", () => {
       const user = socketToUserMap[socket.id];
       if (user) {
-        User.findOne({ _id: user._id }).then((serverUser) => {
-          if (serverUser) {
-            socket.emit("costumes", {
-              selected: serverUser.costume,
-              enabled: enabledCostumes(serverUser),
-            });
-          } else {
-            socket.emit("costumes", {
-              selected: 0,
-              enabled: [true, false, false, false, false, false, false, false],
-            });
-          }
+        socket.emit("costumes", {
+          selected: user.costume,
+          enabled: enabledCostumes(user),
         });
       }
     });
@@ -211,11 +205,8 @@ const initGeckos = async (server, port) => {
     socket.on("setcostume", (costume) => {
       const user = socketToUserMap[socket.id];
       if (user && enabledCostumes(user)[costume]) {
-        User.updateOne({ _id: user._id }, { costume: costume }).then(
-          (update) => {
-            User.findOne({ _id: user._id }).then((user) => console.log(user));
-          }
-        );
+        User.updateOne({ _id: user._id }, { costume });
+        user.costume = costume;
       }
     });
 
