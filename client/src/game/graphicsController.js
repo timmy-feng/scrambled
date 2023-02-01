@@ -145,6 +145,7 @@ export default class GraphicsController {
         alpha = 1;
       }
 
+      yolk.setAlpha(alpha);
       yolk.setPos(this.convert(player.yolkPos));
 
       const dir = Vector.diff(player.yolkPos, player.pointerPos);
