@@ -56,19 +56,15 @@ const Lobby = (props) => {
       if (rooms[roomCode][0]._id == props.userId) {
         startGameButtons = (
           <div className="u-rounded">
-            <div className="Map-container u-flex">
+            <div className="Map-container u-flex u-rounded">
             {MAPS.map((map) => (
-              
               <button className= "Map-button Directions-button" key={map} onClick={() => socket.emit("startgame", map)}>
                 <div className="img-Container">
                   <img className="map-img" src={`${map}.png`} />
                 </div>
-                
                 <p className="map-title">{map}</p>
               </button>
             ))}
-
-
             </div>
             
 
