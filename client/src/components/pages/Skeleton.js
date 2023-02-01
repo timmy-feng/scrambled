@@ -13,7 +13,7 @@ import { GAME } from "../../../../shared/constants";
 const GOOGLE_CLIENT_ID =
   "405770742094-nsvn5kjdutoiito75u15c7b78eqmekmf.apps.googleusercontent.com";
 
-let test = "scrambled";
+let test = "2023";
 test = test.split("");
 let rotateBy = [10, -30, 20, 0, 10, -10, 5, -10, 5];
 
@@ -41,12 +41,13 @@ const showImg = [
 
 const animFPS = 8;
 
+//let img = blink1;
+let frame = 0;
+
 const Skeleton = ({ userId, handleLogin, handleLogout }) => {
   const canvas = useRef();
-  const [animIndex, setAnimIndex] = useState(0);
-
-  let i = 0;
-  let img = blink1;
+  //const [frame, setFrame] = useState(0);
+  //const [animIndex, setAnimIndex] = useState(0);
 
   useEffect(() => {
     // animate
@@ -84,6 +85,43 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
     const context = canvas.current.getContext("2d");
 
     if (context) {
+      context.clearRect(0, 0, canvas.current.width, canvas.current.height);
+      let newFrame = frame % showImg.length;
+
+      const img1 = new Image();
+      img1.src = BLINK[showImg[newFrame]];
+
+      const width = img1.width;
+      const height = img1.height;
+
+      console.log("w", canvas.current.width);
+
+      var hRatio = canvas.current.width / width;
+      var vRatio = canvas.current.height / height;
+
+      var ratio = Math.min(hRatio, vRatio);
+
+      console.log(ratio);
+
+      context.drawImage(
+        img1,
+        0,
+        0,
+        width,
+        height,
+        0,
+        0,
+        width * ratio,
+        height * ratio
+      );
+
+      console.log("inside");
+
+      frame = frame + 1;
+      console.log(frame, "frame");
+    }
+
+    /* if (context) {
       context.clearRect(0, 0, canvas.current.width, canvas.current.height)
       i = i % showImg.length;
 
@@ -111,68 +149,74 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
       );
 
       i = i + 1;
-    }
-
+    } */
   };
 
   return (
-    <div className="Start-container u-flex">
-      <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-        <div className="Directions-container u-flex">
-          <div>
-            <canvas ref={canvas} />
-          </div>
-          <div className="Title-container u-flex">
-            <h2 className="Title-text">scrambled</h2>
-          </div>
-          {userId ? (
-            <>
-              <div className="Directions-button">
-                <Link to="/lobby">Play</Link>
-              </div>
+    <>
+      <head></head>
+      <div className="Start-container u-flex">
+        <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+          <div className="Directions-container u-flex">
+            <div>
+              <canvas ref={canvas} />
+            </div>
+            <div className="Title-container u-flex">
+              <h2 className="Title-text">scrambled</h2>
+            </div>
+            {userId ? (
+              <>
+                <button className="Directions-button button-pushable">
+                  <span className="button-front">
+                    <Link to="/lobby">Play</Link>
+                  </span>
+                </button>
 
-              <div className="Directions-button">Achievements</div>
-              <div
-                className="Directions-button"
-                onClick={() => {
-                  googleLogout();
-                  handleLogout();
-                }}
-              >
-                Logout
-              </div>
-            </>
-          ) : (
-            <GoogleLogin
-              onSuccess={handleLogin}
-              onError={(err) => console.log(err)}
-            />
-          )}
-          <div className="Directions-button">How to Play</div>
-          <div className="Scrambled-text-container u-flex">
-            {test.map((letter) => (
-              <div
-                className="Scrambled-text-letter"
-                style={{ rotate: `${20 - 40 * Math.random()}deg` }}
-              >
-                {letter}
-              </div>
-            ))}
+                <button className="Directions-button button-pushable">
+                  <span className="button-front">Achievements</span>
+                </button>
+                <button
+                  className="Directions-button button-pushable"
+                  onClick={() => {
+                    googleLogout();
+                    handleLogout();
+                  }}
+                >
+                  <span className=" button-front">Logout</span>
+                </button>
+              </>
+            ) : (
+              <GoogleLogin
+                onSuccess={handleLogin}
+                onError={(err) => console.log(err)}
+              />
+            )}
+            <button className="Directions-button button-pushable"><span className="button-front">How to Play</span></button>
+            <div className="Scrambled-text-container u-flex">
+              {test.map((letter) => (
+                <div
+                  className="Scrambled-text-letter"
+                  style={{ rotate: `${20 - 40 * Math.random()}deg` }}
+                >
+                  {letter}
+                </div>
+              ))}
+            </div>
+           {/*  <div className="u-flex">
+              {test.map((letter, i) => (
+                <div
+                  className="Scrambled-text-letter"
+                  style={{ rotate: `${rotateBy[i]}deg`, margin: "0 1px" }}
+                >
+                  {letter}
+                </div>
+              ))}
+            </div> */}
+            <div>{}</div>
           </div>
-          <div className="u-flex">
-            {test.map((letter, i) => (
-              <div
-                className="Scrambled-text-letter"
-                style={{ rotate: `${rotateBy[i]}deg`, margin: "0 1px" }}
-              >
-                {letter}
-              </div>
-            ))}
-          </div>
-          <div>{}</div>
-        </div>
-      </GoogleOAuthProvider>
-    </div>
+        </GoogleOAuthProvider>
+      </div>
+    </>
   );
 };
 
