@@ -47,9 +47,10 @@
   background-color: #fdf8ed;
 }
 
-a {
+.button-front a {
   text-decoration: none;
   background-color: #fdf8ed;
+  display: block;
 }
 
 .button-front {
@@ -60,6 +61,8 @@ a {
   transform: translate(-10px, -10px);
   will-change: transform;
   transition: transform 150ms;
+  width: 100%;
+  height: 100%;
 }
 
 .button-pushable {
@@ -72,6 +75,10 @@ a {
 
 .button-pushable:active .button-front {
   transform: translate(-2px, -2px);
+}
+
+.button-pushable:hover .button-front {
+  transform: translate(-8px, -8px);
 }
 
 .Scrambled-text-container {
