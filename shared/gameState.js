@@ -220,7 +220,7 @@ class GameState {
 
     this.updateDead(updates);
 
-    console.log(this.collisions);
+    //console.log(this.collisions);
 
     this.framesPassed += 1;
     return updates;
@@ -282,8 +282,8 @@ class GameState {
   }
 
   isGameOver() {
-    // return this.framesPassed < 20 * 60;
-    return this.eggs.length <= 1;
+    return this.framesPassed > 20 * 60;
+    //return this.eggs.length <= 1;
   }
 
   // TODO: make a way to get "random" positions that are far from other objects
