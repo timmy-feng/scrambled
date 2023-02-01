@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { removeSocketListener, socket } from "../../client-socket";
 
 import "./Skeleton.css";
+import "./Lobby.css";
 
 const MAPS = ["rice", "ramen", "shakshuka"];
 
@@ -93,28 +94,47 @@ const Lobby = (props) => {
         );
     }
 
+    
+
     return (
       <div className="Start-container u-flex">
         <div className="Directions-container u-flex">
           <div className="Title-container u-flex">
-            <h2 className="Title-text">Join A Room</h2>
+            <h2 className="Title-text">Join a Room</h2>
           </div>
+          {roomList.length === 0 ? roomList: <div>no rooms!</div>}
           {roomList}
-          <div
-            className="Directions-button"
+          <div className="Rooms-container">
+          <ul className="Rooms-list">
+            <li><button className="Room-button">ASHJ</button></li>
+            <li><button className="Room-button">ADPO</button></li>
+          </ul>
+          </div>
+
+          
+
+          <button
+            className="Directions-button button-pushable"
             onClick={() => socket.emit("createroom")}
           >
-            Create Room
-          </div>
-          <div
-            className="Directions-button"
+            <span className="button-front">Create Room</span>
+            
+          </button>
+          <button
+            className="Directions-button button-pushable"
             onClick={() => socket.emit("requestrooms")}
           >
+            <span className="button-front">
             Refresh
-          </div>
-          <div className="Directions-button">
+            </span>
+            
+          </button>
+          <button className="Directions-button button-pushable">
+            <span className="button-front">
             <Link to="/">Home</Link>
-          </div>
+            </span>
+            
+          </button>
         </div>
       </div>
     );
