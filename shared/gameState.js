@@ -286,7 +286,7 @@ class GameState {
   }
 
   isGameOver() {
-    return this.framesPassed > 20 * 60;
+    //return this.framesPassed > 20 * 60;
     return this.eggs.length <= 1;
   }
 
