@@ -130,7 +130,7 @@ export default class GraphicsController {
         yolk = this.yolkMap[player.id] = new YolkGraphic(player.costume);
       }
 
-      const alpha = 1;
+      let alpha = 1;
       if ("sarah" in player.state) {
         if (
           player.id == this.playerId ||

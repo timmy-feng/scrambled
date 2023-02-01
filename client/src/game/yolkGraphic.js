@@ -38,6 +38,7 @@ export default class YolkGraphic {
     this.anim = "normal";
     this.frame = 0;
     this.fire = false;
+    this.alpha = 1;
 
     this.costume = costume;
   }
