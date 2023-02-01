@@ -85,9 +85,12 @@ class GameState {
   updateGummies(updates) {
     for (const egg of this.eggs) {
       // try to eat gummies
-      if (!("frozen" in egg.state || "sprung" in egg.state)) {
-        const eaten = [];
-        for (const gummy of this.gummies) {
+      const eaten = [];
+      for (const gummy of this.gummies) {
+        if (
+          gummy.type == "seaweed" ||
+          !("frozen" in egg.state || "sprung" in egg.state)
+        ) {
           if (Vector.dist(egg.yolkPos, gummy.pos) < GUMMY.SIZE) {
             eaten.push(gummy);
             updates.push({
@@ -96,16 +99,16 @@ class GameState {
             });
           }
         }
-
-        for (const gummy of eaten) {
-          egg.whiteSize += GUMMY[gummy.type].SIZE_INC;
-          egg.state[gummy.type] = GUMMY[gummy.type].DURATION;
-          this.gummies.splice(this.gummies.indexOf(gummy), 1);
-        }
-
-        egg.whiteSize = Math.min(WHITE.MAX_SIZE, egg.whiteSize);
-        egg.playAy += eaten.length;
       }
+
+      for (const gummy of eaten) {
+        egg.whiteSize += GUMMY[gummy.type].SIZE_INC;
+        egg.state[gummy.type] = GUMMY[gummy.type].DURATION;
+        this.gummies.splice(this.gummies.indexOf(gummy), 1);
+      }
+
+      egg.whiteSize = Math.min(WHITE.MAX_SIZE, egg.whiteSize);
+      egg.playAy += eaten.length;
     }
 
     // respawn gummies to max number unless in predict mode

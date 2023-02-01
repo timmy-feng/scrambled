@@ -69,6 +69,10 @@ const GUMMY = {
     DURATION: 120,
     BUFFER: 10,
   },
+  seaweed: {
+    SIZE_INC: 50,
+    DURATION: 120,
+  },
 
   // maps
   rice: {
@@ -77,9 +81,9 @@ const GUMMY = {
     gummy: 0.8,
   },
   ramen: {
-    invisible: 0.05,
-    spring: 0.15,
-    gummy: 0.8,
+    seaweed: 0.2,
+    spring: 0.3,
+    gummy: 0.5,
   },
   shakshuka: {
     invisible: 0.1,
@@ -93,7 +97,7 @@ const MISC = {
     DURATION: 120,
   },
   SPRUNG: {
-    DURATION: 120,
+    DURATION: 60,
     VEL: 5000,
   },
 };

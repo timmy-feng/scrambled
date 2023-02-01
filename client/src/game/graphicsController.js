@@ -1,6 +1,7 @@
 import Vector from "../../../shared/vector";
 import { GAME, YOLK, TOMATO } from "../../../shared/constants";
 import EggGraphic from "./eggGraphic";
+import Weed from "./weed";
 
 const imageFrom = (src) => {
   const image = new Image();
@@ -15,6 +16,7 @@ const fabiTexture = {
   speed: { icon: imageFrom("fabispice.png"), scale: 0.15 },
   invisible: { icon: imageFrom("fabicloak.png"), scale: 0.15 },
   armed: { icon: imageFrom("fa-b-ball.png"), scale: 0.15 },
+  seaweed: { icon: imageFrom("fabisees.png"), scale: 0.15 },
 };
 
 const kirbyAy = new Audio("kirbyAy.wav");
@@ -32,6 +34,8 @@ export default class GraphicsController {
     // 3 nothing
     // 4 game over
     this.panelState = 0;
+
+    this.weeds = [];
 
     this.idToGraphicMap = {};
 
@@ -141,6 +145,22 @@ export default class GraphicsController {
       this.context.restore();
 
       this.context.globalAlpha = 1;
+    }
+
+    if (playerEgg && "seaweed" in playerEgg.state) {
+      if (Math.random() < 1 / 10) this.weeds.push(new Weed());
+    }
+
+    if (this.weeds.length > 0) console.log(this.weeds);
+    const dead = [];
+    for (const weed of this.weeds) {
+      weed.render(this.context);
+      if (weed.duration <= 0) {
+        dead.push(weed);
+      }
+    }
+    for (const weed in dead) {
+      this.weeds.splice(this.weeds.indexOf(weed), 1);
     }
 
     if (gameState.isGameOver()) {
