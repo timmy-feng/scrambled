@@ -44,6 +44,7 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
             />
           )}
           <div className="Directions-button">How to Play</div>
+          <div>{}</div>
         </div>
       </GoogleOAuthProvider>
     </div>
