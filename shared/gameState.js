@@ -152,15 +152,15 @@ class GameState {
     if (acc.norm() != 0) {
       me.yolkVel = Vector.applyDelta(me.yolkVel, acc);
 
-      if ("spring" in you.state) {
+      if ("fishcake" in you.state) {
         const dir = Vector.diff(me.whitePos, you.whitePos).unit();
-        me.state.sprung = MISC.SPRUNG.DURATION;
-        me.yolkVel = Vector.scale(MISC.SPRUNG.VEL, dir);
+        me.state.sprung = GUMMY.fishcake.SPRUNG;
+        me.yolkVel = Vector.scale(GUMMY.fishcake.VEL, dir);
         delete you.state.spring;
       }
 
-      if ("freeze" in you.state) {
-        me.state.frozen = MISC.FROZEN.DURATION;
+      if ("garlic" in you.state) {
+        me.state.frozen = GUMMY.garlic.FROZEN;
         delete you.state.freeze;
       }
     }
@@ -257,8 +257,8 @@ class GameState {
     } else if (input.type == "pointerDown") {
       egg.setPointerDown(true);
       if (
-        "armed" in egg.state &&
-        egg.state.armed < GUMMY.armed.DURATION - GUMMY.armed.BUFFER
+        "tomato" in egg.state &&
+        egg.state.tomato < GUMMY.tomato.DURATION - GUMMY.tomato.BUFFER
       ) {
         console.log(Vector.diff(egg.pointerPos, egg.yolkPos).unit());
         this.tomatoes.push(
@@ -268,7 +268,7 @@ class GameState {
             ownerId: egg.id,
           })
         );
-        delete egg.state.armed;
+        delete egg.state.tomato;
       }
     } else if (input.type == "pointerUp") {
       egg.setPointerDown(false);

@@ -70,7 +70,7 @@ class Egg {
     if (!this.yolkInWhite()) whiteAcc = Vector.scale(0.75, whiteAcc);
     if ("sprung" in this.state) whiteAcc = Vector.scale(0.75, whiteAcc);
     if ("frozen" in this.state) whiteAcc = Vector.scale(0.75, whiteAcc);
-    if ("speed" in this.state) whiteAcc = Vector.scale(2.5, whiteAcc);
+    if ("pepper" in this.state) whiteAcc = Vector.scale(2.5, whiteAcc);
     return whiteAcc;
   }
 
