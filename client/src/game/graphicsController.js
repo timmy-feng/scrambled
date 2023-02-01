@@ -132,29 +132,33 @@ export default class GraphicsController {
         yolk = this.yolkMap[player.id] = new YolkGraphic();
       }
 
-      if ("invisible" in player.state) {
+      if ("sarah" in player.state) {
         if (
           player.id == this.playerId ||
           "frozen" in player.state ||
           "sprung" in player.state
         ) {
-          this.context.globalAlpha = 0.5;
+          yolk.setAlpha(0.5);
         } else {
-          this.context.globalAlpha = 0;
+          yolk.setAlpha(0);
         }
+      } else {
+        yolk.setAlpha(1);
       }
-
-      this.context.globalAlpha = 1;
 
       yolk.setPos(this.convert(player.yolkPos));
 
       const dir = Vector.diff(player.yolkPos, player.pointerPos);
       yolk.setRotation(Math.PI / 2 - Math.atan2(dir.y, dir.x));
 
-      if ("frozen" in player.state || "sprung" in player.state) {
+      if ("hurt" in player.state) {
+        yolk.setAnim("hurt");
+      } else if ("frozen" in player.state || "sprung" in player.state) {
         yolk.setAnim("stun");
       } else if ("eat" in player.state) {
         yolk.setAnim("eat");
+      } else if ("shoot" in player.state) {
+        yolk.setAnim("shoot");
       } else {
         yolk.setAnim("normal");
       }

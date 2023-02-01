@@ -157,12 +157,12 @@ class GameState {
         const dir = Vector.diff(me.whitePos, you.whitePos).unit();
         me.state.sprung = GUMMY.fishcake.SPRUNG;
         me.yolkVel = Vector.scale(GUMMY.fishcake.VEL, dir);
-        delete you.state.spring;
+        delete you.state.fishcake;
       }
 
       if ("garlic" in you.state) {
         me.state.frozen = GUMMY.garlic.FROZEN;
-        delete you.state.freeze;
+        delete you.state.garlic;
       }
     }
   }
@@ -264,7 +264,7 @@ class GameState {
         "tomato" in egg.state &&
         egg.state.tomato < GUMMY.tomato.DURATION - GUMMY.tomato.BUFFER
       ) {
-        console.log(Vector.diff(egg.pointerPos, egg.yolkPos).unit());
+        egg.state.shoot = 20;
         this.tomatoes.push(
           new Tomato({
             pos: egg.yolkPos,

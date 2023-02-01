@@ -55,6 +55,7 @@ class Egg {
   damage(delta, killerId) {
     this.whiteSize -= delta;
     this.killerId = killerId;
+    this.state.hurt = 20;
   }
 
   // TODO: add constants to /shared/constants.js
