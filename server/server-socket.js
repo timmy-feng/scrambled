@@ -198,7 +198,7 @@ const initGeckos = async (server, port) => {
 
     socket.on("setcostume", (costume) => {
       const user = socketToUserMap[socket.id];
-      if (user && user.enabledCostumes[costume]) {
+      if (user && enabledCostumes(user)[costume]) {
         User.updateOne({ _id: user._id }, { costume });
       }
     });
