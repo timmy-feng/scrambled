@@ -155,6 +155,19 @@ const removeUser = (user, socket) => {
   delete socketToUserMap[socket.id];
 };
 
+const enabledCostumes = (user) => {
+  const enabled = Array(8);
+  enabled[0] = true;
+  enabled[1] = user.game >= 1;
+  enabled[2] = user.game >= 50;
+  enabled[3] = user.kill >= 10;
+  enabled[4] = user.kill >= 100;
+  enabled[5] = user.seaweed >= 50;
+  enabled[6] = user.scallion >= 500;
+  enabled[7] = user.fishcake >= 1000;
+  return enabled;
+};
+
 const initGeckos = async (server, port) => {
   const geckos = await import("@geckos.io/server");
   io = geckos.geckos();
@@ -176,7 +189,17 @@ const initGeckos = async (server, port) => {
     socket.on("requestcostumes", () => {
       const user = socketToUserMap[socket.id];
       if (user) {
-        socket.emit("updatecostumes");
+        socket.emit("costumes", {
+          selected: user.costume,
+          enabled: enabledCostumes(user),
+        });
+      }
+    });
+
+    socket.on("setcostume", (costume) => {
+      const user = socketToUserMap[socket.id];
+      if (user && user.enabledCostumes[costume]) {
+        User.updateOne({ _id: user._id }, { costume });
       }
     });
 

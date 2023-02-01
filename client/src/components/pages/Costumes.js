@@ -23,22 +23,15 @@ const unlockedEgg = Array(8).fill("/yolk-head.png");
 const Costumes = (props) => {
   if (!props.userId) navigate("/");
 
-  const [enabled, setEnabled] = useState([
-    true,
-    false,
-    true,
-    false,
-    true,
-    false,
-    true,
-    false,
-  ]);
-  const [selected, setSelected] = useState(0);
+  const [enabled, setEnabled] = useState(Array(8).fill(false));
+  const [selected, setSelected] = useState();
   const [details, setDetails] = useState();
 
   useEffect(() => {
-    socket.on("costumes", (enabledEggs) => {
-      setEnabled(enabledEggs);
+    socket.on("costumes", (result) => {
+      console.log(result);
+      setEnabled(result.enabled);
+      setSelected(result.selected);
     });
 
     socket.emit("requestcostumes");

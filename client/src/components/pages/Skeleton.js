@@ -94,14 +94,14 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
       const width = img1.width;
       const height = img1.height;
 
-      console.log("w", canvas.current.width);
+      // console.log("w", canvas.current.width);
 
       var hRatio = canvas.current.width / width;
       var vRatio = canvas.current.height / height;
 
       var ratio = Math.min(hRatio, vRatio);
 
-      console.log(ratio);
+      // console.log(ratio);
 
       context.drawImage(
         img1,
@@ -115,10 +115,10 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
         height * ratio
       );
 
-      console.log("inside");
+      // console.log("inside");
 
       frame = frame + 1;
-      console.log(frame, "frame");
+      // console.log(frame, "frame");
     }
 
     /* if (context) {
