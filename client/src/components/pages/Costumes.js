@@ -46,6 +46,12 @@ const Costumes = (props) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (selected != undefined) {
+      socket.emit("setcostume", selected);
+    }
+  }, [selected]);
+
   const costumeList = [];
   for (let i = 0; i < 8; i++) {
     costumeList.push(
@@ -55,7 +61,6 @@ const Costumes = (props) => {
           setDetails(i);
           if (enabled[i]) {
             setSelected(i);
-            socket.emit("setcostume", i);
           }
         }}
       >

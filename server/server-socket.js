@@ -31,9 +31,10 @@ const startGame = (user, map) => {
     delete userToRoomMap[user._id];
 
     userToGameMap[user._id] = game;
-    game.spawnEgg(user._id, user.costume);
-
-    userToSocketMap[user._id].emit("startgame");
+    User.findOne({ _id: user._id }).then((serverUser) => {
+      game.spawnEgg(user._id, serverUser ? serverUser.costume : 0);
+      userToSocketMap[user._id].emit("startgame");
+    });
   }
 
   const sendLoop = setInterval(() => {
@@ -191,9 +192,18 @@ const initGeckos = async (server, port) => {
     socket.on("requestcostumes", () => {
       const user = socketToUserMap[socket.id];
       if (user) {
-        socket.emit("costumes", {
-          selected: user.costume,
-          enabled: enabledCostumes(user),
+        User.findOne({ _id: user._id }).then((serverUser) => {
+          if (serverUser) {
+            socket.emit("costumes", {
+              selected: serverUser.costume,
+              enabled: enabledCostumes(serverUser),
+            });
+          } else {
+            socket.emit("costumes", {
+              selected: 0,
+              enabled: [true, false, false, false, false, false, false, false],
+            });
+          }
         });
       }
     });
@@ -201,7 +211,11 @@ const initGeckos = async (server, port) => {
     socket.on("setcostume", (costume) => {
       const user = socketToUserMap[socket.id];
       if (user && enabledCostumes(user)[costume]) {
-        User.updateOne({ _id: user._id }, { costume });
+        User.updateOne({ _id: user._id }, { costume: costume }).then(
+          (update) => {
+            User.findOne({ _id: user._id }).then((user) => console.log(user));
+          }
+        );
       }
     });
 
