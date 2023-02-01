@@ -55,13 +55,28 @@ const Lobby = (props) => {
 
       if (rooms[roomCode][0]._id == props.userId) {
         startGameButtons = (
-          <div className="Directions-button">
-            <span>Start Game: </span>
+          <div className="u-rounded">
+            <div className="Map-container u-flex">
             {MAPS.map((map) => (
-              <button key={map} onClick={() => socket.emit("startgame", map)}>
-                {map}
+              
+              <button className= "Map-button Directions-button" key={map} onClick={() => socket.emit("startgame", map)}>
+                <div className="img-Container">
+                  <img className="map-img" src={`${map}.png`} />
+                </div>
+                
+                <p className="map-title">{map}</p>
               </button>
             ))}
+
+
+            </div>
+            
+
+            <div>
+              <button className=" Directions-button button-pushable">
+                <span className="button-front">Start Game: </span>
+              </button>
+            </div>
           </div>
         );
       }
@@ -75,14 +90,18 @@ const Lobby = (props) => {
           </div>
           {playerList}
           {startGameButtons}
-          <div
-            className="Directions-button"
-            onClick={() => socket.emit("leaveroom")}
-          >
-            Leave Room
-          </div>
-          <div className="Directions-button">
-            <Link to="/">Home</Link>
+          <div className="Escape-container u-split buttons u-flex u-space-between ">
+            <div
+              className="Split-button button-pushable"
+              onClick={() => socket.emit("leaveroom")}
+            >
+              <span className=" button-front">Leave Room</span>
+            </div>
+            <div className="Split-button button-pushable">
+              <span className="button-front">
+                <Link to="/">Home</Link>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -99,46 +118,44 @@ const Lobby = (props) => {
       );
     }
 
-    
-
     return (
       <div className="Start-container u-flex">
         <div className="Directions-container u-flex">
           <div className="Title-container u-flex">
             <h2 className="Title-text">Join a Room</h2>
           </div>
-          {roomList.length === 0 ? roomList: <div>no rooms!</div>}
+          {roomList.length === 0 ? roomList : <div>no rooms!</div>}
           {roomList}
+
           <div className="Rooms-container">
-          <ul className="Rooms-list">
-            <li><button className="Room-button">ASHJ</button></li>
-            <li><button className="Room-button">ADPO</button></li>
-          </ul>
+            <ul className="Rooms-list">
+              <li>
+                <button className="Room-button">ASHJ</button>
+              </li>
+              <li>
+                <button className="Room-button">ADPO</button>
+              </li>
+            </ul>
           </div>
 
-          
+          <div className="space"></div>
 
           <button
             className="Directions-button button-pushable"
             onClick={() => socket.emit("createroom")}
           >
             <span className="button-front">Create Room</span>
-            
           </button>
           <button
             className="Directions-button button-pushable"
             onClick={() => socket.emit("requestrooms")}
           >
-            <span className="button-front">
-            Refresh
-            </span>
-            
+            <span className="button-front">Refresh</span>
           </button>
           <button className="Directions-button button-pushable">
             <span className="button-front">
-            <Link to="/">Home</Link>
+              <Link to="/">Home</Link>
             </span>
-            
           </button>
         </div>
       </div>

@@ -61,6 +61,8 @@
   transform: translate(-10px, -10px);
   will-change: transform;
     transition: transform 150ms;
+    width: 100%;
+    height: 100%;
 }
 
 .button-pushable {
