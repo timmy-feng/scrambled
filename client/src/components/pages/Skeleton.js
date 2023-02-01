@@ -159,7 +159,7 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
         <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
           <div className="Directions-container u-flex">
             <div>
-              <canvas ref={canvas} />
+              <canvas id="start-anim" ref={canvas} />
             </div>
             <div className="Title-container u-flex">
               <h2 className="Title-text">scrambled</h2>
