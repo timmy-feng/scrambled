@@ -1,0 +1,35 @@
+.Mascot-subcontainer {
+  display: flex;
+  justify-content: center;
+}
+
+.Mascot-mascot {
+  position: relative;
+  margin-bottom: 96px;
+}
+
+.Mascot-egg {
+  position: relative;
+  top: 75px;
+  left: 0;
+
+  height: auto;
+  width: 150px;
+}
+
+.Mascot-costume {
+  background-color: transparent;
+  position: absolute;
+  height: auto;
+  top: 0;
+  left: 0;
+
+  height: auto;
+  width: 150px;
+}
+
+.Mascot-text {
+  font-family: "Jua", sans-serif;
+  font-size: 24px;
+  margin-bottom: 32px;
+}
