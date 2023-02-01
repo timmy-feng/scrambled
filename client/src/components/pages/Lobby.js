@@ -47,31 +47,43 @@ const Lobby = (props) => {
     let startGameButtons = null;
 
     if (roomCode in rooms) {
-      playerList = rooms[roomCode].map((player, i) => (
-        <div className="Directions-button" key={i}>
-          {player.name + (i == 0 ? " (host)" : "")}
+      playerList = (
+        <div className="Players-container">
+          <h3 className="u-font">Players</h3>
+          <ul className = "Players-list">
+            {rooms[roomCode].map((player, i) => (
+              <li className="u-font" key={i}>
+                {player.name + (i == 0 ? " (host)" : "")}
+              </li>
+            ))}
+          </ul>
         </div>
-      ));
+      );
 
       if (rooms[roomCode][0]._id == props.userId) {
         startGameButtons = (
-          <div className="u-rounded">
-            <div className="Map-container u-flex u-rounded">
+          <div className="Maps-behind">
+            <div className="Maps-container u-flex">
               {MAPS.map((map) => (
-                <button
-                  className="Map-button Directions-button"
-                  key={map}
-                  onClick={() => socket.emit("startgame", map)}
-                >
-                  <div className="img-Container">
-                    <img className="map-img" src={`${map}.png`} />
-                  </div>
-                  <p className="map-title">{map}</p>
-                </button>
+                <div className="Map-card">
+                  <button
+                    className="Map-button"
+                    key={map}
+                    onClick={() => socket.emit("startgame", map)}
+                  >
+                    <div className="img-container">
+                      <img className="map-img" src={`${map}.png`} />
+                    </div>
+                    <div className="Map-title-container">
+                    <p className="Map-title u-font">{map}</p>
+                    </div>
+                    
+                  </button>
+                </div>
               ))}
             </div>
 
-            <div>
+            <div className="Room-start-container">
               <button className=" Directions-button button-pushable">
                 <span className="button-front">Start Game: </span>
               </button>
@@ -94,10 +106,10 @@ const Lobby = (props) => {
               className="Split-button button-pushable"
               onClick={() => socket.emit("leaveroom")}
             >
-              <span className=" button-front">Leave Room</span>
+              <span className=" button-front u-font">Leave Room</span>
             </div>
             <div className="Split-button button-pushable">
-              <span className="button-front">
+              <span className="button-front u-font">
                 <Link to="/">Home</Link>
               </span>
             </div>
@@ -107,17 +119,32 @@ const Lobby = (props) => {
     );
   } else {
     const roomList = [];
-    for (const roomCode in rooms) {
+    /* for (const roomCode in rooms) {
       roomList.push(
         <div key={roomCode}>
           <button onClick={() => socket.emit("joinroom", roomCode)}>
             {roomCode}
           </button>
         </div>
+      ); */
+
+    //let roomsTest = ["asdb", "asdjh"];
+    for (const roomCode in rooms) {
+      roomList.push(
+        <div key={roomCode}>
+          <li
+            className="u-font u-rounded u-brown Room-available"
+            onClick={() => socket.emit("joinroom", roomCode)}
+          >
+            <span className="u-white Room-available-text">{roomCode}</span>
+          </li>
+        </div>
       );
     }
 
     //const roomList1 = ["AHJS", "AOQJ"];
+
+    //console.log("roomlist", roomList)
     return (
       <div className="Start-container u-flex">
         <div className="Directions-container u-flex">
@@ -126,13 +153,7 @@ const Lobby = (props) => {
           </div>
           <>
             <div className="Rooms-container">
-              <ul className="Rooms-list">
-                {roomList.map((room) => (
-                  <li className="u-font u-rounded u-brown Room-available">
-                    <span className="u-white Room-available-text">{room}</span>
-                  </li>
-                ))}
-              </ul>
+              <ul className="Rooms-list">{roomList}</ul>
             </div>
           </>
 

@@ -2,10 +2,6 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
 
-* {
-  color: #3a220a;
-  background: white;
-}
 
 .Title-container {
   font-family: "Jua", sans-serif;
@@ -73,7 +69,6 @@
   width: 100%;
   border-radius: 12px;
   background-color: #f4f4f2; /*blue*/
-
   outline-offset: 4px;
 }
 
@@ -87,4 +82,8 @@
 
 .Scrambled-text-container {
   margin-top: 8px;
+}
+
+a {
+    color: black;
 }
