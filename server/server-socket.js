@@ -32,7 +32,6 @@ const startGame = (user, map) => {
 
     userToGameMap[user._id] = game;
     game.spawnEgg(user._id, user.costume);
-
     userToSocketMap[user._id].emit("startgame");
   }
 
@@ -69,6 +68,11 @@ const startGame = (user, map) => {
             }
             update[game.map] = 1;
             update.game = 1;
+
+            // change user props locally too
+            for (const prop in update) {
+              user[prop] += update[prop];
+            }
 
             User.updateOne({ _id: user._id }, { $inc: update }).then((res) => {
               if (res.n) {
@@ -166,7 +170,7 @@ const enabledCostumes = (user) => {
   enabled[4] = user.kill >= 100;
   enabled[5] = user.seaweed >= 50;
   enabled[6] = user.scallion >= 500;
-  enabled[7] = user.fishcake >= 1000;
+  enabled[7] = user.fishcake + user.garlic >= 1000;
   return enabled;
 };
 
@@ -202,6 +206,7 @@ const initGeckos = async (server, port) => {
       const user = socketToUserMap[socket.id];
       if (user && enabledCostumes(user)[costume]) {
         User.updateOne({ _id: user._id }, { costume });
+        user.costume = costume;
       }
     });
 

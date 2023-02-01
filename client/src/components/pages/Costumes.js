@@ -12,7 +12,7 @@ const description = [
   "Get 100 Kills",
   "Eat 50 Seaweed",
   "Eat 500 Scallion",
-  "Eat 500 Fish Cakes",
+  "Eat 1000 Garlic or Fish Cake",
 ];
 
 // pics
@@ -46,6 +46,12 @@ const Costumes = (props) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (selected != undefined) {
+      socket.emit("setcostume", selected);
+    }
+  }, [selected]);
+
   const costumeList = [];
   for (let i = 0; i < 8; i++) {
     costumeList.push(
@@ -55,7 +61,6 @@ const Costumes = (props) => {
           setDetails(i);
           if (enabled[i]) {
             setSelected(i);
-            socket.emit("setcostume", i);
           }
         }}
       >
@@ -73,25 +78,29 @@ const Costumes = (props) => {
   return (
     <div className="Costumes-mainContainer u-flex">
       <div className="Costumes-secondaryContainer u-flex">
-        <h2>eggcessories</h2>
+        <div className="Title-container u-flex">
+          <h2 className="Title-text">Eggcessories</h2>
+        </div>
         <div className="Costumes-costumeContainer">{costumeList}</div>
-        {details == undefined ? null : (
-          <div>
-            {enabled[details] ? (
-              <span>Unlocked: </span>
-            ) : (
-              <span className="Costumes-lockedText">LOCKED: </span>
-            )}
-            <span>{description[details]}</span>
-          </div>
-        )}
-        <div className="Directions-button button-pushable u-flex u-center">
-          <div>
-            <span className="">
+        <div className="Costumes-descriptionContainer">
+          {details == undefined ? null : (
+            <>
+              {enabled[details] ? (
+                <span>Unlocked: </span>
+              ) : (
+                <span className="Costumes-lockedText">LOCKED: </span>
+              )}
+              <span>{description[details]}</span>
+            </>
+          )}
+        </div>
+        <button className="Directions-button button-pushable">
+          <div className="button-front u-flex u-justify-content">
+            <span>
               <Link to="/">Home</Link>
             </span>
           </div>
-        </div>
+        </button>
       </div>
     </div>
   );
