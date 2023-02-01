@@ -22,6 +22,12 @@ const Game = (props) => {
   };
 
   useEffect(() => {
+    return () => {
+      socket.emit("leavegame");
+    };
+  }, []);
+
+  useEffect(() => {
     socket.on("update", (update) => processUpdate(update));
     return () => {
       removeSocketListener("update");

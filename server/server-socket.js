@@ -245,6 +245,13 @@ const initGeckos = async (server, port) => {
       }
     });
 
+    socket.on("leavegame", () => {
+      const user = socketToUserMap[socket.id];
+      if (user) {
+        leaveGame(user);
+      }
+    });
+
     socket.on("requestresults", () => {
       const user = socketToUserMap[socket.id];
       if (user) {
