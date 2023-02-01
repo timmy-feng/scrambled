@@ -130,18 +130,19 @@ export default class GraphicsController {
         yolk = this.yolkMap[player.id] = new YolkGraphic(player.costume);
       }
 
+      const alpha = 1;
       if ("sarah" in player.state) {
         if (
           player.id == this.playerId ||
           "frozen" in player.state ||
           "sprung" in player.state
         ) {
-          yolk.setAlpha(0.5);
+          alpha = 0.5;
         } else {
-          yolk.setAlpha(0);
+          alpha = 0;
         }
       } else {
-        yolk.setAlpha(1);
+        alpha = 1;
       }
 
       yolk.setPos(this.convert(player.yolkPos));
@@ -164,6 +165,8 @@ export default class GraphicsController {
       yolk.setFire("pepper" in player.state);
 
       yolk.render(this.context);
+
+      this.context.globalAlpha = alpha;
 
       if ("garlic" in player.state) {
         this.drawImage(fabiTexture.garlic.icon, {
@@ -194,6 +197,7 @@ export default class GraphicsController {
           size: 50,
         });
       }
+      this.context.globalAlpha = 1;
     }
 
     if (playerEgg && "seaweed" in playerEgg.state) {
