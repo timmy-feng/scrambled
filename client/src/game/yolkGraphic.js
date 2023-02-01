@@ -16,7 +16,9 @@ const imageFrom = (src) => {
 
 const yolkNormal = imageFrom("yolk-head.png");
 const yolkEat = imageFrom("eat-3.png");
-const yolkStun = imageFrom("stun-1.png");
+const yolkStun = imageFrom("stun-2.png");
+const yolkShoot = imageFrom("eat-1.png");
+const yolkHurt = imageFrom("stun-1.png");
 
 export default class YolkGraphic {
   constructor() {
@@ -42,6 +44,8 @@ export default class YolkGraphic {
     let image = yolkNormal;
     if (this.anim == "stun") image = yolkStun;
     if (this.anim == "eat") image = yolkEat;
+    if (this.anim == "shoot") image = yolkShoot;
+    if (this.anim == "hurt") image = yolkHurt;
 
     context.save();
     context.translate(this.pos.x, this.pos.y);

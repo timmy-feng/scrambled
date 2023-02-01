@@ -151,10 +151,14 @@ export default class GraphicsController {
       const dir = Vector.diff(player.yolkPos, player.pointerPos);
       yolk.setRotation(Math.PI / 2 - Math.atan2(dir.y, dir.x));
 
-      if ("frozen" in player.state || "sprung" in player.state) {
+      if ("hurt" in player.state) {
+        yolk.setAnim("hurt");
+      } else if ("frozen" in player.state || "sprung" in player.state) {
         yolk.setAnim("stun");
       } else if ("eat" in player.state) {
         yolk.setAnim("eat");
+      } else if ("shoot" in player.state) {
+        yolk.setAnim("shoot");
       } else {
         yolk.setAnim("normal");
       }

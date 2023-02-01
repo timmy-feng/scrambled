@@ -157,11 +157,13 @@ class GameState {
         const dir = Vector.diff(me.whitePos, you.whitePos).unit();
         me.state.sprung = MISC.SPRUNG.DURATION;
         me.yolkVel = Vector.scale(MISC.SPRUNG.VEL, dir);
+        me.state.hurt = 20;
         delete you.state.spring;
       }
 
       if ("freeze" in you.state) {
         me.state.frozen = MISC.FROZEN.DURATION;
+        me.state.hurt = 20;
         delete you.state.freeze;
       }
     }
@@ -264,7 +266,7 @@ class GameState {
         "armed" in egg.state &&
         egg.state.armed < GUMMY.armed.DURATION - GUMMY.armed.BUFFER
       ) {
-        console.log(Vector.diff(egg.pointerPos, egg.yolkPos).unit());
+        egg.state.shoot = 20;
         this.tomatoes.push(
           new Tomato({
             pos: egg.yolkPos,
@@ -282,7 +284,7 @@ class GameState {
   }
 
   isGameOver() {
-    // return this.framesPassed < 20 * 60;
+    //return this.framesPassed > 20 * 60;
     return this.eggs.length <= 1;
   }
 
