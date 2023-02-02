@@ -57,19 +57,19 @@ const Results = (props) => {
         <Mascot name={result.user.name} costume={result.user.costume} />
         <div className="Results-statContainer">{statList}</div>
         <div className="Escape-container u-split buttons u-flex u-space-between ">
-          <div
+          <button
             className="Split-button button-pushable"
             onClick={() => socket.emit("leaveroom")}
           >
             <span className=" button-front">
               <Link to="/lobby">Lobby</Link>
             </span>
-          </div>
-          <div className="Split-button button-pushable">
+          </button>
+          <button className="Split-button button-pushable">
             <span className="button-front">
               <Link to="/">Home</Link>
             </span>
-          </div>
+          </button>
         </div>
       </div>
     </div>

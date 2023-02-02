@@ -161,10 +161,12 @@
   font-size: 48px;
   width: 100%;
   border: none;
-  padding: 4px;
+  padding: 8px;
   width: 10rem;
   font-family: "Jua", sans-serif;
   background-color: #fdf8ed;
+
+  margin: 0 16px;
 }
 
 .u-space-between {

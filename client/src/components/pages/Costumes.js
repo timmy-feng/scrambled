@@ -95,11 +95,9 @@ const Costumes = (props) => {
           )}
         </div>
         <button className="Directions-button button-pushable">
-          <div className="button-front u-flex u-justify-content">
-            <span>
-              <Link to="/">Home</Link>
-            </span>
-          </div>
+          <span className="button-front">
+            <Link to="/">Home</Link>
+          </span>
         </button>
       </div>
     </div>
