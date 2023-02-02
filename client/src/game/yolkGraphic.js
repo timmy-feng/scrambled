@@ -106,10 +106,10 @@ export default class YolkGraphic {
     if (this.costume) {
       context.drawImage(
         costumeImgs[this.costume],
-        -YOLK.SIZE,
-        -1.7 * YOLK.SIZE,
-        1.1 * 2 * YOLK.SIZE,
-        1.1 * 2.6 * YOLK.SIZE
+        -1.25 * YOLK.SIZE,
+        -2.25 * YOLK.SIZE,
+        2 * 1.18 * YOLK.SIZE,
+        2 * 1.55 * YOLK.SIZE
       );
     }
     context.restore();

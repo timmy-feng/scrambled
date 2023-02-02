@@ -1,4 +1,4 @@
-.u-flex{
+.u-flex {
   display: flex;
 }
 
@@ -16,7 +16,8 @@
 .Costumes-costumeContainer {
   display: grid;
   grid-template-columns: 225px 225px 225px 225px;
-  grid-template-rows: 225px 225px;
+  grid-template-rows: 250px 250px;
+  margin-right: 40px;
 }
 
 .Costumes-button {
@@ -27,8 +28,8 @@
 
 .Costumes-egg {
   position: relative;
-  top: 75px;
-  left: 0;
+  top: 90px;
+  left: 15px;
 
   height: auto;
   width: 150px;
@@ -42,7 +43,7 @@
   left: 0;
 
   height: auto;
-  width: 150px;
+  width: 177px;
 }
 
 .Costumes-secondaryContainer {
@@ -52,7 +53,6 @@
 }
 
 @import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
-
 
 .Title-container {
   font-family: "Jua", sans-serif;
