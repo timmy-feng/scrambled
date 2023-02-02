@@ -10,7 +10,7 @@ const statIcons = {
   garlic: "garlic-power.png",
   pepper: "pepper-power.png",
   scallion: "scallion-power.png",
-  seaweed: "seaweed-power.png",
+  seaweed: "seaweed-power3.png",
   tomato: "tomato-power.png",
   sarah: "egg-power.png",
   kill: "stun-1.png",

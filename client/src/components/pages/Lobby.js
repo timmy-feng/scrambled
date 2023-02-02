@@ -54,17 +54,15 @@ const Lobby = (props) => {
 
     for (const roomCode in rooms) {
       roomList.push(
-        <div key={roomCode}>
-          <li
-            className="u-font u-rounded u-brown Room-available"
-            onClick={() => socket.emit("joinroom", roomCode)}
-          >
-            <span className="u-white Room-available-text">{roomCode}</span>
-          </li>
-        </div>
+        <li
+          key={roomCode}
+          className="u-font u-rounded u-brown Room-available"
+          onClick={() => socket.emit("joinroom", roomCode)}
+        >
+          <span className="u-white Room-available-text">{roomCode}</span>
+        </li>
       );
     }
-
     return (
       <div className="Start-container u-flex">
         <div className="Directions-container u-flex">
@@ -73,7 +71,11 @@ const Lobby = (props) => {
           </div>
           <div className="Lobby-columns u-margin-top">
             <div className="Rooms-container">
-              <ul className="Rooms-list">{roomList}</ul>
+              {roomList.length === 0 ? (
+                <div className="No-rooms-container u-font">no rooms active!</div>
+              ) : (
+                <ul className="Rooms-list">{roomList}</ul>
+              )}
             </div>
             <div className="Lobby-buttonsContainer">
               <button

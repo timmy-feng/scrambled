@@ -13,9 +13,13 @@ import { GAME } from "../../../../shared/constants";
 const GOOGLE_CLIENT_ID =
   "405770742094-nsvn5kjdutoiito75u15c7b78eqmekmf.apps.googleusercontent.com";
 
-let test = "2023";
+let test = "scrambled";
 test = test.split("");
 let rotateBy = [10, -30, 20, 0, 10, -10, 5, -10, 5];
+
+const randomRotate = (str) => {
+
+}
 
 const imageFrom = (src) => {
   const image = new Image();
@@ -39,7 +43,7 @@ const showImg = [
   0, 1, 2, 3, 4, 5, 0, 4, 0, 4, 0, 4, 4, 4, 0, 0, 0, 4, 0, 4, 0, 0, 0,
 ]; // indicies of blinkImgs -> morse code
 
-const animFPS = 8;
+const animFPS = 6;
 
 //let img = blink1;
 let frame = 0;
@@ -193,14 +197,16 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
             )}
             <div className="Scrambled-text-container u-flex">
               {test.map((letter) => (
-                <div
-                  className="Scrambled-text-letter"
+                <span
+                  className="Scrambled-text-letter u-font"
                   style={{ rotate: `${20 - 40 * Math.random()}deg` }}
                 >
                   {letter}
-                </div>
+                </span>
               ))}
             </div>
+
+           
             {/*  <div className="u-flex">
               {test.map((letter, i) => (
                 <div

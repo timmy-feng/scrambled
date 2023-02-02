@@ -1,5 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
 
+:root {
+    --light-orange: #eeb007,
+    --orange: #f8c947,
+    --brown: #3a220a,
+}
+
 .u-font {
   font-family: "Jua", sans-serif;
 }
@@ -38,7 +44,7 @@
 .Rooms-container {
   width: 32rem;
   height: 24rem;
-  border: 4px solid #eeb007;
+  border: 4px solid var(--brown);
   border-radius: 12px;
   background-color: #eeb007;
 }
@@ -47,7 +53,6 @@
   list-style-position: inside;
   padding: 0;
   margin: 0;
-  background-color: #eea107;
   list-style: none;
 }
 
@@ -64,17 +69,27 @@ ul {
   /*border-radius: 12px;*/
   padding: 24px 16px;
   margin: 8px;
-  background-color: #f8c947;
   will-change: transform;
   transition: transform 150ms;
+  background-color: #f8c947;
 }
 
+.Rooms-list li {
+    margin: 0;
+    padding: 16px 24px;
+  
+    border-bottom: 4px solid white;
+    will-change: transform;
+    transition: transform 150ms;
+    cursor: pointer;
+  }
+
 .Room-available:active {
-  transform: translate(1px, 1px);
+  transform: translate(0, 4px);
 }
 
 .Room-available:hover {
-  transform: translate(-4px, -4px);
+  transform: translate(0, 2px);
 }
 
 .Room-available-text {
@@ -168,4 +183,12 @@ ul {
 
 .Title-subtext {
   font-size: 24px;
+}
+
+
+.No-rooms-container {
+    background: transparent;
+    padding: 16px 24px;
+    font-size:32px;
+    color: var(--light-orange);
 }

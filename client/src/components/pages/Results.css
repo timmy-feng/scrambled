@@ -18,11 +18,6 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
 
-* {
-  color: #3a220a;
-  background: white;
-}
-
 .Title-container {
   font-family: "Jua", sans-serif;
   font-size: 64px;
@@ -53,41 +48,6 @@
   justify-content: center;
 }
 
-.Directions-button {
-  font-size: 48px;
-  width: 24rem;
-  border: none;
-  padding: 4px;
-  margin: 16px 0px;
-  font-family: "Jua", sans-serif;
-  background-color: #fdf8ed;
-}
-
-.button-front a {
-  text-decoration: none;
-  background-color: #fdf8ed;
-  display: block;
-}
-
-.button-front {
-  background-color: #fffbf7;
-  border-radius: 12px;
-  cursor: pointer;
-  display: block;
-  transform: translate(-10px, -10px);
-  will-change: transform;
-  transition: transform 150ms;
-  width: 100%;
-  height: 100%;
-}
-
-.button-pushable {
-  width: 100%;
-  border-radius: 12px;
-  background-color: #f4f4f2;
-
-  outline-offset: 4px;
-}
 
 .button-pushable:active .button-front {
   transform: translate(-2px, -2px);
@@ -101,53 +61,6 @@
   margin-top: 8px;
 }
 @import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
-
-.Rooms-container {
-  width: 32rem;
-  height: 24rem;
-  border-radius: 12px;
-  border: 4px solid #3a220a;
-}
-
-.Rooms-list {
-  overflow: hidden;
-  overflow-y: scroll;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.Room-button {
-  border: none;
-  margin: none;
-  padding: 0;
-  background-color: #f4f4f2;
-
-  font-size: 2rem;
-  display: block;
-  will-change: transform;
-  transition: transform 150ms;
-}
-
-.Rooms-list li {
-  margin: 0;
-  padding: 16px 24px;
-  background-color: #f4f4f2;
-  border-bottom: 4px solid white;
-  will-change: transform;
-  transition: transform 150ms;
-  cursor: pointer;
-}
-
-.Rooms-list li:hover {
-  background-color: #dededc;
-
-  transform: translate(1px, 1px);
-}
-
-.Rooms-list li:hover .Room-button {
-  background-color: #dededc;
-}
 
 .space {
   height: 4rem;
