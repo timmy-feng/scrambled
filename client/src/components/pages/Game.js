@@ -66,6 +66,7 @@ const Game = (props) => {
   return (
     <>
       <div className="Game-container" style={{backgroundColor: "#"}}>
+        
         <canvas
           className="Game-canvas"
           width="1280"

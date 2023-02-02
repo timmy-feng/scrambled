@@ -15,6 +15,10 @@ const GOOGLE_CLIENT_ID =
 
 let test = "2023";
 test = test.split("");
+
+let test2 = "weblab";
+test2 = test2.split("")
+
 let rotateBy = [10, -30, 20, 0, 10, -10, 5, -10, 5];
 
 const randomRotate = (str) => {
@@ -201,14 +205,21 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
               />
             )}
             <div className="Scrambled-text-container u-flex">
-              {test.map((letter) => (
-                <span
+              {test2.map((letter) => (
+                <div
                   className="Scrambled-text-letter"
                   style={{ rotate: `${20 - 40 * Math.random()}deg` }}
                 >
                   {letter}
-                </span>
-              ))}
+                </div>
+              ))} {test.map((letter) => (
+                <div
+                  className="Scrambled-text-letter"
+                  style={{ rotate: `${20 - 40 * Math.random()}deg` }}
+                >
+                  {letter}
+                </div>
+              ))} 
             </div>
 
            

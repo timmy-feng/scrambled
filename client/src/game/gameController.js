@@ -22,11 +22,11 @@ const getWeightedAverage = (prev, next) => {
   );
 };
 
-export default class GameController {
+export default class GameController { 
   constructor(canvas, playerId) {
     this.canvas = canvas;
     this.playerId = playerId;
-    this.graphics = new GraphicsController(canvas.getContext("2d"), playerId);
+    this.graphics = new GraphicsController(canvas.getContext("2d"), playerId, canvas);
 
     this.renderLoop = setInterval(() => {
       if (this.gameState) {

@@ -23,8 +23,10 @@ const fabiTexture = {
 const mapTexture = {
   rice: imageFrom("rice.png"),
   ramen: imageFrom("ramen.png"),
-  shakshuka: imageFrom("shakshuka.png"),
+  shakshuka: imageFrom("tomato_egg3.png"),
 };
+
+const tomatoBullet = imageFrom("tomato-bullet.png");
 
 const kirbyAy = new Audio("kirbyAy.wav");
 
@@ -154,7 +156,10 @@ export default class GraphicsController {
     }
 
     for (const tomato of gameState.tomatoes) {
-      this.drawCircle(this.convert(tomato.pos), TOMATO.SIZE, "#ff4000");
+      this.drawImage(tomatoBullet, {center: this.convert(tomato.pos), size: TOMATO.SIZE});
+      
+
+      //this.drawCircle(this.convert(tomato.pos), TOMATO.SIZE, "#ff4000");
     }
 
     for (const player of gameState.eggs) {

@@ -24,7 +24,7 @@ const YOLK = {
 const TOMATO = {
   VEL: 1000,
   DAMAGE: 150,
-  SIZE: 32,
+  SIZE: 96,
 };
 
 const SPRING = {
