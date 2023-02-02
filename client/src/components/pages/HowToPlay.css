@@ -9,6 +9,10 @@
   bottom: 32px;
 }
 
+.u-transparent {
+  background-color: transparent;
+}
+
 .Tip-homeButton {
   position: absolute;
   top: 32px;

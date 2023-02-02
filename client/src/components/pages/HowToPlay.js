@@ -144,7 +144,7 @@ const HowToPlay = (props) => {
           <div className="Tip-title">Tips</div>
           <div className="Tip-text">{messages[message]}</div>
           <div className="Tip-columns">
-            <div>
+            <div className="u-transparent">
               <button
                 className="Tip-button Directions-button button-pushable"
                 onClick={() => {
@@ -157,7 +157,7 @@ const HowToPlay = (props) => {
             <div className="u-margin-top Tip-text">
               {message + 1}/{messages.length}
             </div>
-            <div>
+            <div className="u-transparent">
               <button
                 className="Tip-button Directions-button button-pushable"
                 onClick={() => {
