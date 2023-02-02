@@ -43,15 +43,6 @@ const Game = (props) => {
   }, []);
 
   useEffect(() => {
-    const pingLoop = setInterval(() => {
-      setPing(Math.floor(socketPing));
-    }, 1000);
-    return () => {
-      clearInterval(pingLoop);
-    };
-  }, []);
-
-  useEffect(() => {
     if (canvas) {
       setGame(new GameController(canvas.current, props.userId));
     }

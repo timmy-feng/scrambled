@@ -286,8 +286,7 @@ class GameState {
   }
 
   isGameOver() {
-    //return this.framesPassed > 5 * 60;
-    return this.eggs.length <= 1;
+    return this.map != "practice" && this.eggs.length <= 1;
   }
 
   getRandomPos() {

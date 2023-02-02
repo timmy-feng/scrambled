@@ -30,7 +30,11 @@ export default class GameController {
 
     this.renderLoop = setInterval(() => {
       if (this.gameState) {
-        this.gameState.update();
+        for (const update of this.gameState.update()) {
+          if (update.id == this.playerId && update.type in this.eventHandler) {
+            this.eventHandler[update.type]();
+          }
+        }
         this.graphics.render(this.gameState);
       }
     }, 1000 / GAME.FRAMES_PER_SEC);
@@ -38,6 +42,16 @@ export default class GameController {
     // how many times we played AY
     // make sure we're not behind what the game state says
     this.playAy = 0;
+
+    this.eventHandler = {};
+  }
+
+  addEventListener(eventName, callback) {
+    this.eventHandler[eventName] = callback;
+  }
+
+  removeEventListener(eventName) {
+    delete this.eventHandler[eventName];
   }
 
   serverUpdate(gameState) {

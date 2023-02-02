@@ -54,8 +54,7 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
 
     const context = canvas.current.getContext("2d");
     //console.log(blink1)
-    const img = new Image(); // Create new img element
-    img.src = "blink-1.png"; // Set source path
+    const img = blinkImgs[0]; // Set source path
 
     var hRatio = canvas.current.width / img.width;
     var vRatio = canvas.current.height / img.height;
@@ -175,6 +174,12 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
                     <Link to="/costumes">Costumes</Link>
                   </span>
                 </button>
+
+                <button className="Directions-button button-pushable">
+                  <span className="button-front">
+                    <Link to="/howtoplay">How To Play</Link>
+                  </span>
+                </button>
                 <button
                   className="Directions-button button-pushable"
                   onClick={() => {
@@ -192,8 +197,9 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
               />
             )}
             <div className="Scrambled-text-container u-flex">
-              {test.map((letter) => (
+              {test.map((letter, i) => (
                 <div
+                  key={i}
                   className="Scrambled-text-letter"
                   style={{ rotate: `${20 - 40 * Math.random()}deg` }}
                 >
