@@ -79,7 +79,7 @@ const Costumes = (props) => {
     <div className="Costumes-mainContainer u-flex">
       <div className="Costumes-secondaryContainer u-flex">
         <div className="Title-container u-flex">
-          <h2 className="Title-text">Eggcessories</h2>
+          <h2 className="Costumes-titleText">Eggcessories</h2>
         </div>
         <div className="Costumes-costumeContainer">{costumeList}</div>
         <div className="Costumes-descriptionContainer">
