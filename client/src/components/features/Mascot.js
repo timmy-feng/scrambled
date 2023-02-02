@@ -16,13 +16,12 @@ const Mascot = (props) => {
   return (
     <div className="Mascot-container">
       <div className="Mascot-subcontainer">
-        <div className="Mascot-mascot">
-          <img
-            className="Mascot-egg"
-            src={egg}
-            onMouseDown={() => setEgg(clickEgg)}
-            onMouseUp={() => setEgg(idleEgg)}
-          />
+        <div
+          className="Mascot-mascot"
+          onMouseDown={() => setEgg(clickEgg)}
+          onMouseUp={() => setEgg(idleEgg)}
+        >
+          <img className="Mascot-egg" src={egg} />
           {props.costume ? (
             <img className="Mascot-costume" src={costumes[props.costume]} />
           ) : null}
