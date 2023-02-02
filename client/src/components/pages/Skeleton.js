@@ -88,8 +88,7 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
       context.clearRect(0, 0, canvas.current.width, canvas.current.height);
       let newFrame = frame % showImg.length;
 
-      const img1 = new Image();
-      img1.src = BLINK[showImg[newFrame]];
+      const img1 = blinkImgs[showImg[newFrame]];
 
       const width = img1.width;
       const height = img1.height;
