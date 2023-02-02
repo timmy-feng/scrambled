@@ -2,6 +2,9 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
 
+:root{
+    --darkbrown: rgb(21, 13, 8);
+}
 .Title-container {
   font-family: "Jua", sans-serif;
   font-size: 64px;
@@ -32,8 +35,9 @@
   justify-content: center;
 }
 
-.Title-text {
-  margin-top: 16px;
+.Start-container .Title-text {
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
 }
 
 .Directions-button {
@@ -84,11 +88,19 @@
   margin-top: 8px;
 }
 
-a {
-  color: black;
-}
-
 .Scrambled-text-letter-2 {
   will-change: transform;
   transition: transform 150ms;
+}
+
+a {
+  color: var(--darkbrown);
+}
+
+.button-front {
+  color: var(--darkbrown);
+}
+
+* {
+    color: var(--darkbrown);
 }

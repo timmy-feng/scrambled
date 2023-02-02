@@ -105,10 +105,17 @@ export default class GraphicsController {
     // );
 
     for (const gummy of gameState.gummies) {
-      this.drawImage(fabiTexture[gummy.type].icon, {
+
+      var hRatio = 100/fabiTexture[gummy.type].icon.height;
+      var newWidth = hRatio * fabiTexture[gummy.type].icon.width;
+
+      var center = this.convert(gummy.pos)
+      this.context.drawImage(fabiTexture[gummy.type].icon, center.x-newWidth/2, center.y-50, newWidth, 100);
+
+      /* this.drawImage(fabiTexture[gummy.type].icon, {
         center: this.convert(gummy.pos),
         size: 100,
-      });
+      }); */
     }
 
     for (const player of gameState.eggs) {
