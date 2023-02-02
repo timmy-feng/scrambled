@@ -72,7 +72,9 @@ const Lobby = (props) => {
           <div className="Lobby-columns u-margin-top">
             <div className="Rooms-container">
               {roomList.length === 0 ? (
-                <div className="No-rooms-container u-font">no rooms active!</div>
+                <div className="No-rooms-container u-font">
+                  no rooms active!
+                </div>
               ) : (
                 <ul className="Rooms-list">{roomList}</ul>
               )}
@@ -182,7 +184,7 @@ const Lobby = (props) => {
         <div className="Directions-container u-flex">
           <div className="Title-container u-flex">
             <div>
-              <h2 className="Title-text">Room {roomCode}</h2>
+              <h2 className="Costumes-titleText">Room {roomCode}</h2>
               <div className="u-brown Title-subtext">
                 eat other eggs to win!
               </div>

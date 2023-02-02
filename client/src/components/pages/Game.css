@@ -9,3 +9,20 @@
   object-fit: contain;
 }
 
+.Game-gummyContainer {
+  display: flex;
+  position: absolute;
+  top: 32px;
+  right: 32px;
+}
+
+.Game-gummyButton {
+  height: 80px;
+  width: auto;
+  margin: 16px;
+}
+
+.Game-gummyButton:hover {
+  height: 96px;
+  margin: 9px;
+}
