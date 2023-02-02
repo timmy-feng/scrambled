@@ -13,7 +13,7 @@ import { GAME } from "../../../../shared/constants";
 const GOOGLE_CLIENT_ID =
   "405770742094-nsvn5kjdutoiito75u15c7b78eqmekmf.apps.googleusercontent.com";
 
-let test = "scrambled";
+let test = "2023";
 test = test.split("");
 let rotateBy = [10, -30, 20, 0, 10, -10, 5, -10, 5];
 
@@ -191,7 +191,7 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
                     handleLogout();
                   }}
                 >
-                  <span className=" button-front">Logout</span>
+                  <span className="button-front">Logout</span>
                 </button>
               </>
             ) : (
@@ -203,7 +203,7 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
             <div className="Scrambled-text-container u-flex">
               {test.map((letter) => (
                 <span
-                  className="Scrambled-text-letter u-font"
+                  className="Scrambled-text-letter"
                   style={{ rotate: `${20 - 40 * Math.random()}deg` }}
                 >
                   {letter}
