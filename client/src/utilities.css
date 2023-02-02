@@ -16,6 +16,15 @@
 
 /* TODO: REPLACE WITH YOUR OWN FONT! */
 
+img {
+  user-select: none;
+  pointer-events: none;
+}
+
+canvas {
+  user-select: none;
+}
+
 :root {
   --primary: #396dff;
   --primary--dim: #6987db;
