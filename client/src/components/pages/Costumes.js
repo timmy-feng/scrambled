@@ -7,12 +7,12 @@ import "./Costumes.css";
 const description = [
   "Plain and Simple",
   "Play Your First Game",
-  "Play 50 Games",
-  "Get 10 Kills",
-  "Get 100 Kills",
-  "Eat 50 Seaweed",
-  "Eat 500 Scallion",
-  "Eat 1000 Garlic or Fish Cake",
+  "Play 20 Games",
+  "Get 5 Kills",
+  "Get 50 Kills",
+  "Eat 5 Seaweed",
+  "Eat 100 Scallion",
+  "Eat 200 Garlic or Fish Cake",
 ];
 
 // pics

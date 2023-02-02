@@ -168,12 +168,12 @@ const enabledCostumes = (user) => {
   const enabled = Array(8);
   enabled[0] = true;
   enabled[1] = user.game >= 1;
-  enabled[2] = user.game >= 50;
-  enabled[3] = user.kill >= 10;
-  enabled[4] = user.kill >= 100;
-  enabled[5] = user.seaweed >= 50;
-  enabled[6] = user.scallion >= 500;
-  enabled[7] = user.fishcake + user.garlic >= 1000;
+  enabled[2] = user.game >= 20;
+  enabled[3] = user.kill >= 5;
+  enabled[4] = user.kill >= 50;
+  enabled[5] = user.seaweed >= 5;
+  enabled[6] = user.scallion >= 100;
+  enabled[7] = user.fishcake + user.garlic >= 200;
   return enabled;
 };
 
