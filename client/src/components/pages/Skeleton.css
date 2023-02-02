@@ -2,6 +2,9 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
 
+:root{
+    --darkbrown: rgb(21, 13, 8);
+}
 .Title-container {
   font-family: "Jua", sans-serif;
   font-size: 64px;
@@ -91,9 +94,13 @@
 }
 
 a {
-  color: black;
+  color: var(--darkbrown);
 }
 
 .button-front {
-  color: black;
+  color: var(--darkbrown);
+}
+
+* {
+    color: var(--darkbrown);
 }
