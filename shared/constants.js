@@ -78,6 +78,9 @@ const GUMMY = {
   },
 
   // maps
+  practice: {
+    scallion: 1,
+  },
   rice: {
     pepper: 0.05,
     garlic: 0.15,

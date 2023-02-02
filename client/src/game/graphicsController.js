@@ -67,10 +67,36 @@ export default class GraphicsController {
     }
 
     this.context.clearRect(0, 0, GAME.SCREEN_SIZE, GAME.SCREEN_SIZE);
-    this.drawImage(mapTexture[gameState.map], {
-      center: new Vector(GAME.SCREEN_SIZE / 2, GAME.SCREEN_SIZE / 2),
-      size: GAME.SCREEN_SIZE,
-    });
+    if (gameState.map == "practice") {
+      const s = GAME.SCREEN_SIZE;
+      this.context.strokeStyle = "#80c0ff";
+      this.context.lineWidth = 2;
+      this.context.beginPath();
+      for (let x = 50; x < s; x += 50) {
+        this.context.moveTo(
+          x,
+          s / 2 - Math.sqrt((s * s) / 4 - (s / 2 - x) * (s / 2 - x))
+        );
+        this.context.lineTo(
+          x,
+          s / 2 + Math.sqrt((s * s) / 4 - (s / 2 - x) * (s / 2 - x))
+        );
+        this.context.moveTo(
+          s / 2 - Math.sqrt((s * s) / 4 - (s / 2 - x) * (s / 2 - x)),
+          x
+        );
+        this.context.lineTo(
+          s / 2 + Math.sqrt((s * s) / 4 - (s / 2 - x) * (s / 2 - x)),
+          x
+        );
+      }
+      this.context.stroke();
+    } else {
+      this.drawImage(mapTexture[gameState.map], {
+        center: new Vector(GAME.SCREEN_SIZE / 2, GAME.SCREEN_SIZE / 2),
+        size: GAME.SCREEN_SIZE,
+      });
+    }
 
     // this.drawCircle(
     //   new Vector(GAME.SCREEN_SIZE / 2, GAME.SCREEN_SIZE / 2),
@@ -233,7 +259,7 @@ export default class GraphicsController {
       this.context.fillRect(0, 0, GAME.SCREEN_SIZE, GAME.SCREEN_SIZE);
       this.context.globalAlpha = 1;
       this.context.fillStyle = "#000000";
-      this.context.font = "72px arial bold";
+      this.context.font = "72px Arial bold";
       this.context.fillText(
         "YOU CRACKED",
         GAME.SCREEN_SIZE / 2,
@@ -246,7 +272,7 @@ export default class GraphicsController {
       this.context.fillRect(0, 0, GAME.SCREEN_SIZE, GAME.SCREEN_SIZE);
       this.context.globalAlpha = 1;
       this.context.fillStyle = "#000000";
-      this.context.font = "72px arial bold";
+      this.context.font = "72px Arial bold";
       this.context.fillText(
         "GAME OVER",
         GAME.SCREEN_SIZE / 2,
