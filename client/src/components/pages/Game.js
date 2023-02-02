@@ -15,12 +15,11 @@ const Game = (props) => {
   const canvas = useRef();
   const [game, setGame] = useState();
 
-  const [ping, setPing] = useState();
-
   const processUpdate = (update) => {
     game.serverUpdate(update.gameState, update.playerId);
   };
 
+  // kick player out of room if they leave
   useEffect(() => {
     return () => {
       socket.emit("leavegame");
@@ -34,7 +33,6 @@ const Game = (props) => {
     };
   }, [game]);
 
-  // kick player out of room if they leave
   useEffect(() => {
     socket.on("gameover", () => {
       navigate("/results");
@@ -88,8 +86,6 @@ const Game = (props) => {
           onPointerCancel={(event) => game.onPointerUp(event)}
         />
       </div>
-      <img id="howto1" src="howto/instructions.png" />
-      <img id="howto2" src="howto/powerups.png" />
     </>
   );
 };

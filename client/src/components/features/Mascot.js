@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 
-const egg = "/yolk-head.png";
+const idleEgg = "/yolk-head.png";
+const clickEgg = "/stun-1.png";
+
 const costumes = [];
 for (let i = 0; i < 8; ++i) {
   costumes.push(`/costumes/cos${i}.png`);
@@ -9,11 +11,18 @@ for (let i = 0; i < 8; ++i) {
 import "./Mascot.css";
 
 const Mascot = (props) => {
+  const [egg, setEgg] = useState(idleEgg);
+
   return (
     <div className="Mascot-container">
       <div className="Mascot-subcontainer">
         <div className="Mascot-mascot">
-          <img className="Mascot-egg" src={egg} />
+          <img
+            className="Mascot-egg"
+            src={egg}
+            onMouseDown={() => setEgg(clickEgg)}
+            onMouseUp={() => setEgg(idleEgg)}
+          />
           {props.costume ? (
             <img className="Mascot-costume" src={costumes[props.costume]} />
           ) : null}

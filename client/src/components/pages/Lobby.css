@@ -4,6 +4,37 @@
   font-family: "Jua", sans-serif;
 }
 
+.u-margin-top {
+  margin-top: 32px;
+}
+
+.Maps-text {
+  font-family: "Jua", sans-serif;
+  font-size: 48px;
+  white-space: nowrap;
+  text-align: center;
+  margin: 0 16px 0 16px;
+  width: 240px;
+}
+
+.Maps-textSmall {
+  font-family: "Jua", sans-serif;
+  font-size: 24px;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.Lobby-columns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Lobby-buttonsContainer {
+  width: 400px;
+  margin-left: 32px;
+}
+
 .Rooms-container {
   width: 32rem;
   height: 24rem;
@@ -112,6 +143,7 @@ ul {
 
 .Players-container {
   display: flex;
+  justify-content: center;
 }
 
 .Map-title-container {

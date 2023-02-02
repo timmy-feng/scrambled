@@ -214,9 +214,7 @@ const initGeckos = async (server, port) => {
       const user = socketToUserMap[socket.id];
       if (user) {
         socket.emit("updaterooms", rooms);
-        if (user._id in userToRoomMap) {
-          socket.emit("updateroom", userToRoomMap[user._id]);
-        }
+        socket.emit("updateroom", userToRoomMap[user._id] ?? "none");
       }
     });
 

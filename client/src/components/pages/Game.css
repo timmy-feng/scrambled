@@ -8,23 +8,3 @@
 .Game-canvas {
   object-fit: contain;
 }
-
-#howto1 {
-  background-color: transparent;
-  position: absolute;
-  left: 0;
-  bottom: 0;
-
-  height: 400px;
-  width: auto;
-}
-
-#howto2 {
-  background-color: transparent;
-  position: absolute;
-  right: 0;
-  bottom: 0;
-
-  height: 250px;
-  width: auto;
-}
