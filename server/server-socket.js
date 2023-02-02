@@ -20,7 +20,7 @@ const startGame = (user, map) => {
   if (!(user._id in userToRoomMap)) return;
 
   const room = [...rooms[userToRoomMap[user._id]]];
-  if (room[0] != user) return;
+  if (room[0]._id != user._id) return;
 
   const game = new GameState({ map });
   for (const user of room) {
@@ -120,7 +120,10 @@ const joinRoom = (user, roomCode) => {
 const leaveRoom = (user) => {
   if (user._id in userToRoomMap) {
     const players = rooms[userToRoomMap[user._id]];
-    players.splice(players.indexOf(user), 1);
+    players.splice(
+      players.findIndex((player) => player._id == user._id),
+      1
+    );
 
     if (players.length == 0) {
       delete rooms[userToRoomMap[user._id]];

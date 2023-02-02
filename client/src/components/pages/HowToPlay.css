@@ -2,11 +2,16 @@
   position: absolute;
   outline: solid;
   outline-width: 4px;
+  background-color: #ffffff;
   border-radius: 32px;
   height: 240px;
   width: 360px;
   right: 32px;
   bottom: 32px;
+}
+
+.u-transparent {
+  background-color: transparent;
 }
 
 .Tip-homeButton {
