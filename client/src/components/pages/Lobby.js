@@ -6,6 +6,7 @@ import Mascot from "../features/Mascot";
 
 import "./Skeleton.css";
 import "./Lobby.css";
+import { GAME } from "../../../../shared/constants";
 
 const INTERNAL_MAPS = ["rice", "ramen", "shakshuka"];
 const MAPS = ["Fried Rice", "Ramen", "Shakshuka"];
@@ -17,6 +18,12 @@ const Lobby = (props) => {
 
   const [rooms, setRooms] = useState([]);
   const [roomCode, setRoomCode] = useState();
+
+  useEffect(() => {
+    return () => {
+      socket.emit("leaveroom");
+    };
+  }, []);
 
   useEffect(() => {
     socket.on("updaterooms", (rooms) => {
@@ -53,15 +60,17 @@ const Lobby = (props) => {
     const roomList = [];
 
     for (const roomCode in rooms) {
-      roomList.push(
-        <li
-          key={roomCode}
-          className="u-font u-rounded u-brown Room-available"
-          onClick={() => socket.emit("joinroom", roomCode)}
-        >
-          <span className="u-white Room-available-text">{roomCode}</span>
-        </li>
-      );
+      if (rooms[roomCode].length < GAME.MAX_PLAYERS) {
+        roomList.push(
+          <li
+            key={roomCode}
+            className="u-font u-rounded u-brown Room-available"
+            onClick={() => socket.emit("joinroom", roomCode)}
+          >
+            <span className="u-white Room-available-text">{roomCode}</span>
+          </li>
+        );
+      }
     }
     return (
       <div className="Start-container u-flex">

@@ -107,12 +107,17 @@ export default class GraphicsController {
     // );
 
     for (const gummy of gameState.gummies) {
-
-      var hRatio = 100/fabiTexture[gummy.type].icon.height;
+      var hRatio = 100 / fabiTexture[gummy.type].icon.height;
       var newWidth = hRatio * fabiTexture[gummy.type].icon.width;
 
-      var center = this.convert(gummy.pos)
-      this.context.drawImage(fabiTexture[gummy.type].icon, center.x-newWidth/2, center.y-50, newWidth, 100);
+      var center = this.convert(gummy.pos);
+      this.context.drawImage(
+        fabiTexture[gummy.type].icon,
+        center.x - newWidth / 2,
+        center.y - 50,
+        newWidth,
+        100
+      );
 
       /* this.drawImage(fabiTexture[gummy.type].icon, {
         center: this.convert(gummy.pos),
@@ -156,8 +161,10 @@ export default class GraphicsController {
     }
 
     for (const tomato of gameState.tomatoes) {
-      this.drawImage(tomatoBullet, {center: this.convert(tomato.pos), size: TOMATO.SIZE});
-      
+      this.drawImage(tomatoBullet, {
+        center: this.convert(tomato.pos),
+        size: TOMATO.SIZE,
+      });
 
       //this.drawCircle(this.convert(tomato.pos), TOMATO.SIZE, "#ff4000");
     }
@@ -253,6 +260,21 @@ export default class GraphicsController {
     }
     for (const weed in dead) {
       this.weeds.splice(this.weeds.indexOf(weed), 1);
+    }
+
+    if (playerEgg) {
+      const pos = this.convert(playerEgg.yolkPos);
+      this.context.strokeStyle = "#6f4c2c";
+      this.context.lineWidth = 5;
+      this.context.fillStyle = "#80c0ff";
+      this.context.beginPath();
+      this.context.moveTo(pos.x, pos.y - 1.5 * YOLK.SIZE);
+      this.context.lineTo(pos.x - 0.5 * YOLK.SIZE, pos.y - 2 * YOLK.SIZE);
+      this.context.lineTo(pos.x + 0.5 * YOLK.SIZE, pos.y - 2 * YOLK.SIZE);
+      this.context.lineTo(pos.x, pos.y - 1.5 * YOLK.SIZE);
+      this.context.stroke();
+      this.context.fill();
+      this.context.restore();
     }
 
     if (gameState.isGameOver()) {

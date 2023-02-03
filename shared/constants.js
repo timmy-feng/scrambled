@@ -4,6 +4,7 @@ const GAME = {
   MAP_SIZE: 1280,
   SCREEN_SIZE: 1280,
   FRAMES_PER_SEC: 60, // change in vector.js too
+  MAX_PLAYERS: 2,
 };
 
 const WHITE = {

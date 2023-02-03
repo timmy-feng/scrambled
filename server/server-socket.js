@@ -27,9 +27,6 @@ const startGame = (user, map) => {
     delete results[user._id];
     results[user._id] = { user, stats: {} };
 
-    leaveRoom(user);
-    delete userToRoomMap[user._id];
-
     userToGameMap[user._id] = game;
     game.spawnEgg(user._id, user.costume);
     userToSocketMap[user._id].emit("startgame");
@@ -110,7 +107,7 @@ const createRoom = (user) => {
 
 const joinRoom = (user, roomCode) => {
   if (user._id in userToRoomMap) return;
-  if (roomCode in rooms) {
+  if (roomCode in rooms && rooms[roomCode].length < GAME.MAX_PLAYERS) {
     rooms[roomCode].push(user);
     userToRoomMap[user._id] = roomCode;
     io.emit("updaterooms", rooms);
@@ -233,7 +230,7 @@ const initGeckos = async (server, port) => {
       const user = socketToUserMap[socket.id];
       if (user) {
         joinRoom(user, roomCode);
-        socket.emit("updateroom", roomCode);
+        socket.emit("updateroom", userToRoomMap[user._id] ?? "none");
       }
     });
 

@@ -34,13 +34,14 @@ const normalImg = imageFrom("yolk-head.png");
 const hurtImg = imageFrom("stun-1.png");
 
 export default class YolkGraphic {
-  constructor(costume) {
+  constructor(costume, isMain = false) {
     this.anim = "normal";
     this.frame = 0;
     this.fire = false;
     this.alpha = 1;
 
     this.costume = costume;
+    this.isMain = isMain;
   }
 
   setRotation(rotation) {
