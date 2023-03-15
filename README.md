@@ -96,3 +96,4 @@ webpack.config.js
 ```
 
 ## Good luck on your project :)
+# scrambled-copy
