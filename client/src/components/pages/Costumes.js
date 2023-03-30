@@ -49,6 +49,7 @@ const Costumes = (props) => {
   useEffect(() => {
     if (selected != undefined) {
       socket.emit("setcostume", selected);
+      setDetails(selected)
     }
   }, [selected]);
 
@@ -61,6 +62,7 @@ const Costumes = (props) => {
           setDetails(i); // sets the index of costume to look at
           if (enabled[i]) { // if user unlocked before
             setSelected(i); 
+            //do animation
           }
         }}
       >
@@ -68,21 +70,18 @@ const Costumes = (props) => {
           <img
             className="Costumes-egg"
             src={
-              enabled[i] ? (i == selected ? selectedEgg : unlockedEgg) : lockedEgg
+              enabled[i] ? (i == details ? selectedEgg : unlockedEgg) : lockedEgg
             }
           />
           {i ? <img className="Costumes-costume" src={costumes[i]} /> : null}
           <div 
             className="Costumes-dummy-hover"
-            onMouseEnter={()=>{console.log("enter",i)}}
-            onMouseLeave={()=>{console.log("leave",i)}}
+            onMouseEnter={()=>{setDetails(i)}}
+            onMouseLeave={()=>{
+              setDetails(selected)}}
           >
           </div>
-          
         </div>
-        
-
-        
       </div>
     );
   }
