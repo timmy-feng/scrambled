@@ -17,20 +17,25 @@
   display: grid;
   grid-template-columns: 225px 225px 225px 225px;
   grid-template-rows: 250px 250px;
-  margin-right: 40px;
 }
 
 .Costumes-button {
   position: relative;
-  top: 0;
-  left: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.Costumes-dressed-egg {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: center;
+
 }
 
 .Costumes-egg {
   position: relative;
-  top: 90px;
-  left: 15px;
-
   height: auto;
   width: 150px;
 }
@@ -38,12 +43,13 @@
 .Costumes-costume {
   background-color: transparent;
   position: absolute;
-  height: auto;
-  top: 0;
-  left: 0;
-
-  height: auto;
   width: 177px;
+}
+
+.Costumes-dummy-hover {
+  position: absolute;
+  width: 100%;
+  padding-top:100%;
 }
 
 .Costumes-secondaryContainer {
