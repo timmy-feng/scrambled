@@ -1,6 +1,7 @@
 import { navigate, Link } from "@reach/router";
 import React, { useEffect, useState } from "react";
 import { removeSocketListener, socket } from "../../client-socket";
+import DressedEgg from "../../components/features/DressedEgg"
 
 import "./Costumes.css";
 
@@ -14,11 +15,6 @@ const description = [
   "Eat 100 Scallion",
   "Eat 200 Garlic or Fish Cake",
 ];
-
-// pics
-const lockedEgg = "/stun-1.png";
-const selectedEgg = "/eat-4.png";
-const unlockedEgg = "/yolk-head.png";
 
 const costumes = [];
 for (let i = 0; i < 8; ++i) {
@@ -56,33 +52,15 @@ const Costumes = (props) => {
   const costumeList = [];
   for (let i = 0; i < 8; i++) {
     costumeList.push(
-      <div
-        className="Costumes-button"
-        onClick={() => {
-          setDetails(i); // sets the index of costume to look at
-          if (enabled[i]) { // if user unlocked before
-            setSelected(i); 
-            //do animation
-          }
-        }}
-      >
-        <div className="Costumes-dressed-egg">
-          <img
-            className="Costumes-egg"
-            src={
-              enabled[i] ? (i == details ? selectedEgg : unlockedEgg) : lockedEgg
-            }
-          />
-          {i ? <img className="Costumes-costume" src={costumes[i]} /> : null}
-          <div 
-            className="Costumes-dummy-hover"
-            onMouseEnter={()=>{setDetails(i)}}
-            onMouseLeave={()=>{
-              setDetails(selected)}}
-          >
-          </div>
-        </div>
-      </div>
+      <DressedEgg 
+        isEnabled = {enabled[i]}
+        costume = {costumes[i]}
+        details = {details} // need the brackets???
+        selected = {selected}
+        i = {i}
+        setDetails = {setDetails}
+        setSelected = {setSelected}
+      />
     );
   }
 
