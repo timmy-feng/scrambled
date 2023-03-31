@@ -308,7 +308,7 @@ export default class GraphicsController {
       this.context.fillStyle = "#000000";
       this.context.font = "72px Arial bold";
       this.context.fillText(
-        "GAME OVER",
+        "GAME OVER deez nuts",
         GAME.SCREEN_SIZE / 2,
         GAME.SCREEN_SIZE / 2
       );
@@ -331,4 +331,6 @@ export default class GraphicsController {
       props.size
     );
   }
+
+  
 }

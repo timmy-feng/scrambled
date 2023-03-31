@@ -8,7 +8,7 @@ const EAT = ["eat-1.png", "eat-2.png", "eat-3.png", "eat-4.png"];
 
 // props: enabled, costume 
 // setDetails, setSelected
-const fps = 12
+const fps = 15
 
 const DressedEgg = ({isEnabled, costume, details, selected, i, setDetails, setSelected}) => {
     const [srcEgg, setSrcEgg] = useState();

@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const UserSchema = new mongoose.Schema({
   name: String,
   googleid: String,
+  datejoined: String,
   game: { type: Number, default: 0 },
   kill: { type: Number, default: 0 },
   scallion: { type: Number, default: 0 },

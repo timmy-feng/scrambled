@@ -36,7 +36,6 @@ const Costumes = (props) => {
     });
 
     socket.emit("requestcostumes");
-
     return () => {
       removeSocketListener("costumes");
     };

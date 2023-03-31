@@ -50,6 +50,7 @@
   position: absolute;
   width: 100%;
   padding-top:100%;
+  cursor: pointer;
 }
 
 .Costumes-secondaryContainer {

@@ -25,9 +25,16 @@ function getOrCreateUser(user) {
   return User.findOne({ googleid: user.sub }).then((existingUser) => {
     if (existingUser) return existingUser;
 
+    var date = new Date()
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0
+    const yyyy = date.getFullYear();
+    date = dd +"/"+ mm +"/" + yyyy
+
     const newUser = new User({
       name: user.name,
       googleid: user.sub,
+      datejoined: date,
     });
 
     return newUser.save();
