@@ -9,12 +9,12 @@ import { ARROW_CODE, GAME } from "../../../../shared/constants";
 import "./HowToPlay.css";
 
 const messages = [
-  "Hey look, it's you!",
+  "Hey look, it's you!", // 0
   "You're an egg today!",
   "Move your white with the WASD keys.",
   "Move your yolk by clicking and dragging.",
   "Your yolk can eat foods to help you grow.",
-  "Look out for special foods that do special things!",
+  "Look out for special foods that do special things!", // 5
   "Push your yolk into another egg's whites to take a bite.",
   "Lose too much white and you will cease to exist.",
   "Good luck in the real world!",
@@ -27,7 +27,7 @@ const HowToPlay = (props) => {
   const game = useRef();
 
   const [message, setMessage] = useState(0);
-  const furthest = useRef(-1);
+  const furthest = useRef(-1); // since we have back arrows, we keep track of furthest message we've seen so far
 
   useEffect(() => {
     if (canvas) {
@@ -63,7 +63,7 @@ const HowToPlay = (props) => {
     }
 
     if (message == 5 && furthest.current < 5) {
-      setInterval(() => {
+      setInterval(() => { // reload egg if the spawned one gets eaten
         const gameState = game.current.gameState;
         if (gameState.eggs.length == 1) {
           gameState.spawnEgg(Date.now().toString(), 0);
