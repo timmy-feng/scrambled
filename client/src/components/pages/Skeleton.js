@@ -10,8 +10,8 @@ import "../../utilities.css";
 import "./Skeleton.css";
 import { GAME } from "../../../../shared/constants";
 
-const GOOGLE_CLIENT_ID =
-  "405770742094-nsvn5kjdutoiito75u15c7b78eqmekmf.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID = 
+  "642561588672-fgae72029hs797o3244j3cjfktcuh3gb.apps.googleusercontent.com"
 
 let test = "2023";
 test = test.split("");
