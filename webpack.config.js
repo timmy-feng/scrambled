@@ -21,6 +21,7 @@ const entryFile = path.resolve(__dirname, "client", "src", "index.js");
 const outputDir = path.resolve(__dirname, "client", "dist");
 
 const webpack = require("webpack");
+const fs = require("fs");
 
 module.exports = {
   entry: ["@babel/polyfill", entryFile],
@@ -75,5 +76,15 @@ module.exports = {
         ws: true,
       },
     },
+
+    // for https connections on aws
+    port: 443,
+    https: true,
+    key: fs.readFileSync(
+      path.resolve("/etc/letsencrypt/live/www.scrambled.uno/privkey.pem")
+    ),
+    cert: fs.readFileSync(
+      path.resolve("/etc/letsencrypt/live/www.scrambled.uno/fullchain.pem")
+    ),
   },
 };

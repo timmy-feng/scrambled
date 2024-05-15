@@ -1,7 +1,7 @@
 import geckos from "@geckos.io/client";
 import { post } from "./utilities";
 
-let port = window.location.hostname == "scrambled.one" ? 443 : 3000;
+let port = 3000;
 
 export const socket = geckos({ port });
 

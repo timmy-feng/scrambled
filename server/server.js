@@ -99,28 +99,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-const port = process.env.PORT || 3000;
-let server;
-if (process.env.HTTPS == "true") {
-  const privateKey = fs.readFileSync(
-    "/etc/letsencrypt/live/scrambled.one/privkey.pem"
-  );
-  const certificate = fs.readFileSync(
-    "/etc/letsencrypt/live/scrambled.one/fullchain.pem"
-  );
-
-  server = https.createServer({ key: privateKey, cert: certificate }, app);
-
-  // redirect client to https
-  const httpRedirect = http.createServer((req, res) => {
-    res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
-    res.end();
-  });
-  httpRedirect.listen(80);
-} else {
-  server = http.Server(app);
-}
-
+server = http.Server(app);
 socketManager.init(server);
 
 server.listen(port, () => {
