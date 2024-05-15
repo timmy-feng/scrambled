@@ -10,20 +10,18 @@ import "../../utilities.css";
 import "./Skeleton.css";
 import { GAME } from "../../../../shared/constants";
 
-const GOOGLE_CLIENT_ID = 
-  "642561588672-fgae72029hs797o3244j3cjfktcuh3gb.apps.googleusercontent.com"
+const GOOGLE_CLIENT_ID =
+  "375196652001-nhj4snbmqe02g5oi5gkhl0mcjghn8ctb.apps.googleusercontent.com";
 
 let test = "2023";
 test = test.split("");
 
 let test2 = "weblab";
-test2 = test2.split("")
+test2 = test2.split("");
 
 let rotateBy = [10, -30, 20, 0, 10, -10, 5, -10, 5];
 
-const randomRotate = (str) => {
-
-}
+const randomRotate = (str) => {};
 
 const imageFrom = (src) => {
   const image = new Image();
@@ -212,17 +210,17 @@ const Skeleton = ({ userId, handleLogin, handleLogout }) => {
                 >
                   {letter}
                 </div>
-              ))} {test.map((letter) => (
+              ))}{" "}
+              {test.map((letter) => (
                 <div
                   className="Scrambled-text-letter"
                   style={{ rotate: `${20 - 40 * Math.random()}deg` }}
                 >
                   {letter}
                 </div>
-              ))} 
+              ))}
             </div>
 
-           
             {/*  <div className="u-flex">
               {test.map((letter, i) => (
                 <div

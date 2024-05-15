@@ -2,11 +2,11 @@ const { OAuth2Client } = require("google-auth-library");
 const User = require("./models/user");
 const socketManager = require("./server-socket");
 
-// test 
+// test
 
 // create a new OAuth client used to verify google sign-in
-const CLIENT_ID = 
-  "642561588672-fgae72029hs797o3244j3cjfktcuh3gb.apps.googleusercontent.com";
+const CLIENT_ID =
+  "375196652001-nhj4snbmqe02g5oi5gkhl0mcjghn8ctb.apps.googleusercontent.com";
 const client = new OAuth2Client(CLIENT_ID);
 
 // accepts a login token from the frontend, and verifies that it's legit
@@ -25,11 +25,11 @@ function getOrCreateUser(user) {
   return User.findOne({ googleid: user.sub }).then((existingUser) => {
     if (existingUser) return existingUser;
 
-    var date = new Date()
-    const dd = String(date.getDate()).padStart(2, '0');
-    const mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0
+    var date = new Date();
+    const dd = String(date.getDate()).padStart(2, "0");
+    const mm = String(date.getMonth() + 1).padStart(2, "0"); //January is 0
     const yyyy = date.getFullYear();
-    date = dd +"/"+ mm +"/" + yyyy
+    date = dd + "/" + mm + "/" + yyyy;
 
     const newUser = new User({
       name: user.name,
